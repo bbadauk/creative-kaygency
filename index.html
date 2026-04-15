@@ -146,6 +146,7 @@
   <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 /* ==================== CREATIVE KAYGENCY — COMPLETE CSS ==================== */
@@ -1208,6 +1209,13 @@ const safeSetStorage = (key, value) => {
   catch (e) { console.warn('localStorage quota exceeded for key:', key); }
 };
 
+// ============================================================================
+// SUPABASE CLIENT
+// ============================================================================
+const SUPABASE_URL = 'https://gmcqtjmwvpkxugcoclgs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtY3F0am13dnBreHVnY29jbGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyODM0NTksImV4cCI6MjA5MTg1OTQ1OX0.WmNovRTXw-HNHm5NNtWlKG-B5zTf0Av6rs9vso8Jm6A';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const SERVICES = [
   { id: 'business-website', name: 'Business Website', category: 'websites', icon: '🌐', desc: 'Professional multi-page website with responsive design, SEO optimization, and CMS integration.', longDesc: 'Get a professionally designed, fully responsive business website that works flawlessly on every device. We build your site with a modern CMS so you can easily update content yourself, integrated contact forms that capture leads directly to your inbox, on-page SEO to help you rank on Google from day one, and an SSL certificate for security and trust. Includes up to 5 custom-designed pages — Home, About, Services, Contact, and one of your choice. Perfect for businesses ready to establish a credible, conversion-focused online presence.', creditMin: 640, creditMax: 2000, turnaround: '5–10 days', features: ['Responsive design','CMS integration','Contact forms','SEO optimized','SSL certificate','5 pages included'], formFields: ['pages','features','competitors','timeline','brandColors'] },
   { id: 'landing-page', name: 'Landing Page', category: 'websites', icon: '📄', desc: 'High-converting single-page design focused on driving signups, sales, or leads.', longDesc: 'A single, laser-focused page engineered to do one thing exceptionally well: convert visitors into leads or customers. We design mobile-first, fast-loading landing pages using proven conversion frameworks — with compelling headlines, persuasive copy, trust signals, and strategically placed CTAs. Every page is A/B test-ready and comes with Google Analytics tracking set up so you can measure performance from the moment it goes live. Ideal for product launches, ad campaigns, lead magnets, or any scenario where you need a high-impact page that drives action.', creditMin: 240, creditMax: 640, turnaround: '3–5 days', features: ['A/B test ready','Mobile-first','Fast loading','CTA optimized','Analytics setup'], formFields: ['goal','targetAudience','headline','features'] },
@@ -1288,12 +1296,7 @@ const AD_PACKAGES = [
   { id: 'ad-premium', name: 'Premium', price: 149, duration: 30, placement: 'featured', description: 'Featured placement with premium positioning, larger format, and highlighted styling for 30 days.', features: ['Featured banner placement','Sidebar with highlight border','Up to 5,000 impressions/day','Full analytics dashboard','Priority support','Guaranteed top rotation'] },
 ];
 
-const DEMO_ADS = [
-  { id: 'ad_1', advertiser: 'TechStart Solutions', email: 'sarah@techstart.io', package: 'ad-pro', status: 'active', title: 'Launch Your SaaS Faster', description: 'Full-stack development for startups. From MVP to scale — we build it all.', url: 'https://techstart.io', image: '', gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)', startDate: '2026-03-15', endDate: '2026-04-14', impressions: 8420, clicks: 312, spent: 79 },
-  { id: 'ad_2', advertiser: 'FreshBite Catering', email: 'james@freshbite.com', package: 'ad-basic', status: 'active', title: 'Corporate Catering Done Right', description: 'Fresh, locally sourced meals delivered to your office. 20% off first order.', url: 'https://freshbite.com', image: '', gradient: 'linear-gradient(135deg, #f59e0b, #ef4444)', startDate: '2026-03-22', endDate: '2026-03-29', impressions: 2150, clicks: 89, spent: 29 },
-  { id: 'ad_3', advertiser: 'Summit Consulting', email: 'emma@summit.co', package: 'ad-premium', status: 'pending', title: 'Scale Your Agency to 7 Figures', description: 'Proven frameworks for digital agency growth. Free strategy call available.', url: 'https://summit.co', image: '', gradient: 'linear-gradient(135deg, #10b981, #059669)', startDate: '2026-03-28', endDate: '2026-04-27', impressions: 0, clicks: 0, spent: 149 },
-  { id: 'ad_4', advertiser: 'NexGen Apps', email: 'david@startup.io', package: 'ad-pro', status: 'rejected', title: 'Mobile App Development', description: 'iOS & Android apps from concept to App Store. Fast turnaround.', url: 'https://nexgenapps.io', image: '', gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', startDate: '', endDate: '', impressions: 0, clicks: 0, spent: 0, rejectReason: 'Ad copy needs revision — too similar to our own services' },
-];
+// Demo ads removed — ads now loaded from Supabase
 
 const BLOG_POSTS = [
   { slug: 'why-every-business-needs-website-2024', title: 'Why Every Business Needs a Professional Website in 2024', category: 'Websites', excerpt: 'Discover why having a professional website is no longer optional and how it directly impacts your revenue.', date: '2024-03-15', readTime: '6 min', author: 'Kay', content: 'In today\'s digital-first world, your website is often the first impression potential customers have of your business. Studies show that 75% of consumers judge a company\'s credibility based on their website design. A professional website builds trust, generates leads around the clock, and serves as the foundation for all your digital marketing efforts. Without one, you\'re leaving money on the table every single day.', image: '', metaTitle: '', metaDescription: '', metaKeywords: '', canonicalUrl: '', ogImage: '', status: 'published', featured: false, tags: [] },
@@ -2003,16 +2006,7 @@ const _generateSecureRefCode = async (userId, userInitials) => {
   const hashPart = hash.substring(0, 6).toUpperCase();
   return `CK-${userInitials}-${hashPart}`;
 };
-// Pre-computed SHA-256 hashes for demo credentials (never store plaintext)
-const _DEMO_HASHES = {
-  'demo@creative-kaygency.com': 'd3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791', // demo123
-  [CONFIG.ADMIN_EMAIL]: '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', // admin123
-};
-// Demo user data (passwords stored as hashes only)
-const DEMO_USERS = {
-  demo: { id: 'usr_demo', name: 'Demo User', email: 'demo@creative-kaygency.com', credits: 2450, plan: 'professional', streak: 12, badges: ['first-login','first-purchase','streak-7','subscriber'], referralCode: 'DEMO2024', referrals: 3, projectsCompleted: 8, joinDate: '2024-01-15' },
-  admin: { id: 'usr_admin', name: 'Kay (Admin)', email: CONFIG.ADMIN_EMAIL, credits: 99999, plan: 'enterprise', streak: 45, badges: BADGES.map(b => b.id), referralCode: 'ADMIN2024', referrals: 28, projectsCompleted: 0, joinDate: '2024-01-01', isAdmin: true },
-};
+// Demo data removed — auth now handled by Supabase
 
 const PROJECT_MILESTONES = {
   'pending': { label: 'Order Received', icon: '📥', step: 1 },
@@ -2023,67 +2017,7 @@ const PROJECT_MILESTONES = {
   'completed': { label: 'Delivered', icon: '🎉', step: 6 },
 };
 
-const DEMO_PROJECTS = [
-  {
-    id: 'prj_1', service: 'business-website', status: 'completed', date: '2024-03-01', paid: 'credits', amount: 1200,
-    progress: 100, assignedTo: 'Alex Morgan', userId: 'usr_demo', userName: 'Demo User', userEmail: 'demo@creative-kaygency.com',
-    brief: 'Modern 5-page business website with contact form, about page, services section, testimonials, and blog integration. Brand colours: navy and gold.',
-    deliverables: [
-      { name: 'Website Files (HTML/CSS/JS)', type: 'zip', size: '4.2 MB', date: '2024-03-20' },
-      { name: 'Style Guide PDF', type: 'pdf', size: '1.1 MB', date: '2024-03-20' },
-    ],
-    timeline: [
-      { date: '2024-03-01', event: 'Order placed', type: 'system' },
-      { date: '2024-03-02', event: 'Brief approved — assigned to Alex Morgan', type: 'admin' },
-      { date: '2024-03-05', event: 'Wireframes shared for review', type: 'admin' },
-      { date: '2024-03-07', event: 'Wireframes approved by client', type: 'user' },
-      { date: '2024-03-10', event: 'Homepage and About page design completed', type: 'admin' },
-      { date: '2024-03-14', event: 'All 5 pages built and functional', type: 'admin' },
-      { date: '2024-03-16', event: 'Revision requested: adjust hero section colours', type: 'user' },
-      { date: '2024-03-17', event: 'Revision completed', type: 'admin' },
-      { date: '2024-03-19', event: 'Quality check passed — ready for delivery', type: 'admin' },
-      { date: '2024-03-20', event: 'Files delivered. Project complete!', type: 'system' },
-    ],
-  },
-  {
-    id: 'prj_2', service: 'logo-design', status: 'completed', date: '2024-03-05', paid: 'credits', amount: 200,
-    progress: 100, assignedTo: 'Sophie Bennett', userId: 'usr_demo', userName: 'Demo User', userEmail: 'demo@creative-kaygency.com',
-    brief: 'Minimalist logo for a tech startup. Must work on dark and light backgrounds. Prefer geometric/clean style.',
-    deliverables: [
-      { name: 'Logo Pack (SVG, PNG, PDF)', type: 'zip', size: '2.8 MB', date: '2024-03-15' },
-    ],
-    timeline: [
-      { date: '2024-03-05', event: 'Order placed', type: 'system' },
-      { date: '2024-03-06', event: 'Brief reviewed — assigned to Sophie Bennett', type: 'admin' },
-      { date: '2024-03-09', event: '3 logo concepts presented', type: 'admin' },
-      { date: '2024-03-10', event: 'Concept B selected with minor tweaks requested', type: 'user' },
-      { date: '2024-03-12', event: 'Final logo refined and exported in all formats', type: 'admin' },
-      { date: '2024-03-15', event: 'Files delivered. Project complete!', type: 'system' },
-    ],
-  },
-  {
-    id: 'prj_3', service: 'onpage-seo', status: 'in-progress', date: '2024-03-12', paid: 'credits', amount: 635,
-    progress: 55, assignedTo: 'Ryan Clarke', userId: 'usr_demo', userName: 'Demo User', userEmail: 'demo@creative-kaygency.com',
-    brief: 'Full on-page SEO audit and optimisation for existing 12-page e-commerce site. Focus on product pages and category pages for better Google rankings.',
-    deliverables: [],
-    timeline: [
-      { date: '2024-03-12', event: 'Order placed', type: 'system' },
-      { date: '2024-03-13', event: 'Brief approved — assigned to Ryan Clarke', type: 'admin' },
-      { date: '2024-03-15', event: 'SEO audit completed. 47 issues found across 12 pages.', type: 'admin' },
-      { date: '2024-03-18', event: 'Meta titles and descriptions optimised for all pages', type: 'admin' },
-      { date: '2024-03-22', event: 'Heading structure, image alt tags, and schema markup updated', type: 'admin' },
-    ],
-  },
-  {
-    id: 'prj_4', service: 'social-pack-monthly', status: 'pending', date: '2024-03-18', paid: 'credits', amount: 500,
-    progress: 0, assignedTo: null, userId: 'usr_demo', userName: 'Demo User', userEmail: 'demo@creative-kaygency.com',
-    brief: 'Monthly social media content pack: 20 Instagram posts, 8 Stories, and 4 LinkedIn carousel designs. Brand kit provided.',
-    deliverables: [],
-    timeline: [
-      { date: '2024-03-18', event: 'Order placed — awaiting brief review', type: 'system' },
-    ],
-  },
-];
+// Demo projects removed — projects now loaded from Supabase
 
 // ============================================================================
 // CONTEXT PROVIDERS
@@ -2094,191 +2028,404 @@ const CurrencyContext = createContext();
 const NotificationContext = createContext();
 
 function AuthProvider({ children }) {
-  const SESSION_TTL = 24 * 60 * 60 * 1000; // 24h session expiry
   const MAX_LOGIN_ATTEMPTS = 5;
   const LOCKOUT_MS = 15 * 60 * 1000; // 15 min lockout
 
-  const _validateSession = (raw) => {
-    try {
-      const s = stripProto(JSON.parse(raw));
-      if (!s || !s._ts || Date.now() - s._ts > SESSION_TTL) { localStorage.removeItem('ck_user'); return null; }
-      // Strip dangerous fields that shouldn't be set client-side
-      const { isAdmin: _a, password: _p, _ts, ...safe } = s;
-      // Recompute admin from email only
-      return { ...safe, _ts: s._ts };
-    } catch { return null; }
-  };
-
-  const [user, setUser] = useState(() => {
-    try { const u = localStorage.getItem('ck_user'); return u ? _validateSession(u) : null; } catch { return null; }
-  });
-  const [projects, setProjects] = useState(() => safeParseJSON(localStorage.getItem('ck_projects'), DEMO_PROJECTS));
-  const [portfolioItems, setPortfolioItems] = useState(() => safeParseJSON(localStorage.getItem('ck_portfolio'), PORTFOLIO_ITEMS));
-  const [services, setServices] = useState(() => safeParseJSON(localStorage.getItem('ck_services'), SERVICES));
-  const [ads, setAds] = useState(() => safeParseJSON(localStorage.getItem('ck_ads'), DEMO_ADS));
-  const [blogPosts, setBlogPosts] = useState(() => safeParseJSON(localStorage.getItem('ck_blog'), BLOG_POSTS));
-  const [referralData, setReferralData] = useState(() => safeParseJSON(localStorage.getItem('ck_referrals'), {
-    code: user ? user.referralCode : '',
-    referrals: [
-      { id: 'REF001', name: 'John Smith', email: 'j***h@gmail.com', signedUp: '2026-03-15', firstPurchase: '2026-03-18', status: 'converted', creditsEarned: 25, verifiedAt: '2026-03-19', ipHash: 'a3f9...c2e1' },
-      { id: 'REF002', name: 'Amy Wilson', email: 'a***n@yahoo.com', signedUp: '2026-03-20', firstPurchase: null, status: 'signed-up', creditsEarned: 0, verifiedAt: null, ipHash: 'b7d2...e8f4' },
-      { id: 'REF003', name: 'Mark Davis', email: 'm***s@outlook.com', signedUp: '2026-04-01', firstPurchase: '2026-04-03', status: 'converted', creditsEarned: 25, verifiedAt: '2026-04-04', ipHash: 'c1e5...a9b3' },
-    ],
-    totalEarned: 54,
-    pendingReferrals: 1,
-    convertedReferrals: 2,
-    shareCredits: [
-      { id: 'SC001', platform: 'Twitter', page: '/blog/seo-strategies-2025', date: '2026-03-20', timestamp: 1710892800000, status: 'verified', creditsEarned: 2, verifiedAt: 1711065600000, autoVerifyAt: 1711065600000, userAgent: 'Mozilla/5.0' },
-      { id: 'SC002', platform: 'LinkedIn', page: '/services', date: '2026-03-22', timestamp: 1711065600000, status: 'verified', creditsEarned: 2, verifiedAt: 1711238400000, autoVerifyAt: 1711238400000, userAgent: 'Mozilla/5.0' },
-    ]
-  }));
+  // ── State ──
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [portfolioItems, setPortfolioItems] = useState(PORTFOLIO_ITEMS); // fallback until DB loads
+  const [services, setServices] = useState(SERVICES); // fallback until DB loads
+  const [ads, setAds] = useState([]);
+  const [blogPosts, setBlogPosts] = useState(BLOG_POSTS); // fallback until DB loads
+  const [referralData, setReferralData] = useState({ referrals: [], shareCredits: [], totalEarned: 0, pendingReferrals: 0, convertedReferrals: 0 });
   const loginAttemptsRef = useRef({ count: 0, lockedUntil: 0 });
 
+  // ── Load public data from Supabase on mount (no auth required) ──
   useEffect(() => {
-    if (user) {
-      // Never persist passwords or admin flags to localStorage
-      const { password: _p, isAdmin: _a, ...safeUser } = user;
-      safeSetStorage('ck_user', { ...safeUser, _ts: user._ts || Date.now() });
-    } else localStorage.removeItem('ck_user');
-  }, [user]);
-  useEffect(() => { safeSetStorage('ck_projects', projects); }, [projects]);
-  useEffect(() => { safeSetStorage('ck_portfolio', portfolioItems); }, [portfolioItems]);
-  useEffect(() => { safeSetStorage('ck_services', services); }, [services]);
-  useEffect(() => { safeSetStorage('ck_ads', ads); }, [ads]);
-  useEffect(() => { safeSetStorage('ck_blog', blogPosts); }, [blogPosts]);
-  useEffect(() => { safeSetStorage('ck_referrals', referralData); }, [referralData]);
+    const loadPublicData = async () => {
+      try {
+        const [svcRes, portRes, blogRes, settingsRes] = await Promise.all([
+          supabaseClient.from('services').select('*').eq('is_active', true).order('sort_order'),
+          supabaseClient.from('portfolio_items').select('*').order('sort_order'),
+          supabaseClient.from('blog_posts').select('*').eq('status', 'published').order('date', { ascending: false }),
+          supabaseClient.from('settings').select('*'),
+        ]);
+        if (svcRes.data && svcRes.data.length > 0) {
+          // Map DB column names to JS camelCase used by the app
+          setServices(svcRes.data.map(s => ({
+            id: s.id, name: s.name, category: s.category, icon: s.icon, desc: s.description,
+            longDesc: s.long_description, creditMin: s.credit_min, creditMax: s.credit_max,
+            turnaround: s.turnaround, features: s.features || [], formFields: s.form_fields || []
+          })));
+        }
+        if (portRes.data && portRes.data.length > 0) setPortfolioItems(portRes.data);
+        if (blogRes.data && blogRes.data.length > 0) {
+          setBlogPosts(blogRes.data.map(b => ({
+            slug: b.slug, title: b.title, category: b.category, excerpt: b.excerpt,
+            date: b.date, readTime: b.read_time, author: b.author, content: b.content,
+            image: b.image, metaTitle: b.meta_title, metaDescription: b.meta_description,
+            metaKeywords: b.meta_keywords, canonicalUrl: b.canonical_url, ogImage: b.og_image,
+            status: b.status, featured: b.featured, tags: b.tags || []
+          })));
+        }
+        if (settingsRes.data) {
+          const ann = settingsRes.data.find(s => s.key === 'announcement');
+          if (ann && ann.value) setAnnouncementText(ann.value);
+        }
+      } catch (err) { console.warn('Failed to load public data from Supabase, using defaults:', err); }
+    };
+    loadPublicData();
+  }, []);
 
+  // ── Supabase Auth state listener ──
+  useEffect(() => {
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        try {
+          const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
+          if (profile) {
+            setUser(profile);
+            // Load user-specific data
+            const [projRes, refsRes, sharesRes, adsRes] = await Promise.all([
+              supabaseClient.from('projects').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false }),
+              supabaseClient.from('referrals').select('*').eq('referrer_id', session.user.id),
+              supabaseClient.from('share_credits').select('*').eq('user_id', session.user.id),
+              supabaseClient.from('ads').select('*'),
+            ]);
+            if (projRes.data) setProjects(projRes.data.map(p => ({
+              id: p.id, service: p.service, status: p.status, date: p.date, paid: p.paid,
+              amount: p.amount, progress: p.progress, assignedTo: p.assigned_to, userId: p.user_id,
+              userName: p.user_name, userEmail: p.user_email, brief: p.brief,
+              deliverables: p.deliverables || [], timeline: p.timeline || []
+            })));
+            const refs = refsRes.data || [];
+            const shares = sharesRes.data || [];
+            setReferralData({
+              referrals: refs.map(r => ({
+                id: r.id, name: r.referred_name, email: r.referred_email, signedUp: r.signed_up,
+                firstPurchase: r.first_purchase, status: r.status, creditsEarned: r.credits_earned,
+                verifiedAt: r.verified_at, ipHash: r.ip_hash
+              })),
+              shareCredits: shares.map(s => ({
+                id: s.id, platform: s.platform, page: s.page, date: s.shared_date,
+                timestamp: s.timestamp, status: s.status, creditsEarned: s.credits_earned,
+                verifiedAt: s.verified_at, autoVerifyAt: s.auto_verify_at, userAgent: s.user_agent
+              })),
+              totalEarned: refs.reduce((sum, r) => sum + (r.credits_earned || 0), 0) + shares.filter(s => s.status === 'verified').reduce((sum, s) => sum + (s.credits_earned || 0), 0),
+              pendingReferrals: refs.filter(r => r.status === 'signed-up').length,
+              convertedReferrals: refs.filter(r => r.status === 'converted').length,
+            });
+            if (adsRes.data) setAds(adsRes.data);
+            // If admin, load ALL projects
+            if (profile.is_admin) {
+              const { data: allProjects } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
+              if (allProjects) setProjects(allProjects.map(p => ({
+                id: p.id, service: p.service, status: p.status, date: p.date, paid: p.paid,
+                amount: p.amount, progress: p.progress, assignedTo: p.assigned_to, userId: p.user_id,
+                userName: p.user_name, userEmail: p.user_email, brief: p.brief,
+                deliverables: p.deliverables || [], timeline: p.timeline || []
+              })));
+            }
+          }
+        } catch (err) { console.error('Error loading user data:', err); }
+      } else {
+        setUser(null);
+        setProjects([]);
+        setReferralData({ referrals: [], shareCredits: [], totalEarned: 0, pendingReferrals: 0, convertedReferrals: 0 });
+        setAds([]);
+      }
+      setAuthLoading(false);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // ── Auth functions ──
   const login = async (email, password) => {
-    // Rate limiting
     const now = Date.now();
     const la = loginAttemptsRef.current;
     if (la.lockedUntil > now) {
       const mins = Math.ceil((la.lockedUntil - now) / 60000);
       return { success: false, error: `Too many attempts. Try again in ${mins} minute${mins > 1 ? 's' : ''}.` };
     }
-    // Hash the input password for comparison
-    const inputHash = await _secHash(password);
-    const sanitisedEmail = email.toLowerCase().trim();
-    const demoKey = Object.keys(DEMO_USERS).find(k => DEMO_USERS[k].email.toLowerCase() === sanitisedEmail);
-    const storedHash = _DEMO_HASHES[sanitisedEmail];
-    if (demoKey && storedHash && _secCompare(inputHash, storedHash)) {
-      la.count = 0;
-      const { password: _p, ...safeUser } = DEMO_USERS[demoKey];
-      const sessionUser = { ...safeUser, _ts: Date.now() };
-      setUser(sessionUser);
-      return { success: true, user: sessionUser };
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email: email.toLowerCase().trim(), password });
+    if (error) {
+      la.count++;
+      if (la.count >= MAX_LOGIN_ATTEMPTS) { la.lockedUntil = now + LOCKOUT_MS; la.count = 0; }
+      return { success: false, error: error.message };
     }
-    // Track failed attempts
-    la.count++;
-    if (la.count >= MAX_LOGIN_ATTEMPTS) { la.lockedUntil = now + LOCKOUT_MS; la.count = 0; }
-    return { success: false, error: 'Invalid email or password' };
+    la.count = 0;
+    // Profile is loaded via onAuthStateChange listener
+    return { success: true };
   };
-  const register = (name, email, password, referralCode) => {
-    // Validate inputs
+
+  const register = async (name, email, password, referralCode) => {
     const sanitisedName = name.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').trim().slice(0, 100);
     const sanitisedEmail = email.toLowerCase().trim().slice(0, 254);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitisedEmail)) return { success: false, error: 'Invalid email address' };
     if (sanitisedName.length < 2) return { success: false, error: 'Name must be at least 2 characters' };
     if (password.length < 8) return { success: false, error: 'Password must be at least 8 characters' };
     if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) return { success: false, error: 'Password must include uppercase, lowercase, and a number' };
-    // Validate referral code against known codes only
-    const validReferrals = Object.values(DEMO_USERS).map(u => u.referralCode);
-    const refValid = referralCode && validReferrals.includes(referralCode.trim().toUpperCase());
-    const newUser = { id: 'usr_' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36), name: sanitisedName, email: sanitisedEmail, credits: refValid ? 15 : 0, plan: null, streak: 0, badges: ['first-login'], referralCode: 'REF' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase(), referrals: 0, projectsCompleted: 0, joinDate: new Date().toISOString().split('T')[0], _ts: Date.now() };
-    setUser(newUser);
-    return { success: true, user: newUser };
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: sanitisedEmail, password,
+      options: { data: { name: sanitisedName } }
+    });
+    if (error) return { success: false, error: error.message };
+
+    // Handle referral bonus if valid code
+    if (referralCode) {
+      const trimmedCode = referralCode.trim().toUpperCase();
+      const { data: referrer } = await supabaseClient.from('profiles').select('id').eq('referral_code', trimmedCode).single();
+      if (referrer && data.user) {
+        await supabaseClient.from('profiles').update({ credits: 15 }).eq('id', data.user.id);
+        // Record the referral
+        await supabaseClient.from('referrals').insert({
+          id: 'REF' + Date.now(), referrer_id: referrer.id, referred_name: sanitisedName,
+          referred_email: sanitisedEmail, signed_up: new Date().toISOString().split('T')[0], status: 'signed-up'
+        });
+      }
+    }
+    return { success: true };
   };
-  const logout = () => { setUser(null); setProjects(DEMO_PROJECTS); localStorage.removeItem('ck_lastClaim'); };
-  const updateCredits = (amount) => {
+
+  const logout = async () => {
+    await supabaseClient.auth.signOut();
+    setUser(null);
+    setProjects([]);
+    setAds([]);
+    setReferralData({ referrals: [], shareCredits: [], totalEarned: 0, pendingReferrals: 0, convertedReferrals: 0 });
+  };
+
+  // ── Data mutation functions (write to Supabase) ──
+  const updateCredits = async (amount) => {
     const safeAmount = parseInt(amount, 10);
-    if (isNaN(safeAmount)) return;
-    setUser(u => u ? { ...u, credits: Math.max(0, Math.min(u.credits + safeAmount, 999999)) } : null);
+    if (isNaN(safeAmount) || !user) return;
+    const newCredits = Math.max(0, Math.min(user.credits + safeAmount, 999999));
+    await supabaseClient.from('profiles').update({ credits: newCredits }).eq('id', user.id);
+    setUser(u => u ? { ...u, credits: newCredits } : null);
   };
-  const claimDailyLogin = () => {
-    const today = new Date().toDateString();
-    const lastClaim = localStorage.getItem('ck_lastClaim');
-    if (lastClaim === today) return false;
-    localStorage.setItem('ck_lastClaim', today);
-    updateCredits(2);
-    setUser(u => u ? { ...u, streak: u.streak + 1 } : null);
+
+  const claimDailyLogin = async () => {
+    if (!user) return false;
+    const today = new Date().toISOString().split('T')[0];
+    if (user.last_claim_date === today) return false;
+    const newCredits = Math.max(0, Math.min(user.credits + 2, 999999));
+    const newStreak = (user.streak || 0) + 1;
+    await supabaseClient.from('profiles').update({ credits: newCredits, streak: newStreak, last_claim_date: today }).eq('id', user.id);
+    setUser(u => u ? { ...u, credits: newCredits, streak: newStreak, last_claim_date: today } : null);
     return true;
   };
-  const addProject = (project) => setProjects(p => [project, ...p]);
-  const updateProject = (projectId, updates) => setProjects(p => p.map(prj => prj.id === projectId ? { ...prj, ...updates } : prj));
-  const addProjectUpdate = (projectId, event, type) => {
-    const now = new Date().toISOString().split('T')[0];
-    setProjects(p => p.map(prj => prj.id === projectId ? { ...prj, timeline: [...(prj.timeline || []), { date: now, event, type: type || 'admin' }] } : prj));
-  };
-  const addService = (svc) => setServices(s => [...s, svc]);
-  const updateService = (id, updates) => setServices(s => s.map(x => x.id === id ? { ...x, ...updates } : x));
-  const deleteService = (id) => setServices(s => s.filter(x => x.id !== id));
-  const reorderServices = (fromIdx, toIdx) => setServices(s => { const arr = [...s]; const [item] = arr.splice(fromIdx, 1); arr.splice(toIdx, 0, item); return arr; });
-  const resetServices = () => { setServices(SERVICES); localStorage.removeItem('ck_services'); };
-  const addAd = (ad) => setAds(a => [...a, { ...ad, id: 'ad_' + Date.now() }]);
-  const updateAd = (id, updates) => setAds(a => a.map(x => x.id === id ? { ...x, ...updates } : x));
-  const deleteAd = (id) => setAds(a => a.filter(x => x.id !== id));
-  const activeAds = ads.filter(a => a.status === 'active');
-  const addPortfolioItem = (item) => setPortfolioItems(p => [...p, { ...item, id: Math.max(0, ...p.map(x => x.id)) + 1 }]);
-  const updatePortfolioItem = (id, updates) => setPortfolioItems(p => p.map(x => x.id === id ? { ...x, ...updates } : x));
-  const deletePortfolioItem = (id) => setPortfolioItems(p => p.filter(x => x.id !== id));
-  const reorderPortfolio = (fromIdx, toIdx) => setPortfolioItems(p => { const arr = [...p]; const [item] = arr.splice(fromIdx, 1); arr.splice(toIdx, 0, item); return arr; });
-  const addBlogPost = (post) => setBlogPosts(b => [...b, post]);
-  const updateBlogPost = (slug, updates) => setBlogPosts(b => b.map(p => p.slug === slug ? { ...p, ...updates } : p));
-  const deleteBlogPost = (slug) => setBlogPosts(b => b.filter(p => p.slug !== slug));
-  const resetBlog = () => { setBlogPosts(BLOG_POSTS); localStorage.removeItem('ck_blog'); };
-  // ── Referral & Share Credit System (hardened) ──
-  // Share credits: NOT awarded on click. Shares are logged as "pending" and
-  // require admin approval OR a 48-hour verification window before credits release.
-  // This prevents click-farming — users must actually share, and we verify engagement.
-  const SHARE_CREDIT_AMOUNT = 2; // reduced from 5 to 2
-  const SHARE_DAILY_CAP = 5;    // max 5 share credits per day (= 10 credits max)
-  const SHARE_COOLDOWN_MS = 300000; // 5-minute cooldown between shares on same platform
-  const REFERRAL_MONTHLY_CAP = 10;
-  const REFERRAL_CREDIT_AMOUNT = 25; // both parties get 25 (reduced from 50)
 
-  const addShareCredit = (platform, page) => {
+  const addProject = async (project) => {
+    const dbProject = {
+      id: project.id, service: project.service, status: project.status || 'pending',
+      date: project.date || new Date().toISOString().split('T')[0], paid: project.paid || 'credits',
+      amount: project.amount || 0, progress: project.progress || 0, assigned_to: project.assignedTo || null,
+      user_id: user.id, user_name: user.name, user_email: user.email, brief: project.brief || '',
+      deliverables: project.deliverables || [], timeline: project.timeline || []
+    };
+    const { data } = await supabaseClient.from('projects').insert(dbProject).select().single();
+    if (data) setProjects(p => [{ ...project, id: data.id }, ...p]);
+  };
+
+  const updateProject = async (projectId, updates) => {
+    const dbUpdates = {};
+    if (updates.status !== undefined) dbUpdates.status = updates.status;
+    if (updates.progress !== undefined) dbUpdates.progress = updates.progress;
+    if (updates.assignedTo !== undefined) dbUpdates.assigned_to = updates.assignedTo;
+    if (updates.brief !== undefined) dbUpdates.brief = updates.brief;
+    if (updates.deliverables !== undefined) dbUpdates.deliverables = updates.deliverables;
+    if (updates.timeline !== undefined) dbUpdates.timeline = updates.timeline;
+    if (updates.paid !== undefined) dbUpdates.paid = updates.paid;
+    if (updates.amount !== undefined) dbUpdates.amount = updates.amount;
+    dbUpdates.updated_at = new Date().toISOString();
+    await supabaseClient.from('projects').update(dbUpdates).eq('id', projectId);
+    setProjects(p => p.map(prj => prj.id === projectId ? { ...prj, ...updates } : prj));
+  };
+
+  const addProjectUpdate = async (projectId, event, type) => {
+    const now = new Date().toISOString().split('T')[0];
+    const project = projects.find(p => p.id === projectId);
+    if (!project) return;
+    const newTimeline = [...(project.timeline || []), { date: now, event, type: type || 'admin' }];
+    await supabaseClient.from('projects').update({ timeline: newTimeline, updated_at: new Date().toISOString() }).eq('id', projectId);
+    setProjects(p => p.map(prj => prj.id === projectId ? { ...prj, timeline: newTimeline } : prj));
+  };
+
+  const addService = async (svc) => {
+    const dbSvc = {
+      id: svc.id, name: svc.name, category: svc.category, icon: svc.icon,
+      description: svc.desc, long_description: svc.longDesc, credit_min: svc.creditMin,
+      credit_max: svc.creditMax, turnaround: svc.turnaround, features: svc.features || [],
+      form_fields: svc.formFields || [], sort_order: services.length
+    };
+    await supabaseClient.from('services').insert(dbSvc);
+    setServices(s => [...s, svc]);
+  };
+  const updateService = async (id, updates) => {
+    const dbUpdates = {};
+    if (updates.name !== undefined) dbUpdates.name = updates.name;
+    if (updates.category !== undefined) dbUpdates.category = updates.category;
+    if (updates.icon !== undefined) dbUpdates.icon = updates.icon;
+    if (updates.desc !== undefined) dbUpdates.description = updates.desc;
+    if (updates.longDesc !== undefined) dbUpdates.long_description = updates.longDesc;
+    if (updates.creditMin !== undefined) dbUpdates.credit_min = updates.creditMin;
+    if (updates.creditMax !== undefined) dbUpdates.credit_max = updates.creditMax;
+    if (updates.turnaround !== undefined) dbUpdates.turnaround = updates.turnaround;
+    if (updates.features !== undefined) dbUpdates.features = updates.features;
+    if (updates.formFields !== undefined) dbUpdates.form_fields = updates.formFields;
+    dbUpdates.updated_at = new Date().toISOString();
+    await supabaseClient.from('services').update(dbUpdates).eq('id', id);
+    setServices(s => s.map(x => x.id === id ? { ...x, ...updates } : x));
+  };
+  const deleteService = async (id) => {
+    await supabaseClient.from('services').delete().eq('id', id);
+    setServices(s => s.filter(x => x.id !== id));
+  };
+  const reorderServices = async (fromIdx, toIdx) => {
+    setServices(s => {
+      const arr = [...s]; const [item] = arr.splice(fromIdx, 1); arr.splice(toIdx, 0, item);
+      // Update sort_order in DB
+      arr.forEach((svc, i) => supabaseClient.from('services').update({ sort_order: i }).eq('id', svc.id));
+      return arr;
+    });
+  };
+  const resetServices = async () => {
+    // Delete all and re-insert defaults
+    await supabaseClient.from('services').delete().neq('id', '');
+    const inserts = SERVICES.map((svc, i) => ({
+      id: svc.id, name: svc.name, category: svc.category, icon: svc.icon,
+      description: svc.desc, long_description: svc.longDesc, credit_min: svc.creditMin,
+      credit_max: svc.creditMax, turnaround: svc.turnaround, features: svc.features || [],
+      form_fields: svc.formFields || [], sort_order: i
+    }));
+    await supabaseClient.from('services').insert(inserts);
+    setServices(SERVICES);
+  };
+
+  const addAd = async (ad) => {
+    const newAd = { ...ad, id: 'ad_' + Date.now() };
+    await supabaseClient.from('ads').insert({ ...newAd, user_id: user?.id });
+    setAds(a => [...a, newAd]);
+  };
+  const updateAd = async (id, updates) => {
+    await supabaseClient.from('ads').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id);
+    setAds(a => a.map(x => x.id === id ? { ...x, ...updates } : x));
+  };
+  const deleteAd = async (id) => {
+    await supabaseClient.from('ads').delete().eq('id', id);
+    setAds(a => a.filter(x => x.id !== id));
+  };
+  const activeAds = ads.filter(a => a.status === 'active');
+
+  const addPortfolioItem = async (item) => {
+    const newId = Math.max(0, ...portfolioItems.map(x => x.id || 0)) + 1;
+    const dbItem = { title: item.title, category: item.category, gradient: item.gradient, tags: item.tags || [], sort_order: portfolioItems.length };
+    const { data } = await supabaseClient.from('portfolio_items').insert(dbItem).select().single();
+    setPortfolioItems(p => [...p, { ...item, id: data ? data.id : newId }]);
+  };
+  const updatePortfolioItem = async (id, updates) => {
+    await supabaseClient.from('portfolio_items').update(updates).eq('id', id);
+    setPortfolioItems(p => p.map(x => x.id === id ? { ...x, ...updates } : x));
+  };
+  const deletePortfolioItem = async (id) => {
+    await supabaseClient.from('portfolio_items').delete().eq('id', id);
+    setPortfolioItems(p => p.filter(x => x.id !== id));
+  };
+  const reorderPortfolio = async (fromIdx, toIdx) => {
+    setPortfolioItems(p => {
+      const arr = [...p]; const [item] = arr.splice(fromIdx, 1); arr.splice(toIdx, 0, item);
+      arr.forEach((pi, i) => supabaseClient.from('portfolio_items').update({ sort_order: i }).eq('id', pi.id));
+      return arr;
+    });
+  };
+
+  const addBlogPost = async (post) => {
+    const dbPost = {
+      slug: post.slug, title: post.title, category: post.category, excerpt: post.excerpt,
+      date: post.date, read_time: post.readTime, author: post.author || 'Kay', content: post.content,
+      image: post.image, meta_title: post.metaTitle, meta_description: post.metaDescription,
+      meta_keywords: post.metaKeywords, canonical_url: post.canonicalUrl, og_image: post.ogImage,
+      status: post.status || 'published', featured: post.featured || false, tags: post.tags || []
+    };
+    await supabaseClient.from('blog_posts').insert(dbPost);
+    setBlogPosts(b => [...b, post]);
+  };
+  const updateBlogPost = async (slug, updates) => {
+    const dbUpdates = {};
+    if (updates.title !== undefined) dbUpdates.title = updates.title;
+    if (updates.category !== undefined) dbUpdates.category = updates.category;
+    if (updates.excerpt !== undefined) dbUpdates.excerpt = updates.excerpt;
+    if (updates.content !== undefined) dbUpdates.content = updates.content;
+    if (updates.readTime !== undefined) dbUpdates.read_time = updates.readTime;
+    if (updates.image !== undefined) dbUpdates.image = updates.image;
+    if (updates.metaTitle !== undefined) dbUpdates.meta_title = updates.metaTitle;
+    if (updates.metaDescription !== undefined) dbUpdates.meta_description = updates.metaDescription;
+    if (updates.status !== undefined) dbUpdates.status = updates.status;
+    if (updates.featured !== undefined) dbUpdates.featured = updates.featured;
+    if (updates.tags !== undefined) dbUpdates.tags = updates.tags;
+    dbUpdates.updated_at = new Date().toISOString();
+    await supabaseClient.from('blog_posts').update(dbUpdates).eq('slug', slug);
+    setBlogPosts(b => b.map(p => p.slug === slug ? { ...p, ...updates } : p));
+  };
+  const deleteBlogPost = async (slug) => {
+    await supabaseClient.from('blog_posts').delete().eq('slug', slug);
+    setBlogPosts(b => b.filter(p => p.slug !== slug));
+  };
+  const resetBlog = async () => {
+    await supabaseClient.from('blog_posts').delete().neq('slug', '');
+    const inserts = BLOG_POSTS.map(post => ({
+      slug: post.slug, title: post.title, category: post.category, excerpt: post.excerpt,
+      date: post.date, read_time: post.readTime, author: post.author || 'Kay', content: post.content,
+      image: post.image, meta_title: post.metaTitle, meta_description: post.metaDescription,
+      meta_keywords: post.metaKeywords, canonical_url: post.canonicalUrl, og_image: post.ogImage,
+      status: post.status || 'published', featured: post.featured || false, tags: post.tags || []
+    }));
+    await supabaseClient.from('blog_posts').insert(inserts);
+    setBlogPosts(BLOG_POSTS);
+  };
+
+  // ── Referral & Share Credit System (hardened) ──
+  const SHARE_CREDIT_AMOUNT = 2;
+  const SHARE_DAILY_CAP = 5;
+  const SHARE_COOLDOWN_MS = 300000;
+  const REFERRAL_MONTHLY_CAP = 10;
+  const REFERRAL_CREDIT_AMOUNT = 25;
+
+  const addShareCredit = async (platform, page) => {
     if (!user) return { success: false, reason: 'login' };
     const now = Date.now();
     const today = new Date().toISOString().split('T')[0];
 
-    // Rate limit: 5-minute cooldown per platform
     const recentSame = referralData.shareCredits.find(
       sc => sc.platform === platform && (now - new Date(sc.timestamp || sc.date).getTime()) < SHARE_COOLDOWN_MS
     );
     if (recentSame) return { success: false, reason: 'cooldown' };
 
-    // Daily cap: max SHARE_DAILY_CAP shares per day
     const todayShares = referralData.shareCredits.filter(sc => sc.date === today);
     if (todayShares.length >= SHARE_DAILY_CAP) return { success: false, reason: 'daily_cap' };
 
-    // Unique per page+platform per day (1 share per platform per page per day)
     const alreadyShared = todayShares.find(sc => sc.platform === platform && sc.page === page);
     if (alreadyShared) return { success: false, reason: 'duplicate' };
 
-    // Log share as PENDING — credits not awarded yet
     const shareId = 'SH' + now + '_' + Math.random().toString(36).substr(2, 4);
     const newShare = {
-      id: shareId,
-      platform,
-      page,
-      date: today,
-      timestamp: now,
-      status: 'pending',     // pending → verified → credited  OR  pending → rejected
-      creditsEarned: 0,      // 0 until verified
-      verifiedAt: null,
-      userAgent: navigator.userAgent.substr(0, 80),
-      // Auto-verify after 48 hours if no admin action (simulated for demo)
-      autoVerifyAt: now + (48 * 60 * 60 * 1000)
+      id: shareId, user_id: user.id, platform, page, shared_date: today,
+      timestamp: now, status: 'pending', credits_earned: 0, verified_at: null,
+      auto_verify_at: now + (48 * 60 * 60 * 1000), user_agent: navigator.userAgent.substr(0, 80)
     };
+    await supabaseClient.from('share_credits').insert(newShare);
     setReferralData(r => ({
       ...r,
-      shareCredits: [...r.shareCredits, newShare]
+      shareCredits: [...r.shareCredits, { id: shareId, platform, page, date: today, timestamp: now, status: 'pending', creditsEarned: 0, verifiedAt: null, autoVerifyAt: newShare.auto_verify_at, userAgent: newShare.user_agent }]
     }));
     return { success: true, reason: 'pending', shareId };
   };
 
-  // Admin/system function to verify a share and release credits
-  const verifyShareCredit = (shareId) => {
+  const verifyShareCredit = async (shareId) => {
+    await supabaseClient.from('share_credits').update({ status: 'verified', credits_earned: SHARE_CREDIT_AMOUNT, verified_at: Date.now() }).eq('id', shareId);
     setReferralData(r => {
       const idx = r.shareCredits.findIndex(sc => sc.id === shareId);
       if (idx === -1 || r.shareCredits[idx].status !== 'pending') return r;
@@ -2286,11 +2433,11 @@ function AuthProvider({ children }) {
       updated[idx] = { ...updated[idx], status: 'verified', creditsEarned: SHARE_CREDIT_AMOUNT, verifiedAt: Date.now() };
       return { ...r, shareCredits: updated, totalEarned: r.totalEarned + SHARE_CREDIT_AMOUNT };
     });
-    updateCredits(SHARE_CREDIT_AMOUNT);
+    await updateCredits(SHARE_CREDIT_AMOUNT);
   };
 
-  // Admin function to reject a share
-  const rejectShareCredit = (shareId) => {
+  const rejectShareCredit = async (shareId) => {
+    await supabaseClient.from('share_credits').update({ status: 'rejected', credits_earned: 0 }).eq('id', shareId);
     setReferralData(r => {
       const updated = r.shareCredits.map(sc =>
         sc.id === shareId && sc.status === 'pending' ? { ...sc, status: 'rejected', creditsEarned: 0 } : sc
@@ -2299,8 +2446,6 @@ function AuthProvider({ children }) {
     });
   };
 
-  // Auto-verify is DISABLED by default — admin must manually approve shares.
-  // To enable auto-verify after 48h, set this to true in admin settings.
   const [autoVerifyEnabled, setAutoVerifyEnabled] = useState(false);
   useEffect(() => {
     if (!autoVerifyEnabled) return;
@@ -2313,16 +2458,19 @@ function AuthProvider({ children }) {
     }
   }, [referralData.shareCredits, autoVerifyEnabled]);
 
-  // Referral verification: credits only on first purchase, with anti-fraud
-  const verifyReferral = (referralId) => {
-    setReferralData(r => {
-      // Check monthly cap
-      const thisMonth = new Date().toISOString().substr(0, 7);
-      const monthlyConverted = r.referrals.filter(ref =>
-        ref.status === 'converted' && ref.firstPurchase && ref.firstPurchase.startsWith(thisMonth)
-      ).length;
-      if (monthlyConverted >= REFERRAL_MONTHLY_CAP) return r;
+  const verifyReferral = async (referralId) => {
+    const thisMonth = new Date().toISOString().substr(0, 7);
+    const monthlyConverted = referralData.referrals.filter(ref =>
+      ref.status === 'converted' && ref.firstPurchase && ref.firstPurchase.startsWith(thisMonth)
+    ).length;
+    if (monthlyConverted >= REFERRAL_MONTHLY_CAP) return;
 
+    await supabaseClient.from('referrals').update({
+      status: 'converted', first_purchase: new Date().toISOString().split('T')[0],
+      credits_earned: REFERRAL_CREDIT_AMOUNT
+    }).eq('id', referralId);
+
+    setReferralData(r => {
       const updated = r.referrals.map(ref =>
         ref.id === referralId && ref.status === 'signed-up'
           ? { ...ref, status: 'converted', firstPurchase: new Date().toISOString().split('T')[0], creditsEarned: REFERRAL_CREDIT_AMOUNT }
@@ -2333,23 +2481,33 @@ function AuthProvider({ children }) {
       const newTotal = updated.reduce((s, ref) => s + ref.creditsEarned, 0) + r.shareCredits.filter(sc => sc.status === 'verified').reduce((s, sc) => s + sc.creditsEarned, 0);
       return { ...r, referrals: updated, convertedReferrals: newConverted, pendingReferrals: newPending, totalEarned: newTotal };
     });
-    updateCredits(REFERRAL_CREDIT_AMOUNT);
+    await updateCredits(REFERRAL_CREDIT_AMOUNT);
   };
-  // Admin check: ONLY from email match, never from localStorage flag
-  const isAdmin = user?.email?.toLowerCase() === CONFIG.ADMIN_EMAIL.toLowerCase();
 
-  // Announcement bar text (persisted to localStorage)
-  const [announcementText, setAnnouncementText] = useState(() => {
-    try { return localStorage.getItem('ck_announcement') || '🔒 LIMITED LAUNCH PRICING — Save Up To 20% With Credits — Start Free Today'; } catch(e) { return '🔒 LIMITED LAUNCH PRICING — Save Up To 20% With Credits — Start Free Today'; }
-  });
-  const updateAnnouncement = (text) => { setAnnouncementText(text); try { localStorage.setItem('ck_announcement', text); } catch(e) {} };
+  // Admin check: from database is_admin flag
+  const isAdmin = user?.is_admin === true;
 
-  return React.createElement(AuthContext.Provider, { value: { user, login, register, logout, updateCredits, claimDailyLogin, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
+  // Announcement bar text
+  const [announcementText, setAnnouncementText] = useState('🔒 LIMITED LAUNCH PRICING — Save Up To 20% With Credits — Start Free Today');
+  const updateAnnouncement = async (text) => {
+    setAnnouncementText(text);
+    await supabaseClient.from('settings').upsert({ key: 'announcement', value: text, updated_at: new Date().toISOString() });
+  };
+
+  return React.createElement(AuthContext.Provider, { value: { user, authLoading, login, register, logout, updateCredits, claimDailyLogin, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
 }
 
 function CurrencyProvider({ children }) {
-  const [currency, setCurrency] = useState(() => localStorage.getItem('ck_currency') || 'GBP');
-  useEffect(() => { localStorage.setItem('ck_currency', currency); }, [currency]);
+  const { user } = useContext(AuthContext);
+  const [currency, setCurrencyState] = useState('GBP');
+  // Sync currency from user profile
+  useEffect(() => { if (user?.currency) setCurrencyState(user.currency); }, [user]);
+  const setCurrency = async (newCurrency) => {
+    setCurrencyState(newCurrency);
+    if (user) {
+      await supabaseClient.from('profiles').update({ currency: newCurrency }).eq('id', user.id);
+    }
+  };
   const formatPrice = useCallback((gbpAmount, showSymbol = true) => {
     const c = CONFIG.CURRENCIES[currency];
     const converted = Math.round(gbpAmount * c.rate);
@@ -2447,155 +2605,106 @@ const TICKET_PRIORITIES = [
   { id: 'critical', label: 'Critical', color: '#EF4444', sla: '2 hours' },
 ];
 
-const SAMPLE_TICKETS = [
-  {
-    id: 'TK-1001', subject: 'Payment declined when purchasing credits', category: 'billing', priority: 'high', status: 'in-progress',
-    createdAt: '2026-03-25T10:32:00Z', updatedAt: '2026-03-26T14:15:00Z', userId: 'usr_demo', userName: 'Demo User', userEmail: 'demo@creative-kaygency.com',
-    messages: [
-      { id: 'm1', sender: 'user', name: 'Demo User', avatar: '#3B82F6', time: '2026-03-25T10:32:00Z', body: 'Hi, I tried to purchase 500 credits using my Visa card but the payment was declined. I have sufficient funds and the card works on other sites. Can you help?' },
-      { id: 'm2', sender: 'admin', name: 'Kay (Admin)', avatar: '#7C3AED', time: '2026-03-25T11:45:00Z', body: 'Hi there! Sorry to hear about the payment issue. I have checked our payment gateway logs and it seems the transaction was flagged by our fraud prevention system. I have whitelisted your account now. Could you please try again and let me know if it works?' },
-      { id: 'm3', sender: 'system', time: '2026-03-25T11:45:00Z', body: 'Email notification sent to demo@creative-kaygency.com' },
-      { id: 'm4', sender: 'user', name: 'Demo User', avatar: '#3B82F6', time: '2026-03-26T14:15:00Z', body: 'Thanks Kay! I will try again now and report back.' },
-    ],
-    emails: [
-      { time: '2026-03-25T10:32:00Z', type: 'confirmation', text: 'Ticket TK-1001 created — confirmation sent to demo@creative-kaygency.com' },
-      { time: '2026-03-25T11:45:00Z', type: 'reply', text: 'Admin reply notification sent to demo@creative-kaygency.com' },
-    ]
-  },
-  {
-    id: 'TK-1002', subject: 'Logo design project is missing final SVG files', category: 'project', priority: 'medium', status: 'awaiting-reply',
-    createdAt: '2026-03-24T16:10:00Z', updatedAt: '2026-03-25T09:00:00Z', userId: 'usr_sarah', userName: 'Sarah Mitchell', userEmail: 'sarah@techstart.io',
-    messages: [
-      { id: 'm1', sender: 'user', name: 'Sarah Mitchell', avatar: '#EC4899', time: '2026-03-24T16:10:00Z', body: 'Hi, I received my logo design files but the SVG versions are missing from the download. The brief specified SVG, PNG, and PDF formats. Could you send me the SVGs please?' },
-      { id: 'm2', sender: 'admin', name: 'Kay (Admin)', avatar: '#7C3AED', time: '2026-03-25T09:00:00Z', body: 'Hi Sarah! Apologies for the oversight. I have asked the design team to export the SVG versions and they will be uploaded to your project dashboard within the next hour. I will update this ticket once they are ready.' },
-      { id: 'm3', sender: 'system', time: '2026-03-25T09:00:00Z', body: 'Ticket escalated to design team' },
-    ],
-    emails: [
-      { time: '2026-03-24T16:10:00Z', type: 'confirmation', text: 'Ticket TK-1002 created — confirmation sent to sarah@techstart.io' },
-      { time: '2026-03-25T09:00:00Z', type: 'reply', text: 'Admin reply notification sent to sarah@techstart.io' },
-    ]
-  },
-  {
-    id: 'TK-1003', subject: 'How do I transfer credits to another account?', category: 'credits', priority: 'low', status: 'resolved',
-    createdAt: '2026-03-22T08:20:00Z', updatedAt: '2026-03-22T12:30:00Z', userId: 'usr_james', userName: 'James Robertson', userEmail: 'james@freshbite.com',
-    messages: [
-      { id: 'm1', sender: 'user', name: 'James Robertson', avatar: '#F97316', time: '2026-03-22T08:20:00Z', body: 'Hi, we have two accounts — one for our main brand and one for our subsidiary. Is it possible to transfer credits between them?' },
-      { id: 'm2', sender: 'admin', name: 'Kay (Admin)', avatar: '#7C3AED', time: '2026-03-22T10:15:00Z', body: 'Hi James! Credit transfers between accounts are available for Enterprise plan members. Since you are on the Enterprise plan, I can process this for you. Please confirm the receiving account email and the number of credits you would like to transfer, and I will action it right away.' },
-      { id: 'm3', sender: 'user', name: 'James Robertson', avatar: '#F97316', time: '2026-03-22T11:45:00Z', body: 'Please transfer 300 credits to subsidiary@freshbite.com. Thanks!' },
-      { id: 'm4', sender: 'admin', name: 'Kay (Admin)', avatar: '#7C3AED', time: '2026-03-22T12:30:00Z', body: 'Done! 300 credits have been transferred to subsidiary@freshbite.com. The balance will update on both accounts within a few minutes. Is there anything else I can help with?' },
-      { id: 'm5', sender: 'system', time: '2026-03-22T12:30:00Z', body: 'Ticket marked as resolved' },
-    ],
-    emails: [
-      { time: '2026-03-22T08:20:00Z', type: 'confirmation', text: 'Ticket TK-1003 created — confirmation sent to james@freshbite.com' },
-      { time: '2026-03-22T10:15:00Z', type: 'reply', text: 'Admin reply notification sent to james@freshbite.com' },
-      { time: '2026-03-22T12:30:00Z', type: 'resolved', text: 'Ticket resolved — notification sent to james@freshbite.com' },
-    ]
-  },
-  {
-    id: 'TK-1004', subject: 'Website crashes on mobile devices', category: 'technical', priority: 'critical', status: 'escalated',
-    createdAt: '2026-03-26T18:05:00Z', updatedAt: '2026-03-27T08:30:00Z', userId: 'usr_emma', userName: 'Emma Thompson', userEmail: 'emma@summit.co',
-    messages: [
-      { id: 'm1', sender: 'user', name: 'Emma Thompson', avatar: '#10B981', time: '2026-03-26T18:05:00Z', body: 'URGENT: The website you built for us is crashing on all mobile devices since this morning. Our customers cannot access the site at all. This is costing us sales — please fix ASAP!' },
-      { id: 'm2', sender: 'admin', name: 'Kay (Admin)', avatar: '#7C3AED', time: '2026-03-26T18:20:00Z', body: 'Hi Emma, thank you for reporting this. I have escalated this to our senior development team as a P1 incident. We are investigating now and will provide an update within 30 minutes. In the meantime, we have enabled our maintenance page so visitors see a professional holding page.' },
-      { id: 'm3', sender: 'system', time: '2026-03-26T18:20:00Z', body: 'Priority escalated to CRITICAL — SLA: 2 hour resolution target' },
-      { id: 'm4', sender: 'admin', name: 'Kay (Admin)', avatar: '#7C3AED', time: '2026-03-27T08:30:00Z', body: 'Update: Our team identified the issue — a third-party script was causing a JavaScript conflict on mobile Safari and Chrome. We have patched the code and the site is now live and working. Could you please verify on your end and confirm?' },
-    ],
-    emails: [
-      { time: '2026-03-26T18:05:00Z', type: 'confirmation', text: 'URGENT ticket TK-1004 created — confirmation sent to emma@summit.co' },
-      { time: '2026-03-26T18:20:00Z', type: 'escalation', text: 'Escalation alert sent to admin team and emma@summit.co' },
-      { time: '2026-03-27T08:30:00Z', type: 'update', text: 'Progress update notification sent to emma@summit.co' },
-    ]
-  },
-  {
-    id: 'TK-1005', subject: 'Request: Dark mode for the client dashboard', category: 'feature', priority: 'low', status: 'open',
-    createdAt: '2026-03-26T11:00:00Z', updatedAt: '2026-03-26T11:00:00Z', userId: 'usr_david', userName: 'David Chen', userEmail: 'david@startup.io',
-    messages: [
-      { id: 'm1', sender: 'user', name: 'David Chen', avatar: '#6366F1', time: '2026-03-26T11:00:00Z', body: 'Would love to see a dark mode option for the client dashboard. I often work late at night and the bright white interface is quite harsh on the eyes. A toggle in account settings would be perfect. Keep up the great work!' },
-    ],
-    emails: [
-      { time: '2026-03-26T11:00:00Z', type: 'confirmation', text: 'Ticket TK-1005 created — confirmation sent to david@startup.io' },
-    ]
-  },
-  {
-    id: 'TK-1006', subject: 'Subscription renewal failed — account downgraded', category: 'billing', priority: 'high', status: 'open',
-    createdAt: '2026-03-27T07:15:00Z', updatedAt: '2026-03-27T07:15:00Z', userId: 'usr_sarah', userName: 'Sarah Mitchell', userEmail: 'sarah@techstart.io',
-    messages: [
-      { id: 'm1', sender: 'user', name: 'Sarah Mitchell', avatar: '#EC4899', time: '2026-03-27T07:15:00Z', body: 'My Professional subscription was supposed to renew yesterday but it seems to have failed. My account has been downgraded to Free and I have lost access to priority queue. I definitely have funds available. Please restore my subscription urgently as I have active projects.' },
-    ],
-    emails: [
-      { time: '2026-03-27T07:15:00Z', type: 'confirmation', text: 'Ticket TK-1006 created — confirmation sent to sarah@techstart.io' },
-    ]
-  },
-];
+// Sample tickets removed — tickets now loaded from Supabase
 
 function SupportProvider({ children }) {
-  const [tickets, setTickets] = useState(() => {
-    return safeParseJSON(localStorage.getItem('ck_tickets'), SAMPLE_TICKETS);
-  });
-  const [emailLog, setEmailLog] = useState(() => {
-    return safeParseJSON(localStorage.getItem('ck_email_log'), []);
-  });
+  const { user, isAdmin } = useContext(AuthContext);
+  const [tickets, setTickets] = useState([]);
+  const [emailLog, setEmailLog] = useState([]);
 
-  useEffect(() => { safeSetStorage('ck_tickets', tickets); }, [tickets]);
-  useEffect(() => { safeSetStorage('ck_email_log', emailLog); }, [emailLog]);
+  // Load tickets from Supabase when user changes
+  useEffect(() => {
+    if (!user) { setTickets([]); setEmailLog([]); return; }
+    const loadTickets = async () => {
+      try {
+        // RLS handles filtering: admin sees all, user sees own
+        const { data: tkts } = await supabaseClient.from('tickets').select('*').order('created_at', { ascending: false });
+        if (tkts) setTickets(tkts.map(t => ({
+          id: t.id, subject: t.subject, category: t.category, priority: t.priority, status: t.status,
+          createdAt: t.created_at, updatedAt: t.updated_at, userId: t.user_id, userName: t.user_name,
+          userEmail: t.user_email, messages: t.messages || [], emails: t.emails || []
+        })));
+        const { data: emails } = await supabaseClient.from('email_log').select('*').order('sent_at', { ascending: false });
+        if (emails) setEmailLog(emails.map(e => ({
+          id: e.id, to: e.to_address, subject: e.subject, body: e.body, ticketId: e.ticket_id,
+          sentAt: e.sent_at, status: e.status
+        })));
+      } catch (err) { console.warn('Failed to load tickets:', err); }
+    };
+    loadTickets();
+  }, [user]);
 
   const nextTicketId = () => {
     const nums = tickets.map(t => parseInt(t.id.replace('TK-', ''))).filter(n => !isNaN(n));
     return 'TK-' + (Math.max(0, ...nums) + 1);
   };
 
-  const sendEmail = (to, subject, body, ticketId) => {
+  const sendEmail = async (to, subject, body, ticketId) => {
     const entry = { id: Date.now().toString(36), to, subject, body, ticketId, sentAt: new Date().toISOString(), status: 'delivered' };
+    await supabaseClient.from('email_log').insert({
+      id: entry.id, to_address: to, subject, body, ticket_id: ticketId, sent_at: entry.sentAt, status: 'delivered'
+    });
     setEmailLog(prev => [entry, ...prev]);
     return entry;
   };
 
-  const createTicket = (data, user) => {
+  const createTicket = async (data, ticketUser) => {
     const id = nextTicketId();
     const now = new Date().toISOString();
+    const messages = [{ id: 'msg_' + Date.now(), sender: 'user', name: ticketUser.name, avatar: data.avatar || '#3B82F6', time: now, body: data.message.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').slice(0, 5000) }];
+    const emails = [{ time: now, type: 'confirmation', text: 'Ticket ' + id + ' created — confirmation sent to ' + ticketUser.email }];
     const ticket = {
       id, subject: data.subject.replace(/[<>]/g, '').slice(0, 200), category: data.category, priority: data.priority || 'medium', status: 'open',
-      createdAt: now, updatedAt: now, userId: user.id, userName: user.name, userEmail: user.email,
-      messages: [{ id: 'msg_' + Date.now(), sender: 'user', name: user.name, avatar: data.avatar || '#3B82F6', time: now, body: data.message.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').slice(0, 5000) }],
-      emails: [{ time: now, type: 'confirmation', text: 'Ticket ' + id + ' created — confirmation sent to ' + user.email }]
+      createdAt: now, updatedAt: now, userId: ticketUser.id, userName: ticketUser.name, userEmail: ticketUser.email,
+      messages, emails
     };
+    await supabaseClient.from('tickets').insert({
+      id, subject: ticket.subject, category: ticket.category, priority: ticket.priority, status: 'open',
+      user_id: ticketUser.id, user_name: ticketUser.name, user_email: ticketUser.email,
+      messages, emails, created_at: now, updated_at: now
+    });
     setTickets(prev => [ticket, ...prev]);
-    sendEmail(user.email, 'Support Ticket Created: ' + id, 'Your support ticket "' + ticket.subject + '" has been created. Ticket reference: ' + id + '. We aim to respond within ' + (TICKET_PRIORITIES.find(p => p.id === ticket.priority)?.sla || '24 hours') + '. You will receive email updates as we work on your request.', id);
+    sendEmail(ticketUser.email, 'Support Ticket Created: ' + id, 'Your support ticket "' + ticket.subject + '" has been created. Ticket reference: ' + id + '. We aim to respond within ' + (TICKET_PRIORITIES.find(p => p.id === ticket.priority)?.sla || '24 hours') + '. You will receive email updates as we work on your request.', id);
     return ticket;
   };
 
-  const addReply = (ticketId, message, sender, senderName, avatar) => {
+  const addReply = async (ticketId, message, sender, senderName, avatar) => {
     const now = new Date().toISOString();
-    setTickets(prev => prev.map(t => {
-      if (t.id !== ticketId) return t;
-      const newMsg = { id: 'msg_' + Date.now(), sender, name: senderName, avatar: avatar || '#7C3AED', time: now, body: message.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').slice(0, 5000) };
-      const newStatus = sender === 'admin' ? 'awaiting-reply' : (t.status === 'awaiting-reply' ? 'in-progress' : t.status);
-      const emailTo = sender === 'admin' ? t.userEmail : CONFIG.ADMIN_EMAIL;
-      const emailSubj = sender === 'admin' ? 'New reply on your ticket ' + t.id : 'Customer replied to ticket ' + t.id;
-      const emailEntry = { time: now, type: 'reply', text: (sender === 'admin' ? 'Admin' : 'Customer') + ' reply notification sent to ' + emailTo };
-      sendEmail(emailTo, emailSubj, senderName + ' replied to ticket ' + t.id + ': "' + message.slice(0, 100) + '..."', t.id);
-      return { ...t, messages: [...t.messages, newMsg], emails: [...t.emails, emailEntry], status: newStatus, updatedAt: now };
-    }));
+    const ticket = tickets.find(t => t.id === ticketId);
+    if (!ticket) return;
+    const newMsg = { id: 'msg_' + Date.now(), sender, name: senderName, avatar: avatar || '#7C3AED', time: now, body: message.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').slice(0, 5000) };
+    const newStatus = sender === 'admin' ? 'awaiting-reply' : (ticket.status === 'awaiting-reply' ? 'in-progress' : ticket.status);
+    const emailTo = sender === 'admin' ? ticket.userEmail : CONFIG.ADMIN_EMAIL;
+    const emailSubj = sender === 'admin' ? 'New reply on your ticket ' + ticket.id : 'Customer replied to ticket ' + ticket.id;
+    const emailEntry = { time: now, type: 'reply', text: (sender === 'admin' ? 'Admin' : 'Customer') + ' reply notification sent to ' + emailTo };
+    const updatedMessages = [...ticket.messages, newMsg];
+    const updatedEmails = [...ticket.emails, emailEntry];
+    await supabaseClient.from('tickets').update({ messages: updatedMessages, emails: updatedEmails, status: newStatus, updated_at: now }).eq('id', ticketId);
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, messages: updatedMessages, emails: updatedEmails, status: newStatus, updatedAt: now } : t));
+    sendEmail(emailTo, emailSubj, senderName + ' replied to ticket ' + ticket.id + ': "' + message.slice(0, 100) + '..."', ticket.id);
   };
 
-  const updateTicketStatus = (ticketId, newStatus) => {
+  const updateTicketStatus = async (ticketId, newStatus) => {
     const now = new Date().toISOString();
-    setTickets(prev => prev.map(t => {
-      if (t.id !== ticketId) return t;
-      const sysMsg = { id: 'msg_' + Date.now(), sender: 'system', time: now, body: 'Ticket status changed to ' + newStatus.replace('-', ' ').toUpperCase() };
-      const emailEntry = { time: now, type: 'status', text: 'Status update (' + newStatus + ') notification sent to ' + t.userEmail };
-      sendEmail(t.userEmail, 'Ticket ' + t.id + ' status updated: ' + newStatus, 'Your support ticket "' + t.subject + '" status has been updated to: ' + newStatus.toUpperCase() + '.', t.id);
-      return { ...t, status: newStatus, updatedAt: now, messages: [...t.messages, sysMsg], emails: [...t.emails, emailEntry] };
-    }));
+    const ticket = tickets.find(t => t.id === ticketId);
+    if (!ticket) return;
+    const sysMsg = { id: 'msg_' + Date.now(), sender: 'system', time: now, body: 'Ticket status changed to ' + newStatus.replace('-', ' ').toUpperCase() };
+    const emailEntry = { time: now, type: 'status', text: 'Status update (' + newStatus + ') notification sent to ' + ticket.userEmail };
+    const updatedMessages = [...ticket.messages, sysMsg];
+    const updatedEmails = [...ticket.emails, emailEntry];
+    await supabaseClient.from('tickets').update({ status: newStatus, messages: updatedMessages, emails: updatedEmails, updated_at: now }).eq('id', ticketId);
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: newStatus, updatedAt: now, messages: updatedMessages, emails: updatedEmails } : t));
+    sendEmail(ticket.userEmail, 'Ticket ' + ticket.id + ' status updated: ' + newStatus, 'Your support ticket "' + ticket.subject + '" status has been updated to: ' + newStatus.toUpperCase() + '.', ticket.id);
   };
 
-  const updateTicketPriority = (ticketId, newPriority) => {
+  const updateTicketPriority = async (ticketId, newPriority) => {
     const now = new Date().toISOString();
-    setTickets(prev => prev.map(t => {
-      if (t.id !== ticketId) return t;
-      const sysMsg = { id: 'msg_' + Date.now(), sender: 'system', time: now, body: 'Priority changed to ' + newPriority.toUpperCase() };
-      return { ...t, priority: newPriority, updatedAt: now, messages: [...t.messages, sysMsg] };
-    }));
+    const ticket = tickets.find(t => t.id === ticketId);
+    if (!ticket) return;
+    const sysMsg = { id: 'msg_' + Date.now(), sender: 'system', time: now, body: 'Priority changed to ' + newPriority.toUpperCase() };
+    const updatedMessages = [...ticket.messages, sysMsg];
+    await supabaseClient.from('tickets').update({ priority: newPriority, messages: updatedMessages, updated_at: now }).eq('id', ticketId);
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, priority: newPriority, updatedAt: now, messages: updatedMessages } : t));
   };
 
   const getTicketsForUser = (userId) => tickets.filter(t => t.userId === userId);
