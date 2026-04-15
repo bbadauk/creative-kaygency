@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Creative Kaygency - Premium Digital Design Services Platform. Websites, E-commerce, Graphics, SEO & More. Subscribe or pay with credits for huge savings.">
+  <meta name="robots" content="index, follow">
+  <title>Creative Kaygency - Premium Digital Design Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    /* Critical inline styles for above-fold speed */
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#FAFAFF;margin:0}
+    #root{min-height:100vh}
+    .app-loading{display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:18px;color:#7C3AED;font-weight:600}
+  </style>
+</head>
+<body>
+  <div id="root"><div class="app-loading">Loading Creative Kaygency...</div></div>
+
+<script type="text/babel" data-type="module">
+// ============================================================================
+// CREATIVE KAYGENCY — Complete React SPA
+// ============================================================================
+
+const { useState, useEffect, useContext, useCallback, useMemo, useRef, createContext } = React;
+
+// ============================================================================
+// MOCK DATA & CONFIGURATION
+// ============================================================================
+
+const CONFIG = {
+  SITE_NAME: 'Creative Kaygency',
+  ADMIN_EMAIL: 'kieron.b@outlook.com',
+  API_BASE: '/api',
+  CURRENCIES: { GBP: { symbol: '£', rate: 1 }, USD: { symbol: '$', rate: 1.27 }, EUR: { symbol: '€', rate: 1.17 } },
+  CREDIT_RATIO: 1.25, // 1 credit ≈ £1.25 value when buying, services priced to give ~20% discount
+};
+
+const SERVICES = [
+  { id: 'business-website', name: 'Business Website', category: 'websites', icon: '🌐', desc: 'Professional multi-page website with responsive design, SEO optimization, and CMS integration.', cashMin: 800, cashMax: 2500, creditMin: 640, creditMax: 2000, features: ['Responsive design','CMS integration','Contact forms','SEO optimized','SSL certificate','5 pages included'], formFields: ['pages','features','competitors','timeline','brandColors'] },
+  { id: 'landing-page', name: 'Landing Page', category: 'websites', icon: '📄', desc: 'High-converting single-page design focused on driving signups, sales, or leads.', cashMin: 300, cashMax: 800, creditMin: 240, creditMax: 640, features: ['A/B test ready','Mobile-first','Fast loading','CTA optimized','Analytics setup'], formFields: ['goal','targetAudience','headline','features'] },
+  { id: 'sales-funnel', name: 'Sales Funnel', category: 'websites', icon: '🔄', desc: 'Complete multi-step sales funnel with landing pages, upsells, downsells, and thank-you pages.', cashMin: 600, cashMax: 2000, creditMin: 480, creditMax: 1600, features: ['Multi-step flow','Upsell pages','Email integration','Payment integration','A/B testing'], formFields: ['steps','products','emailPlatform','paymentGateway'] },
+  { id: 'brochure-site', name: 'Brochure Website', category: 'websites', icon: '📰', desc: 'Elegant informational website perfect for showcasing your business, portfolio, or services.', cashMin: 500, cashMax: 1500, creditMin: 400, creditMax: 1200, features: ['Clean design','Portfolio section','About page','Services page','Responsive'], formFields: ['pages','industry','style','content'] },
+  { id: 'ecom-store', name: 'E-commerce Store', category: 'ecommerce', icon: '🛒', desc: 'Full-featured online store with product management, payments, shipping, and order tracking.', cashMin: 1500, cashMax: 5000, creditMin: 1200, creditMax: 4000, features: ['Product catalog','Payment gateway','Shipping setup','Inventory mgmt','Order tracking','Customer accounts'], formFields: ['platform','products','paymentMethods','shippingZones','features'] },
+  { id: 'product-uploads', name: 'Product Uploads', category: 'ecommerce', icon: '📦', desc: 'Bulk product upload service including titles, descriptions, images, and SEO metadata.', cashMin: 150, cashMax: 500, creditMin: 120, creditMax: 400, features: ['Bulk upload','SEO descriptions','Image optimization','Category setup','Variant support'], formFields: ['productCount','platform','includeImages','categories'] },
+  { id: 'conversion-opt', name: 'Conversion Optimization', category: 'ecommerce', icon: '📈', desc: 'Data-driven optimization of your e-commerce store to increase sales and reduce cart abandonment.', cashMin: 400, cashMax: 1200, creditMin: 320, creditMax: 960, features: ['A/B testing','Cart optimization','Checkout flow','Trust signals','Speed optimization'], formFields: ['currentConversion','goals','platform','traffic'] },
+  { id: 'logo-design', name: 'Logo Design', category: 'graphics', icon: '🎨', desc: 'Custom logo design with multiple concepts, revisions, and complete brand-ready file package.', cashMin: 150, cashMax: 500, creditMin: 120, creditMax: 400, features: ['3 concepts','Unlimited revisions','All file formats','Brand guidelines','Social media kit'], formFields: ['style','colors','inspiration','industry','tagline'] },
+  { id: 'brand-kit', name: 'Brand Kit', category: 'graphics', icon: '💎', desc: 'Complete brand identity package including logo, color palette, typography, and usage guidelines.', cashMin: 400, cashMax: 1200, creditMin: 320, creditMax: 960, features: ['Logo suite','Color palette','Typography','Brand guidelines','Stationery design','Social templates'], formFields: ['industry','values','targetAudience','competitors','style'] },
+  { id: 'social-graphics', name: 'Social Media Graphics', category: 'graphics', icon: '📱', desc: 'Eye-catching social media post designs, stories, and cover images for all platforms.', cashMin: 100, cashMax: 300, creditMin: 80, creditMax: 240, features: ['Multi-platform','Template set','Brand consistent','Editable files','10 designs'], formFields: ['platforms','style','brandColors','postTypes','quantity'] },
+  { id: 'onpage-seo', name: 'On-Page SEO', category: 'seo', icon: '🔍', desc: 'Comprehensive on-page SEO optimization including meta tags, content structure, and internal linking.', cashMin: 300, cashMax: 800, creditMin: 240, creditMax: 640, features: ['Meta optimization','Content structure','Internal links','Image alt tags','Schema markup','Keyword mapping'], formFields: ['website','keywords','competitors','pages'] },
+  { id: 'technical-seo', name: 'Technical SEO', category: 'seo', icon: '⚙️', desc: 'Deep technical audit and fixes including site speed, crawlability, indexing, and Core Web Vitals.', cashMin: 400, cashMax: 1200, creditMin: 320, creditMax: 960, features: ['Full audit','Speed optimization','Crawl fixes','Schema setup','Sitemap','Core Web Vitals'], formFields: ['website','currentIssues','platform','hostingProvider'] },
+  { id: 'blog-seo', name: 'Blog SEO', category: 'seo', icon: '✍️', desc: 'SEO-optimized blog content strategy with keyword research, content briefs, and publishing schedule.', cashMin: 250, cashMax: 600, creditMin: 200, creditMax: 480, features: ['Keyword research','Content briefs','Publishing calendar','Internal linking','Meta optimization'], formFields: ['niche','targetKeywords','frequency','currentBlog'] },
+  { id: 'local-seo', name: 'Local SEO', category: 'seo', icon: '📍', desc: 'Local search optimization including Google Business Profile, citations, reviews, and local content.', cashMin: 300, cashMax: 800, creditMin: 240, creditMax: 640, features: ['GBP optimization','Citations','Review strategy','Local content','NAP consistency'], formFields: ['businessName','location','industry','competitors'] },
+  { id: 'website-copy', name: 'Website Copywriting', category: 'content', icon: '📝', desc: 'Persuasive, SEO-friendly website copy that converts visitors into customers.', cashMin: 200, cashMax: 600, creditMin: 160, creditMax: 480, features: ['SEO optimized','Conversion focused','Brand voice','All pages','Meta descriptions'], formFields: ['pages','industry','tone','targetAudience','keywords'] },
+  { id: 'sales-copy', name: 'Sales Page Copy', category: 'content', icon: '💰', desc: 'High-converting long-form sales page copy with proven frameworks and psychological triggers.', cashMin: 300, cashMax: 1000, creditMin: 240, creditMax: 800, features: ['AIDA framework','Testimonial sections','Objection handling','CTA optimization','Urgency elements'], formFields: ['product','price','targetAudience','painPoints','benefits'] },
+  { id: 'digital-product-copy', name: 'Digital Product Copy', category: 'content', icon: '🎯', desc: 'Specialized copy for ClickBank, JVZoo, and digital product launches.', cashMin: 400, cashMax: 1200, creditMin: 320, creditMax: 960, features: ['VSL scripts','Product descriptions','Affiliate pages','Upsell copy','Email sequences'], formFields: ['platform','productType','launchDate','affiliateProgram'] },
+  { id: 'email-automation', name: 'Email Automation', category: 'email', icon: '📧', desc: 'Automated email sequences for onboarding, nurturing, sales, and re-engagement.', cashMin: 300, cashMax: 900, creditMin: 240, creditMax: 720, features: ['Welcome sequence','Nurture flows','Sales automation','Win-back emails','A/B testing'], formFields: ['platform','sequences','subscribers','goals'] },
+  { id: 'lead-nurturing', name: 'Lead Nurturing', category: 'email', icon: '🌱', desc: 'Strategic email nurturing campaigns that build trust and move leads toward purchase.', cashMin: 250, cashMax: 700, creditMin: 200, creditMax: 560, features: ['Segmentation','Drip campaigns','Lead scoring','Personalization','Analytics'], formFields: ['audienceSize','segments','platform','currentProcess'] },
+  { id: 'campaign-setup', name: 'Campaign Setup', category: 'email', icon: '🚀', desc: 'Complete email marketing campaign setup with templates, lists, automation, and tracking.', cashMin: 200, cashMax: 500, creditMin: 160, creditMax: 400, features: ['Template design','List setup','Automation','Tracking','Deliverability'], formFields: ['platform','campaignType','audienceSize','goals'] },
+  { id: 'social-pack-monthly', name: 'Monthly Social Pack', category: 'social', icon: '📅', desc: 'Full month of social media content including graphics, captions, hashtags, and scheduling.', cashMin: 400, cashMax: 1000, creditMin: 320, creditMax: 800, features: ['30 posts','Captions','Hashtag research','Content calendar','2 platforms','Story templates'], formFields: ['platforms','industry','brandVoice','frequency','contentTypes'] },
+  { id: 'social-captions', name: 'Caption Writing', category: 'social', icon: '💬', desc: 'Engaging social media captions with hashtags, CTAs, and engagement hooks for your posts.', cashMin: 100, cashMax: 250, creditMin: 80, creditMax: 200, features: ['30 captions','Hashtag sets','CTA variations','Engagement hooks','Platform optimized'], formFields: ['platforms','tone','industry','postCount'] },
+  { id: 'pdf-creation', name: 'PDF / eBook Creation', category: 'digital', icon: '📚', desc: 'Professional PDF documents, eBooks, lead magnets, and digital guides with stunning design.', cashMin: 200, cashMax: 800, creditMin: 160, creditMax: 640, features: ['Custom design','Interactive elements','Brand consistent','Print ready','Multiple formats'], formFields: ['type','pages','content','style','purpose'] },
+  { id: 'course-creation', name: 'Online Course', category: 'digital', icon: '🎓', desc: 'Complete online course creation including curriculum design, platform setup, and marketing materials.', cashMin: 800, cashMax: 3000, creditMin: 640, creditMax: 2400, features: ['Curriculum design','Platform setup','Video outlines','Quiz creation','Sales page','Launch strategy'], formFields: ['topic','modules','platform','targetAudience','pricePoint'] },
+  { id: 'saas-tool', name: 'SaaS Tool Development', category: 'digital', icon: '🔧', desc: 'Custom SaaS tool or micro-app development with user authentication, dashboard, and billing.', cashMin: 2000, cashMax: 8000, creditMin: 1600, creditMax: 6400, features: ['Custom development','User auth','Dashboard','Billing integration','API','Hosting setup'], formFields: ['concept','features','userTypes','integrations','timeline'] },
+  { id: 'plugin-dev', name: 'Plugin Development', category: 'digital', icon: '🔌', desc: 'Custom WordPress or platform plugin development for specific business needs.', cashMin: 500, cashMax: 2000, creditMin: 400, creditMax: 1600, features: ['Custom functionality','Admin panel','Updates','Documentation','Support'], formFields: ['platform','functionality','requirements','integrations'] },
+  { id: 'lp-optimization', name: 'Landing Page Optimization', category: 'additional', icon: '🎯', desc: 'Conversion rate optimization for existing landing pages using data-driven strategies.', cashMin: 300, cashMax: 800, creditMin: 240, creditMax: 640, features: ['CRO audit','A/B testing','Heatmap analysis','Copy optimization','Speed improvement'], formFields: ['currentUrl','conversionRate','traffic','goals'] },
+  { id: 'ai-content', name: 'AI-Powered Content', category: 'additional', icon: '🤖', desc: 'AI-enhanced content creation including blog posts, product descriptions, and marketing copy.', cashMin: 150, cashMax: 500, creditMin: 120, creditMax: 400, features: ['AI + human review','SEO optimized','Brand voice','Bulk content','Fast delivery'], formFields: ['contentType','quantity','keywords','tone','industry'] },
+  { id: 'care-plan', name: 'Website Care Plan', category: 'additional', icon: '🛡️', desc: 'Monthly website maintenance including hosting, security monitoring, backups, and updates.', cashMin: 50, cashMax: 200, creditMin: 40, creditMax: 160, features: ['Hosting','SSL','Daily backups','Security monitoring','Plugin updates','Monthly report'], formFields: ['website','platform','currentHosting','features'] },
+];
+
+const CATEGORIES = [
+  { id: 'websites', name: 'Website Services', icon: '🌐', desc: 'Custom websites & landing pages' },
+  { id: 'ecommerce', name: 'E-Commerce', icon: '🛒', desc: 'Online stores & optimization' },
+  { id: 'graphics', name: 'Graphics & Branding', icon: '🎨', desc: 'Logos, brand kits & design' },
+  { id: 'seo', name: 'SEO Services', icon: '🔍', desc: 'Search engine optimization' },
+  { id: 'content', name: 'Content & Copy', icon: '📝', desc: 'Copywriting & content creation' },
+  { id: 'email', name: 'Email Marketing', icon: '📧', desc: 'Automation & campaigns' },
+  { id: 'social', name: 'Social Media', icon: '📱', desc: 'Content packs & management' },
+  { id: 'digital', name: 'Digital Products', icon: '📚', desc: 'Courses, PDFs, SaaS & plugins' },
+  { id: 'additional', name: 'Additional Services', icon: '⚡', desc: 'CRO, AI content & care plans' },
+];
+
+const PLANS = [
+  { id: 'starter', name: 'Starter', price: 99, credits: 100, desc: 'Small tasks, graphics, edits, simple pages', priority: 'Standard', turnaround: '5–7 days', features: ['100 monthly credits','Logo & graphic design','Simple page edits','Email support','Standard queue','Basic revisions'] },
+  { id: 'professional', name: 'Professional', price: 199, credits: 250, desc: 'Websites, design work, priority queue access', priority: 'Priority', turnaround: '3–5 days', featured: true, features: ['250 monthly credits','Full website builds','Priority queue','Design + development','Phone support','Unlimited revisions','SEO basics included'] },
+  { id: 'enterprise', name: 'Enterprise', price: 299, credits: 500, desc: 'Full service: web, SEO, funnels, content creation', priority: 'VIP', turnaround: '1–3 days', features: ['500 monthly credits','Everything in Pro','SEO campaigns','Sales funnels','Content creation','Dedicated manager','VIP turnaround','Monthly strategy call'] },
+];
+
+const CREDIT_PACKAGES = [
+  { id: 'basic', credits: 100, price: 22, perCredit: 0.22 },
+  { id: 'standard', credits: 200, price: 44, perCredit: 0.22, popular: true },
+  { id: 'premium', credits: 400, price: 88, perCredit: 0.22 },
+  { id: 'mega', credits: 1000, price: 200, perCredit: 0.20 },
+  { id: 'ultra', credits: 2500, price: 475, perCredit: 0.19 },
+  { id: 'enterprise', credits: 5000, price: 900, perCredit: 0.18 },
+  { id: 'unlimited', credits: 10000, price: 1700, perCredit: 0.17 },
+];
+
+const BLOG_POSTS = [
+  { slug: 'why-every-business-needs-website-2024', title: 'Why Every Business Needs a Professional Website in 2024', category: 'Websites', excerpt: 'Discover why having a professional website is no longer optional and how it directly impacts your revenue.', date: '2024-03-15', readTime: '6 min', author: 'Kay', content: 'In today\'s digital-first world, your website is often the first impression potential customers have of your business. Studies show that 75% of consumers judge a company\'s credibility based on their website design. A professional website builds trust, generates leads around the clock, and serves as the foundation for all your digital marketing efforts. Without one, you\'re leaving money on the table every single day.' },
+  { slug: 'credit-system-save-money', title: 'How Our Credit System Saves You Up to 20% on Every Project', category: 'Credits', excerpt: 'Learn how to maximize your savings with our innovative credit-based payment system.', date: '2024-03-10', readTime: '4 min', author: 'Kay', content: 'Our credit system was designed with one goal: rewarding loyal customers. When you purchase credits, you lock in a discounted rate that saves you money on every service. The more credits you buy, the bigger your discount. Plus, credits never expire and roll over month to month. Combined with daily login bonuses and referral rewards, you can stretch your budget further than ever.' },
+  { slug: 'seo-mistakes-killing-rankings', title: '10 SEO Mistakes That Are Killing Your Search Rankings', category: 'SEO', excerpt: 'Avoid these common SEO pitfalls that could be preventing your website from ranking on Google.', date: '2024-03-05', readTime: '8 min', author: 'Kay', content: 'Search engine optimization is both an art and a science. Many businesses unknowingly sabotage their own rankings with common mistakes like ignoring mobile optimization, neglecting page speed, skipping meta descriptions, and failing to build internal links. In this guide, we walk through the 10 most damaging SEO mistakes and show you exactly how to fix each one.' },
+  { slug: 'ecommerce-conversion-tips', title: 'Boost Your E-commerce Conversion Rate by 300%', category: 'E-Commerce', excerpt: 'Proven strategies to turn more visitors into paying customers on your online store.', date: '2024-02-28', readTime: '7 min', author: 'Kay', content: 'The average e-commerce conversion rate sits at just 2.86%. But top-performing stores regularly achieve 5–10%. The difference? Strategic optimization of product pages, checkout flows, trust signals, and site speed. We share the exact framework we use to help clients dramatically increase their conversion rates.' },
+  { slug: 'brand-identity-guide', title: 'The Complete Guide to Building a Memorable Brand Identity', category: 'Branding', excerpt: 'Step-by-step guide to creating a brand that stands out and builds lasting customer loyalty.', date: '2024-02-20', readTime: '10 min', author: 'Kay', content: 'Your brand is more than just a logo. It\'s the complete experience customers have with your business. A strong brand identity encompasses your visual design, voice, values, and the emotions you evoke. This comprehensive guide walks you through creating each element of a brand identity that resonates with your target audience and stands the test of time.' },
+  { slug: 'email-marketing-roi', title: 'Email Marketing: The Channel With 4,200% ROI', category: 'Email', excerpt: 'Why email marketing remains the highest-ROI channel and how to leverage it for your business.', date: '2024-02-15', readTime: '5 min', author: 'Kay', content: 'For every £1 spent on email marketing, the average return is £42. That\'s a staggering 4,200% ROI that no other marketing channel can match. The key is building a quality list, crafting compelling sequences, and automating your workflows. We break down the strategies that consistently deliver results.' },
+];
+
+const PORTFOLIO_ITEMS = [
+  { id: 1, title: 'TechStart SaaS Platform', category: 'websites', gradient: 'linear-gradient(135deg, #667eea, #764ba2)', tags: ['React','Node.js','Stripe'] },
+  { id: 2, title: 'FreshBite E-commerce Store', category: 'ecommerce', gradient: 'linear-gradient(135deg, #f093fb, #f5576c)', tags: ['Shopify','Custom Theme'] },
+  { id: 3, title: 'Nexus Brand Identity', category: 'graphics', gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)', tags: ['Logo','Brand Kit'] },
+  { id: 4, title: 'GreenLeaf Organic Market', category: 'ecommerce', gradient: 'linear-gradient(135deg, #43e97b, #38f9d7)', tags: ['WooCommerce','SEO'] },
+  { id: 5, title: 'CloudSync Landing Page', category: 'websites', gradient: 'linear-gradient(135deg, #fa709a, #fee140)', tags: ['Conversion','A/B Tested'] },
+  { id: 6, title: 'Summit Financial Rebrand', category: 'graphics', gradient: 'linear-gradient(135deg, #a18cd1, #fbc2eb)', tags: ['Logo','Stationery'] },
+  { id: 7, title: 'PetPals Mobile App Landing', category: 'websites', gradient: 'linear-gradient(135deg, #fccb90, #d57eeb)', tags: ['Landing Page','Animation'] },
+  { id: 8, title: 'UrbanStyle Fashion Store', category: 'ecommerce', gradient: 'linear-gradient(135deg, #e0c3fc, #8ec5fc)', tags: ['Shopify Plus','Custom'] },
+  { id: 9, title: 'MindfulMe Meditation App', category: 'digital', gradient: 'linear-gradient(135deg, #89f7fe, #66a6ff)', tags: ['SaaS','React'] },
+  { id: 10, title: 'CraftBrew SEO Campaign', category: 'seo', gradient: 'linear-gradient(135deg, #fdcbf1, #e6dee9)', tags: ['Local SEO','+340% Traffic'] },
+  { id: 11, title: 'EliteCoach Course Platform', category: 'digital', gradient: 'linear-gradient(135deg, #ff9a9e, #fad0c4)', tags: ['Course','Funnel'] },
+  { id: 12, title: 'AquaPure Social Campaign', category: 'social', gradient: 'linear-gradient(135deg, #a1c4fd, #c2e9fb)', tags: ['Social','Content'] },
+];
+
+const TESTIMONIALS = [
+  { name: 'Sarah Mitchell', role: 'CEO, TechStart', avatar: '#7C3AED', text: 'Creative Kaygency transformed our online presence completely. The credit system saved us over £2,000 on our full rebrand. Absolutely phenomenal service!' },
+  { name: 'James Robertson', role: 'Founder, FreshBite', avatar: '#10B981', text: 'Our e-commerce store went from £5K to £45K monthly revenue after their redesign and SEO work. The ROI is incredible.' },
+  { name: 'Emma Thompson', role: 'Marketing Director, Summit', avatar: '#EC4899', text: 'The subscription model is genius. We get unlimited design support for a fraction of hiring in-house. Priority queue is a game-changer.' },
+  { name: 'David Chen', role: 'Startup Founder', avatar: '#F97316', text: 'From logo to full website to SEO — they handled everything. The gamified credits make it fun to keep investing in our growth.' },
+  { name: 'Lisa Anderson', role: 'E-commerce Manager', avatar: '#3B82F6', text: 'Best agency experience ever. The dashboard makes tracking projects effortless, and the credit savings add up fast.' },
+  { name: 'Michael Brown', role: 'CEO, GreenLeaf', avatar: '#8B5CF6', text: 'We\'ve been subscribers for 8 months now. The quality is consistently excellent and the turnaround times are unmatched.' },
+];
+
+const BADGES = [
+  { id: 'first-login', name: 'First Steps', icon: '👋', desc: 'Log in for the first time' },
+  { id: 'first-purchase', name: 'First Purchase', icon: '💳', desc: 'Complete your first purchase' },
+  { id: 'streak-7', name: '7-Day Streak', icon: '🔥', desc: 'Log in 7 days in a row' },
+  { id: 'streak-30', name: 'Monthly Master', icon: '⭐', desc: 'Log in 30 days in a row' },
+  { id: 'referral-1', name: 'Referrer', icon: '🤝', desc: 'Get your first successful referral' },
+  { id: 'referral-5', name: 'Ambassador', icon: '👑', desc: 'Get 5 successful referrals' },
+  { id: 'credits-1000', name: 'Credit King', icon: '💰', desc: 'Accumulate 1,000 credits' },
+  { id: 'projects-5', name: 'Power User', icon: '🚀', desc: 'Complete 5 projects' },
+  { id: 'projects-25', name: 'VIP Client', icon: '🏆', desc: 'Complete 25 projects' },
+  { id: 'subscriber', name: 'Subscriber', icon: '💎', desc: 'Subscribe to a plan' },
+  { id: 'social-share', name: 'Social Star', icon: '📢', desc: 'Share on social media' },
+  { id: 'review', name: 'Reviewer', icon: '✨', desc: 'Leave your first review' },
+];
+
+const KB_CATEGORIES = [
+  { id: 'getting-started', name: 'Getting Started', icon: '🚀', count: 5, articles: ['How to create your account','Understanding your dashboard','Your first project booking','Setting up notifications','Quick start guide'] },
+  { id: 'credits', name: 'Credits System', icon: '💰', count: 6, articles: ['How credits work','Buying credit packages','Earning free credits','Credit rollover policy','Credit vs cash pricing','Bulk credit discounts'] },
+  { id: 'services', name: 'Our Services', icon: '🛠️', count: 5, articles: ['Service categories explained','Turnaround times','Revision policy','Service add-ons','Custom requests'] },
+  { id: 'billing', name: 'Billing & Payments', icon: '💳', count: 4, articles: ['Payment methods','Subscription plans','Invoices and receipts','Refund policy'] },
+  { id: 'account', name: 'Account Management', icon: '👤', count: 4, articles: ['Updating your profile','Changing your password','Notification settings','Deleting your account'] },
+  { id: 'referrals', name: 'Referral Program', icon: '🤝', count: 3, articles: ['How referrals work','Referral rewards','Tracking your referrals'] },
+];
+
+const FAQ_DATA = [
+  { q: 'How does the credit system work?', a: 'Credits are our platform currency that give you a discount on all services (typically 20% savings). You can buy credit packages or earn them through daily logins, referrals, and streaks. Credits roll over monthly and never expire.' },
+  { q: 'What\'s included in each subscription plan?', a: 'Each plan includes a monthly credit allocation, priority queue access, and varying turnaround times. Starter (£99/mo) covers small tasks, Professional (£199/mo) includes full websites with priority, and Enterprise (£299/mo) offers VIP service across all categories.' },
+  { q: 'Can I pay per project without a subscription?', a: 'Absolutely! You can pay for any service individually using cash (Stripe/PayPal) or credits. Subscriptions just give you better rates and priority access.' },
+  { q: 'How long does a typical project take?', a: 'Turnaround varies by service and plan: Enterprise gets 1–3 day turnaround, Professional gets 3–5 days, and Starter gets 5–7 days. Complex projects like full e-commerce builds may take 2–4 weeks.' },
+  { q: 'Do credits expire?', a: 'No! Credits roll over month to month and never expire. Buy them when prices are best and use them whenever you need.' },
+  { q: 'How does the referral program work?', a: 'Share your unique referral link. When someone signs up AND makes their first purchase, you both earn bonus credits. The more people you refer who convert, the more you earn.' },
+  { q: 'Can I upgrade or downgrade my plan?', a: 'Yes, you can change your plan at any time from your dashboard. Upgrades take effect immediately, and downgrades apply at the next billing cycle.' },
+  { q: 'What payment methods do you accept?', a: 'We accept Stripe (all major credit/debit cards), PayPal, and platform credits. All payments are processed securely with industry-standard encryption.' },
+];
+
+// Demo user data
+const DEMO_USERS = {
+  demo: { id: 'usr_demo', name: 'Demo User', email: 'demo@creative-kaygency.com', password: 'demo123', credits: 2450, plan: 'professional', streak: 12, badges: ['first-login','first-purchase','streak-7','subscriber'], referralCode: 'DEMO2024', referrals: 3, projectsCompleted: 8, joinDate: '2024-01-15' },
+  admin: { id: 'usr_admin', name: 'Kay (Admin)', email: 'kieron.b@outlook.com', password: 'admin123', credits: 99999, plan: 'enterprise', streak: 45, badges: BADGES.map(b => b.id), referralCode: 'ADMIN2024', referrals: 28, projectsCompleted: 0, joinDate: '2024-01-01', isAdmin: true },
+};
+
+const DEMO_PROJECTS = [
+  { id: 'prj_1', service: 'business-website', status: 'completed', date: '2024-03-01', paid: 'credits', amount: 1200 },
+  { id: 'prj_2', service: 'logo-design', status: 'completed', date: '2024-03-05', paid: 'credits', amount: 200 },
+  { id: 'prj_3', service: 'onpage-seo', status: 'in-progress', date: '2024-03-12', paid: 'cash', amount: 500 },
+  { id: 'prj_4', service: 'social-pack-monthly', status: 'pending', date: '2024-03-18', paid: 'credits', amount: 500 },
+];
+
+// ============================================================================
+// CONTEXT PROVIDERS
+// ============================================================================
+
+const AuthContext = createContext();
+const CurrencyContext = createContext();
+const NotificationContext = createContext();
+
+function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    try { const u = localStorage.getItem('ck_user'); return u ? JSON.parse(u) : null; } catch { return null; }
+  });
+  const [projects, setProjects] = useState(() => {
+    try { const p = localStorage.getItem('ck_projects'); return p ? JSON.parse(p) : DEMO_PROJECTS; } catch { return DEMO_PROJECTS; }
+  });
+
+  useEffect(() => {
+    if (user) localStorage.setItem('ck_user', JSON.stringify(user));
+    else localStorage.removeItem('ck_user');
+  }, [user]);
+  useEffect(() => { localStorage.setItem('ck_projects', JSON.stringify(projects)); }, [projects]);
+
+  const login = (email, password) => {
+    const demoKey = Object.keys(DEMO_USERS).find(k => DEMO_USERS[k].email === email && DEMO_USERS[k].password === password);
+    if (demoKey) { setUser(DEMO_USERS[demoKey]); return { success: true, user: DEMO_USERS[demoKey] }; }
+    return { success: false, error: 'Invalid email or password' };
+  };
+  const register = (name, email, password, referralCode) => {
+    const newUser = { id: 'usr_' + Date.now(), name, email, password, credits: referralCode ? 50 : 0, plan: null, streak: 0, badges: ['first-login'], referralCode: 'REF' + Date.now().toString(36).toUpperCase(), referrals: 0, projectsCompleted: 0, joinDate: new Date().toISOString().split('T')[0] };
+    setUser(newUser);
+    return { success: true, user: newUser };
+  };
+  const logout = () => { setUser(null); setProjects(DEMO_PROJECTS); };
+  const updateCredits = (amount) => setUser(u => u ? { ...u, credits: Math.max(0, u.credits + amount) } : null);
+  const claimDailyLogin = () => {
+    const today = new Date().toDateString();
+    const lastClaim = localStorage.getItem('ck_lastClaim');
+    if (lastClaim === today) return false;
+    localStorage.setItem('ck_lastClaim', today);
+    updateCredits(5);
+    setUser(u => u ? { ...u, streak: u.streak + 1 } : null);
+    return true;
+  };
+  const addProject = (project) => setProjects(p => [project, ...p]);
+  const isAdmin = user?.email === CONFIG.ADMIN_EMAIL || user?.isAdmin;
+
+  return React.createElement(AuthContext.Provider, { value: { user, login, register, logout, updateCredits, claimDailyLogin, projects, addProject, isAdmin } }, children);
+}
+
+function CurrencyProvider({ children }) {
+  const [currency, setCurrency] = useState(() => localStorage.getItem('ck_currency') || 'GBP');
+  useEffect(() => { localStorage.setItem('ck_currency', currency); }, [currency]);
+  const formatPrice = useCallback((gbpAmount, showSymbol = true) => {
+    const c = CONFIG.CURRENCIES[currency];
+    const converted = Math.round(gbpAmount * c.rate);
+    return showSymbol ? `${c.symbol}${converted.toLocaleString()}` : converted;
+  }, [currency]);
+  return React.createElement(CurrencyContext.Provider, { value: { currency, setCurrency, formatPrice, symbol: CONFIG.CURRENCIES[currency].symbol } }, children);
+}
+
+function NotificationProvider({ children }) {
+  const [toasts, setToasts] = useState([]);
+  const addToast = useCallback((message, type = 'success') => {
+    const id = Date.now();
+    setToasts(t => [...t, { id, message, type }]);
+    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 4000);
+  }, []);
+  return React.createElement(NotificationContext.Provider, { value: { toasts, addToast } }, children);
+}
+
+// ============================================================================
+// LAYOUT COMPONENTS
+// ============================================================================
+
+function AnnouncementBar() {
+  const [visible, setVisible] = useState(true);
+  if (!visible) return null;
+  return (
+    <div className="announcement-bar">
+      🔒 LIMITED LAUNCH PRICING — <span>Save Up To 20% With Credits</span> — Start Free Today
+      <button className="close-btn" onClick={() => setVisible(false)}>✕</button>
+    </div>
+  );
+}
+
+function Navbar() {
+  const { user, logout, isAdmin } = useContext(AuthContext);
+  const { currency, setCurrency } = useContext(CurrencyContext);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
+
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+
+  return (
+    <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
+      <div className="navbar-inner">
+        <a href="#/" className="nav-logo"><span className="creative">Creative</span><span className="kaygency">Kaygency</span></a>
+        <div className="nav-links">
+          <a href="#/">Home</a>
+          <div className="nav-dropdown" onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
+            <span className="nav-dropdown-trigger">Services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></span>
+            {megaOpen && <div className="mega-menu"><div className="mega-menu-grid">
+              {CATEGORIES.map(c => <a key={c.id} href={`#/services?cat=${c.id}`} className="mega-menu-item"><div className="mega-menu-icon">{c.icon}</div><div><h4>{c.name}</h4><p>{c.desc}</p></div></a>)}
+            </div></div>}
+          </div>
+          <a href="#/portfolio">Portfolio</a>
+          <a href="#/pricing">Pricing</a>
+          <a href="#/blog">Blog</a>
+          <a href="#/about">About</a>
+          <a href="#/knowledge">Help</a>
+        </div>
+        <div className="nav-right">
+          <div className="currency-switcher">
+            {Object.keys(CONFIG.CURRENCIES).map(c => <button key={c} className={`currency-btn${currency === c ? ' active' : ''}`} onClick={() => setCurrency(c)}>{c}</button>)}
+          </div>
+          {user && <a href="#/dashboard/credits" className="credit-pill"><span className="coin">🪙</span>{user.credits.toLocaleString()}</a>}
+          {user ? (
+            <div className="nav-dropdown" style={{position:'relative'}}>
+              <button className="btn btn-sm btn-ghost nav-dropdown-trigger" style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                <div style={{width:30,height:30,borderRadius:'50%',background:'var(--gradient)',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:13,fontWeight:700}}>{user.name[0]}</div>
+                {user.name.split(' ')[0]}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width:14,height:14}}><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div className="mega-menu" style={{minWidth:200,right:0,left:'auto',transform:'none'}}>
+                <a href="#/dashboard" className="mega-menu-item"><div className="mega-menu-icon">📊</div><div><h4>Dashboard</h4><p>View your account</p></div></a>
+                {isAdmin && <a href="#/admin" className="mega-menu-item"><div className="mega-menu-icon">🔑</div><div><h4>Admin Panel</h4><p>Manage platform</p></div></a>}
+                <a href="#/dashboard/settings" className="mega-menu-item"><div className="mega-menu-icon">⚙️</div><div><h4>Settings</h4><p>Account settings</p></div></a>
+                <div style={{borderTop:'1px solid var(--gray-100)',margin:'8px 0'}}/>
+                <button onClick={logout} className="mega-menu-item" style={{width:'100%',textAlign:'left',cursor:'pointer'}}><div className="mega-menu-icon">🚪</div><div><h4>Log Out</h4></div></button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <a href="#/login" className="btn btn-sm btn-ghost">Log In</a>
+              <a href="#/register" className="btn btn-sm btn-primary">Sign Up Free</a>
+            </>
+          )}
+        </div>
+        <button className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}><span/><span/><span/></button>
+      </div>
+      {mobileOpen && <div className="mobile-menu open">
+        <a href="#/" onClick={() => setMobileOpen(false)}>Home</a>
+        <a href="#/services" onClick={() => setMobileOpen(false)}>Services</a>
+        <a href="#/portfolio" onClick={() => setMobileOpen(false)}>Portfolio</a>
+        <a href="#/pricing" onClick={() => setMobileOpen(false)}>Pricing</a>
+        <a href="#/blog" onClick={() => setMobileOpen(false)}>Blog</a>
+        <a href="#/about" onClick={() => setMobileOpen(false)}>About</a>
+        <a href="#/knowledge" onClick={() => setMobileOpen(false)}>Help Center</a>
+        {user ? <>
+          <a href="#/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</a>
+          <button onClick={() => { logout(); setMobileOpen(false); }} className="btn btn-block btn-secondary" style={{marginTop:8}}>Log Out</button>
+        </> : <>
+          <a href="#/login" className="btn btn-block btn-secondary" onClick={() => setMobileOpen(false)}>Log In</a>
+          <a href="#/register" className="btn btn-block btn-primary" onClick={() => setMobileOpen(false)}>Sign Up Free</a>
+        </>}
+      </div>}
+    </nav>
+  );
+}
+
+function Footer() {
+  const { addToast } = useContext(NotificationContext);
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div>
+            <div className="footer-brand"><div className="nav-logo" style={{marginBottom:12}}><span className="creative">Creative</span><span className="kaygency" style={{color:'white'}}>Kaygency</span></div></div>
+            <p>Premium digital design services with a gamified credit system. Subscribe, earn credits, and save on every project.</p>
+            <div className="footer-newsletter" style={{marginTop:16}}>
+              <input placeholder="Enter your email" />
+              <button className="btn btn-sm btn-primary" onClick={() => addToast('Subscribed to newsletter!','success')}>Subscribe</button>
+            </div>
+          </div>
+          <div><h4>Services</h4><div className="footer-links"><a href="#/services?cat=websites">Websites</a><a href="#/services?cat=ecommerce">E-Commerce</a><a href="#/services?cat=graphics">Graphics</a><a href="#/services?cat=seo">SEO</a><a href="#/services?cat=content">Content</a><a href="#/services?cat=digital">Digital Products</a></div></div>
+          <div><h4>Company</h4><div className="footer-links"><a href="#/about">About Us</a><a href="#/portfolio">Portfolio</a><a href="#/blog">Blog</a><a href="#/contact">Contact</a><a href="#/knowledge">Help Center</a><a href="#/faq">FAQs</a></div></div>
+          <div><h4>Legal</h4><div className="footer-links"><a href="#/privacy">Privacy Policy</a><a href="#/terms">Terms of Service</a><a href="#/refund">Refund Policy</a></div></div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2024 {CONFIG.SITE_NAME}. All rights reserved.</span>
+          <div className="footer-social">
+            <a href="#" title="Twitter">𝕏</a><a href="#" title="Facebook">f</a><a href="#" title="LinkedIn">in</a><a href="#" title="Instagram">📷</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Toasts() {
+  const { toasts } = useContext(NotificationContext);
+  return (
+    <div className="toast-container">
+      {toasts.map(t => <div key={t.id} className={`toast ${t.type}`}><span className="toast-icon">{t.type === 'success' ? '✅' : t.type === 'error' ? '❌' : 'ℹ️'}</span><span>{t.message}</span></div>)}
+    </div>
+  );
+}
+
+// ============================================================================
+// HOME PAGE
+// ============================================================================
+
+function HomePage() {
+  const { formatPrice } = useContext(CurrencyContext);
+  const { user } = useContext(AuthContext);
+  useEffect(() => { document.title = 'Creative Kaygency - Premium Digital Design Services'; }, []);
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="hero">
+        <div className="container">
+          <div className="hero-grid">
+            <div>
+              <div className="hero-badge">⚡ YOUR COMPETITORS ARE ALREADY ONLINE</div>
+              <h1>Transform Your <span className="highlight">Digital Presence</span> Even If You're Starting From Scratch</h1>
+              <p className="hero-subtitle">Premium design services with a gamified credit system that saves you up to 20%. Websites, e-commerce, branding, SEO, and more — all under one roof.</p>
+              <div className="hero-actions">
+                <a href={user ? '#/dashboard/book' : '#/register'} className="btn btn-lg btn-primary">Get Started Free →</a>
+                <a href="#/portfolio" className="btn btn-lg btn-secondary">See Our Work</a>
+              </div>
+              <div className="hero-trust">
+                <div className="avatar-stack">
+                  {['#7C3AED','#10B981','#EC4899','#F97316','#3B82F6'].map((c,i) => <div key={i} className="avatar" style={{background:c}}>{['S','J','E','D','L'][i]}</div>)}
+                </div>
+                <div className="hero-trust-text"><strong>500+ businesses</strong> trust us with their digital growth</div>
+              </div>
+            </div>
+            <div className="hero-visual">
+              <div className="dashboard-mockup">
+                <div className="mockup-header"><div className="mockup-dots"><span/><span/><span/></div><span className="mockup-title">Creative Kaygency Dashboard</span></div>
+                <div className="mockup-stats">
+                  <div className="mockup-stat"><div className="mockup-stat-label">Credit Balance</div><div className="mockup-stat-value purple">2,450</div></div>
+                  <div className="mockup-stat"><div className="mockup-stat-label">Active Projects</div><div className="mockup-stat-value green">3</div></div>
+                  <div className="mockup-stat"><div className="mockup-stat-label">Completion Rate</div><div className="mockup-stat-value pink">98.7%</div></div>
+                  <div className="mockup-stat"><div className="mockup-stat-label">Credits Saved</div><div className="mockup-stat-value orange">£1,240</div></div>
+                </div>
+                <div className="mockup-badge-float" style={{top:-10,right:-10,background:'var(--success)',color:'white',zIndex:2}}>🔥 12 Day Streak!</div>
+                <div className="mockup-badge-float" style={{bottom:-10,left:-10,background:'white',color:'var(--dark)',zIndex:2,animationDelay:'1.5s'}}>+5 daily credits claimed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Logo Bar */}
+      <div className="logo-bar">
+        <div className="container">
+          <p>Trusted by companies worldwide</p>
+          <div className="logo-bar-grid">
+            {['TECHSTART','FRESHBITE','SUMMIT','GREENLEAF','NEXUS','URBANSTYLE'].map(n => <span key={n} className="logo-bar-item">{n}</span>)}
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header"><div className="badge badge-primary">Simple Process</div><h2>How It Works</h2><p>Get started in three simple steps and watch your digital presence transform.</p></div>
+          <div className="steps-grid">
+            {[{n:'1',t:'Choose Your Service',d:'Browse our 30+ professional services or tell us what you need. Pay with credits for up to 20% savings.'},{n:'2',t:'We Create Magic',d:'Our expert team gets to work immediately. Track progress in real-time from your dashboard.'},{n:'3',t:'Launch & Grow',d:'Receive your completed project, provide feedback, and watch your business grow online.'}].map((s,i) => (
+              <div key={i} className="step-card">
+                <div className="step-number">{s.n}</div>
+                <h3>{s.t}</h3><p>{s.d}</p>
+                {i < 2 && <div className="step-arrow">→</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Overview */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header"><div className="badge badge-primary">Our Expertise</div><h2>Services That Drive Growth</h2><p>From stunning websites to powerful SEO — everything you need to dominate online.</p></div>
+          <div className="services-grid">
+            {CATEGORIES.slice(0, 8).map(c => {
+              const svc = SERVICES.find(s => s.category === c.id);
+              return (
+                <a key={c.id} href={`#/services?cat=${c.id}`} className="service-card card-hover">
+                  <div className="service-icon">{c.icon}</div>
+                  <h3>{c.name}</h3>
+                  <p>{c.desc}</p>
+                  {svc && <div className="service-price">From {formatPrice(svc.creditMin)} credits <span className="cash">{formatPrice(svc.cashMin)} cash</span></div>}
+                  {svc && <div className="service-save">Save ~20% with credits</div>}
+                </a>
+              );
+            })}
+          </div>
+          <div style={{textAlign:'center',marginTop:32}}><a href="#/services" className="btn btn-primary">View All Services →</a></div>
+        </div>
+      </section>
+
+      {/* Credit System Promo */}
+      <section className="section">
+        <div className="container">
+          <div className="credit-promo">
+            <div className="credit-promo-text">
+              <div className="badge badge-primary" style={{marginBottom:12}}>💰 Save More</div>
+              <h2>The Smarter Way to Pay</h2>
+              <p>Our credit system rewards loyalty. Buy credits at a discount, earn them daily through logins and referrals, and save on every single project.</p>
+              <div className="credit-feature-list">
+                {['Credits cost less than cash — save ~20% on every service','Earn +5 free credits every day just by logging in','Get bonus credits for referrals (when they purchase)','Credits roll over monthly — they never expire','Streak bonuses: 7-day, 30-day, and milestone rewards'].map((f,i) => <div key={i} className="credit-feature"><span className="check">✓</span>{f}</div>)}
+              </div>
+              <div style={{marginTop:20}}><a href={user ? '#/dashboard/credits' : '#/register'} className="btn btn-primary">Start Earning Credits →</a></div>
+            </div>
+            <div className="credit-packages">
+              {CREDIT_PACKAGES.slice(0, 3).map(pkg => (
+                <div key={pkg.id} className={`credit-pkg${pkg.popular ? ' popular' : ''}`}>
+                  {pkg.popular && <div className="popular-badge">Most Popular</div>}
+                  <div className="label">Credits</div>
+                  <div className="amount">{pkg.credits}</div>
+                  <div className="price">{formatPrice(pkg.price)}</div>
+                  <div className="per">/month</div>
+                  <button className="btn btn-sm btn-primary btn-block" style={{marginTop:12}} onClick={() => location.hash = user ? '/dashboard/credits' : '/register'}>Get Credits</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="section section-dark">
+        <div className="container">
+          <div className="stats-grid">
+            {[{n:'500+',l:'Projects Delivered'},{n:'98%',l:'Client Satisfaction'},{n:'24hr',l:'Average Turnaround'},{n:'50+',l:'Services Available'}].map((s,i) => (
+              <div key={i} className="stat-card"><div className="stat-number text-gradient">{s.n}</div><div className="stat-label">{s.l}</div></div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Gamification Teaser */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header"><div className="badge badge-warning">🎮 Gamified</div><h2>Earn While You Create</h2><p>Our platform rewards you for engagement. Log in daily, refer friends, and unlock achievements.</p></div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3, 1fr)',gap:24}}>
+            <div className="card" style={{textAlign:'center'}}><div style={{fontSize:48,marginBottom:12}}>🔥</div><h3>Daily Streaks</h3><p style={{color:'var(--gray-500)',fontSize:14,marginTop:6}}>Log in daily to build your streak and earn bonus credits. 7-day and 30-day milestones unlock extra rewards.</p></div>
+            <div className="card" style={{textAlign:'center'}}><div style={{fontSize:48,marginBottom:12}}>🏆</div><h3>Achievement Badges</h3><p style={{color:'var(--gray-500)',fontSize:14,marginTop:6}}>Unlock badges as you complete projects, refer friends, and reach milestones. Collect them all!</p></div>
+            <div className="card" style={{textAlign:'center'}}><div style={{fontSize:48,marginBottom:12}}>🤝</div><h3>Referral Rewards</h3><p style={{color:'var(--gray-500)',fontSize:14,marginTop:6}}>Share your referral link. When your friend makes a purchase, you BOTH earn bonus credits.</p></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header"><div className="badge badge-primary">Flexible Plans</div><h2>Choose Your Plan</h2><p>Whether you need a one-off project or ongoing support, we have a plan that fits.</p></div>
+          <PricingCards />
+          <div style={{textAlign:'center',marginTop:24}}><a href="#/pricing" className="btn btn-secondary">Compare All Plans →</a></div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header"><div className="badge badge-success">⭐ Reviews</div><h2>What Our Clients Say</h2><p>Don't take our word for it — hear from businesses we've helped grow.</p></div>
+          <div className="testimonials-grid">
+            {TESTIMONIALS.map((t,i) => (
+              <div key={i} className="testimonial-card">
+                <div className="testimonial-stars">★★★★★</div>
+                <div className="testimonial-text">"{t.text}"</div>
+                <div className="testimonial-author">
+                  <div className="testimonial-avatar" style={{background:t.avatar}}>{t.name[0]}</div>
+                  <div><div className="testimonial-name">{t.name}</div><div className="testimonial-role">{t.role}</div></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Preview */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header"><div className="badge badge-info">📚 Latest</div><h2>From Our Blog</h2><p>Expert insights, guides, and tips to help grow your business.</p></div>
+          <div className="blog-grid">
+            {BLOG_POSTS.slice(0,3).map(p => (
+              <a key={p.slug} href={`#/blog/${p.slug}`} className="blog-card">
+                <div className="blog-card-image">{['🌐','💰','🔍'][BLOG_POSTS.indexOf(p) % 3]}</div>
+                <div className="blog-card-body">
+                  <div className="blog-card-category">{p.category}</div>
+                  <h3 className="blog-card-title">{p.title}</h3>
+                  <p className="blog-card-excerpt">{p.excerpt}</p>
+                  <div className="blog-card-meta"><span>{p.date}</span><span>•</span><span>{p.readTime} read</span></div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section">
+        <div className="container" style={{position:'relative'}}>
+          <h2>Ready to Transform Your Business?</h2>
+          <p>Join 500+ businesses already growing with Creative Kaygency. Start free today.</p>
+          <a href={user ? '#/dashboard/book' : '#/register'} className="btn btn-lg btn-dark">Get Started Free — No Credit Card Required →</a>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PricingCards({ compact }) {
+  const { formatPrice } = useContext(CurrencyContext);
+  return (
+    <div className="pricing-grid">
+      {PLANS.map(plan => (
+        <div key={plan.id} className={`pricing-card${plan.featured ? ' featured' : ''}`}>
+          {plan.featured && <div className="pricing-badge">Most Popular</div>}
+          <div className="plan-name">{plan.name}</div>
+          <div className="plan-price"><span className="currency">{formatPrice(plan.price).charAt(0)}</span>{formatPrice(plan.price, false)}<span className="period">/mo</span></div>
+          <div className="plan-desc">{plan.desc}</div>
+          <ul className="pricing-features">
+            {plan.features.map((f,i) => <li key={i}><span className="icon">✓</span>{f}</li>)}
+          </ul>
+          <a href="#/register" className={`btn btn-block ${plan.featured ? 'btn-primary' : 'btn-secondary'}`}>Choose {plan.name}</a>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// SERVICES PAGE
+// ============================================================================
+
+function ServicesPage() {
+  const { formatPrice } = useContext(CurrencyContext);
+  const [filter, setFilter] = useState('all');
+  useEffect(() => {
+    document.title = 'Services - Creative Kaygency';
+    const h = window.location.hash;
+    const catMatch = h.match(/cat=(\w+)/);
+    if (catMatch) setFilter(catMatch[1]);
+  }, []);
+  const filtered = filter === 'all' ? SERVICES : SERVICES.filter(s => s.category === filter);
+
+  return (
+    <div>
+      <div className="page-header"><div className="container"><div className="breadcrumb"><a href="#/">Home</a> / Services</div><h1>Our Services</h1><p>30+ professional digital services to help your business grow online.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div className="filter-tabs">
+          <button className={`filter-tab${filter === 'all' ? ' active' : ''}`} onClick={() => setFilter('all')}>All Services</button>
+          {CATEGORIES.map(c => <button key={c.id} className={`filter-tab${filter === c.id ? ' active' : ''}`} onClick={() => setFilter(c.id)}>{c.icon} {c.name}</button>)}
+        </div>
+        <div className="services-grid">
+          {filtered.map(s => (
+            <div key={s.id} className="service-card card-hover">
+              <div className="service-icon">{s.icon}</div>
+              <h3>{s.name}</h3>
+              <p>{s.desc}</p>
+              <div className="service-save">Save ~20% with credits</div>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+                <div><div style={{fontSize:12,color:'var(--gray-400)'}}>Credits</div><div style={{fontWeight:700,color:'var(--primary)'}}>{s.creditMin}–{s.creditMax}</div></div>
+                <div style={{textAlign:'right'}}><div style={{fontSize:12,color:'var(--gray-400)'}}>Cash</div><div style={{fontWeight:600,color:'var(--gray-600)'}}>{formatPrice(s.cashMin)}–{formatPrice(s.cashMax)}</div></div>
+              </div>
+              <a href={`#/book/${s.id}`} className="btn btn-sm btn-primary btn-block">Book Now</a>
+            </div>
+          ))}
+        </div>
+      </div></section>
+      <section className="cta-section"><div className="container" style={{position:'relative'}}><h2>Can't Find What You Need?</h2><p>We offer custom solutions. Contact us for a free consultation.</p><a href="#/contact" className="btn btn-lg btn-dark">Contact Us →</a></div></section>
+    </div>
+  );
+}
+
+function ServiceDetailPage({ serviceId }) {
+  const { formatPrice } = useContext(CurrencyContext);
+  const service = SERVICES.find(s => s.id === serviceId);
+  if (!service) return <NotFoundPage />;
+  useEffect(() => { document.title = `${service.name} - Creative Kaygency`; }, [service]);
+  const related = SERVICES.filter(s => s.category === service.category && s.id !== service.id).slice(0, 3);
+  const savings = Math.round((1 - service.creditMin / service.cashMin) * 100);
+
+  return (
+    <div>
+      <div className="page-header"><div className="container"><div className="breadcrumb"><a href="#/">Home</a> / <a href="#/services">Services</a> / {service.name}</div><h1>{service.icon} {service.name}</h1><div className="badge badge-primary" style={{marginTop:8}}>{CATEGORIES.find(c => c.id === service.category)?.name}</div></div></div>
+      <section className="section-sm"><div className="container">
+        <div style={{display:'grid',gridTemplateColumns:'1.5fr 1fr',gap:40}}>
+          <div>
+            <h2 style={{fontSize:24,marginBottom:12}}>About This Service</h2>
+            <p style={{color:'var(--gray-600)',lineHeight:1.8,marginBottom:24}}>{service.desc}</p>
+            <h3 style={{fontSize:18,marginBottom:12}}>What's Included</h3>
+            <ul style={{display:'flex',flexDirection:'column',gap:8,marginBottom:24}}>
+              {service.features.map((f,i) => <li key={i} style={{display:'flex',alignItems:'center',gap:10,fontSize:15,color:'var(--gray-700)'}}><span style={{color:'var(--success)',fontWeight:700}}>✓</span>{f}</li>)}
+            </ul>
+          </div>
+          <div>
+            <div className="card" style={{position:'sticky',top:100}}>
+              <h3 style={{marginBottom:16}}>Pricing</h3>
+              <div style={{display:'flex',flexDirection:'column',gap:12,marginBottom:20}}>
+                <div style={{display:'flex',justifyContent:'space-between',padding:'12px 16px',background:'var(--gradient-subtle)',borderRadius:'var(--radius)',border:'2px solid var(--primary)'}}>
+                  <div><div style={{fontSize:12,fontWeight:600,color:'var(--primary)'}}>💰 Pay with Credits</div><div style={{fontSize:20,fontWeight:800,color:'var(--primary)'}}>{service.creditMin}–{service.creditMax} credits</div></div>
+                  <div className="badge badge-success" style={{alignSelf:'center'}}>Save {savings}%</div>
+                </div>
+                <div style={{display:'flex',justifyContent:'space-between',padding:'12px 16px',background:'var(--gray-50)',borderRadius:'var(--radius)'}}>
+                  <div><div style={{fontSize:12,fontWeight:600,color:'var(--gray-500)'}}>💳 Pay Cash</div><div style={{fontSize:20,fontWeight:700,color:'var(--gray-700)'}}>{formatPrice(service.cashMin)}–{formatPrice(service.cashMax)}</div></div>
+                </div>
+              </div>
+              <a href={`#/book/${service.id}`} className="btn btn-primary btn-block btn-lg">Book This Service →</a>
+              <p style={{textAlign:'center',fontSize:12,color:'var(--gray-400)',marginTop:8}}>No commitment required</p>
+            </div>
+          </div>
+        </div>
+      </div></section>
+      {related.length > 0 && <section className="section section-alt"><div className="container">
+        <h2 style={{textAlign:'center',marginBottom:24}}>Related Services</h2>
+        <div className="services-grid" style={{gridTemplateColumns:`repeat(${Math.min(related.length, 3)}, 1fr)`}}>
+          {related.map(s => <a key={s.id} href={`#/services/${s.id}`} className="service-card card-hover"><div className="service-icon">{s.icon}</div><h3>{s.name}</h3><p>{s.desc}</p><div className="service-price">From {s.creditMin} credits</div></a>)}
+        </div>
+      </div></section>}
+    </div>
+  );
+}
+
+// ============================================================================
+// AUTH PAGES
+// ============================================================================
+
+function LoginPage() {
+  const { login } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  useEffect(() => { document.title = 'Log In - Creative Kaygency'; }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const result = login(email, password);
+    if (result.success) { addToast(`Welcome back, ${result.user.name}!`); location.hash = result.user.isAdmin ? '/admin' : '/dashboard'; }
+    else addToast(result.error, 'error');
+  };
+
+  return (
+    <div className="auth-page"><div className="auth-card">
+      <h2>Welcome Back</h2>
+      <p className="subtitle">Log in to your Creative Kaygency account</p>
+      <div className="demo-hint">🔑 Demo: demo@creative-kaygency.com / demo123<br/>Admin: kieron.b@outlook.com / admin123</div>
+      <div className="social-login">
+        <button className="social-btn" onClick={() => addToast('Google login coming soon!','warning')}>G  Google</button>
+        <button className="social-btn" onClick={() => addToast('GitHub login coming soon!','warning')}>⌥  GitHub</button>
+      </div>
+      <div className="auth-divider">or continue with email</div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required /></div>
+        <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required /></div>
+        <button type="submit" className="btn btn-primary btn-block btn-lg">Log In</button>
+      </form>
+      <div className="auth-footer">Don't have an account? <a href="#/register">Sign Up Free</a></div>
+    </div></div>
+  );
+}
+
+function RegisterPage() {
+  const { register: doRegister } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', referral: '', terms: false });
+  useEffect(() => { document.title = 'Sign Up - Creative Kaygency'; }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (form.password !== form.confirm) return addToast('Passwords do not match', 'error');
+    if (!form.terms) return addToast('Please accept the terms', 'error');
+    const result = doRegister(form.name, form.email, form.password, form.referral);
+    if (result.success) { addToast(`Welcome to Creative Kaygency, ${form.name}! 🎉`); location.hash = '/dashboard'; }
+    else addToast(result.error, 'error');
+  };
+  const u = (field, val) => setForm(f => ({ ...f, [field]: val }));
+
+  return (
+    <div className="auth-page"><div className="auth-card">
+      <h2>Create Your Account</h2>
+      <p className="subtitle">Join 500+ businesses growing with Creative Kaygency</p>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" value={form.name} onChange={e => u('name',e.target.value)} placeholder="John Smith" required /></div>
+        <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" value={form.email} onChange={e => u('email',e.target.value)} placeholder="you@example.com" required /></div>
+        <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={form.password} onChange={e => u('password',e.target.value)} placeholder="Min 8 characters" required minLength="8" /></div>
+        <div className="form-group"><label className="form-label">Confirm Password</label><input className="form-input" type="password" value={form.confirm} onChange={e => u('confirm',e.target.value)} placeholder="••••••••" required /></div>
+        <div className="form-group"><label className="form-label">Referral Code (optional)</label><input className="form-input" value={form.referral} onChange={e => u('referral',e.target.value)} placeholder="Enter referral code for 50 bonus credits" /></div>
+        <label className="form-checkbox" style={{marginBottom:20}}><input type="checkbox" checked={form.terms} onChange={e => u('terms',e.target.checked)} /><span>I agree to the <a href="#/terms" style={{color:'var(--primary)'}}>Terms of Service</a> and <a href="#/privacy" style={{color:'var(--primary)'}}>Privacy Policy</a></span></label>
+        <button type="submit" className="btn btn-primary btn-block btn-lg">Create Account →</button>
+      </form>
+      <div className="auth-footer">Already have an account? <a href="#/login">Log In</a></div>
+    </div></div>
+  );
+}
+
+// ============================================================================
+// USER DASHBOARD
+// ============================================================================
+
+function DashboardPage() {
+  const { user, updateCredits, claimDailyLogin, projects, isAdmin } = useContext(AuthContext);
+  const { formatPrice } = useContext(CurrencyContext);
+  const { addToast } = useContext(NotificationContext);
+  const [tab, setTab] = useState('overview');
+
+  useEffect(() => {
+    document.title = 'Dashboard - Creative Kaygency';
+    const h = window.location.hash;
+    if (h.includes('/dashboard/credits')) setTab('credits');
+    else if (h.includes('/dashboard/book')) setTab('book');
+    else if (h.includes('/dashboard/rewards')) setTab('rewards');
+    else if (h.includes('/dashboard/referrals')) setTab('referrals');
+    else if (h.includes('/dashboard/projects')) setTab('projects');
+    else if (h.includes('/dashboard/settings')) setTab('settings');
+  }, []);
+
+  if (!user) { location.hash = '/login'; return null; }
+
+  const handleDailyClaim = () => {
+    const claimed = claimDailyLogin();
+    if (claimed) addToast('🎉 +5 credits claimed! Keep your streak going!');
+    else addToast('You\'ve already claimed today\'s reward!', 'warning');
+  };
+
+  const sideItems = [
+    { id: 'overview', icon: '📊', label: 'Overview' },
+    { id: 'projects', icon: '📁', label: 'My Projects' },
+    { id: 'book', icon: '🛒', label: 'Book Service' },
+    { id: 'credits', icon: '💰', label: 'Credits' },
+    { id: 'rewards', icon: '🎮', label: 'Rewards' },
+    { id: 'referrals', icon: '🤝', label: 'Referrals' },
+    { id: 'settings', icon: '⚙️', label: 'Settings' },
+  ];
+
+  return (
+    <div className="dashboard-layout">
+      <aside className="dashboard-sidebar">
+        <div style={{marginBottom:16,padding:'0 14px'}}><div style={{fontSize:13,color:'var(--gray-400)'}}>Welcome back,</div><div style={{fontSize:16,fontWeight:700}}>{user.name}</div></div>
+        <nav className="sidebar-nav">
+          {sideItems.map(item => <button key={item.id} className={`sidebar-link${tab === item.id ? ' active' : ''}`} onClick={() => { setTab(item.id); location.hash = `/dashboard/${item.id === 'overview' ? '' : item.id}`; }}><span className="icon">{item.icon}</span>{item.label}</button>)}
+        </nav>
+        {isAdmin && <><div className="sidebar-section-title">Admin</div><a href="#/admin" className="sidebar-link"><span className="icon">🔑</span>Admin Panel</a></>}
+      </aside>
+      <main className="dashboard-content">
+        {tab === 'overview' && <DashOverview user={user} projects={projects} formatPrice={formatPrice} onClaim={handleDailyClaim} />}
+        {tab === 'projects' && <DashProjects projects={projects} />}
+        {tab === 'book' && <DashBookService />}
+        {tab === 'credits' && <DashCredits user={user} formatPrice={formatPrice} />}
+        {tab === 'rewards' && <DashRewards user={user} onClaim={handleDailyClaim} />}
+        {tab === 'referrals' && <DashReferrals user={user} />}
+        {tab === 'settings' && <DashSettings user={user} />}
+      </main>
+    </div>
+  );
+}
+
+function DashOverview({ user, projects, formatPrice, onClaim }) {
+  return (
+    <div>
+      <div className="dash-header"><h1>Dashboard</h1><p>Welcome back, {user.name}. Here's your account overview.</p></div>
+      <div className="dash-stats">
+        <div className="dash-stat-card"><div className="label">Credit Balance</div><div className="value" style={{color:'var(--primary)'}}>{user.credits.toLocaleString()}</div><div className="change up">🪙 Credits available</div></div>
+        <div className="dash-stat-card"><div className="label">Active Projects</div><div className="value" style={{color:'var(--info)'}}>{projects.filter(p => p.status === 'in-progress').length}</div><div className="change">In progress</div></div>
+        <div className="dash-stat-card"><div className="label">Completed</div><div className="value" style={{color:'var(--success)'}}>{projects.filter(p => p.status === 'completed').length}</div><div className="change up">All time</div></div>
+        <div className="dash-stat-card"><div className="label">Current Streak</div><div className="value" style={{color:'var(--warning)'}}>{user.streak} 🔥</div><div className="change up">Days</div></div>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+        <div className="card">
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+            <h3 style={{fontSize:16}}>Daily Login Reward</h3>
+            <button className="btn btn-sm btn-primary" onClick={onClaim}>Claim +5 Credits</button>
+          </div>
+          <div className="streak-bar"><div className="streak-bar-fill" style={{width: `${Math.min(100, (user.streak % 7) / 7 * 100)}%`}}/></div>
+          <div style={{fontSize:13,color:'var(--gray-500)'}}>{7 - (user.streak % 7)} days until 7-day streak bonus (+25 credits)</div>
+        </div>
+        <div className="card">
+          <h3 style={{fontSize:16,marginBottom:12}}>Quick Actions</h3>
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            <a href="#/dashboard/book" className="btn btn-sm btn-primary">Book Service</a>
+            <a href="#/dashboard/credits" className="btn btn-sm btn-secondary">Buy Credits</a>
+            <a href="#/dashboard/referrals" className="btn btn-sm btn-ghost">Share & Earn</a>
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3 style={{fontSize:16,marginBottom:16}}>Recent Projects</h3>
+        <div className="project-list">
+          {projects.slice(0, 4).map(p => {
+            const svc = SERVICES.find(s => s.id === p.service);
+            return (
+              <div key={p.id} className="project-item">
+                <div className="project-info">
+                  <div className="project-icon">{svc?.icon || '📦'}</div>
+                  <div><div className="project-name">{svc?.name || p.service}</div><div className="project-date">{p.date}</div></div>
+                </div>
+                <div className="project-status">
+                  <span className={`badge badge-${p.status === 'completed' ? 'success' : p.status === 'in-progress' ? 'info' : 'warning'}`}>{p.status}</span>
+                  <span style={{fontSize:13,color:'var(--gray-500)'}}>{p.paid === 'credits' ? `${p.amount} credits` : formatPrice(p.amount)}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DashProjects({ projects }) {
+  return (
+    <div>
+      <div className="dash-header"><h1>My Projects</h1><p>Track all your booked services and their progress.</p></div>
+      <div className="project-list">
+        {projects.map(p => {
+          const svc = SERVICES.find(s => s.id === p.service);
+          return (
+            <div key={p.id} className="project-item">
+              <div className="project-info">
+                <div className="project-icon">{svc?.icon || '📦'}</div>
+                <div><div className="project-name">{svc?.name || p.service}</div><div className="project-date">{p.date} • {p.paid === 'credits' ? `${p.amount} credits` : `£${p.amount} cash`}</div></div>
+              </div>
+              <span className={`badge badge-${p.status === 'completed' ? 'success' : p.status === 'in-progress' ? 'info' : 'warning'}`}>{p.status}</span>
+            </div>
+          );
+        })}
+        {projects.length === 0 && <div className="card" style={{textAlign:'center',padding:40}}><p style={{color:'var(--gray-400)',marginBottom:12}}>No projects yet</p><a href="#/dashboard/book" className="btn btn-primary">Book Your First Service →</a></div>}
+      </div>
+    </div>
+  );
+}
+
+function DashBookService() {
+  const [selected, setSelected] = useState(null);
+  return (
+    <div>
+      <div className="dash-header"><h1>Book a Service</h1><p>Choose from 30+ professional services below.</p></div>
+      {!selected ? (
+        <div className="services-grid" style={{gridTemplateColumns:'repeat(3, 1fr)'}}>
+          {SERVICES.slice(0, 15).map(s => (
+            <div key={s.id} className="service-card card-hover" onClick={() => setSelected(s)} style={{cursor:'pointer'}}>
+              <div className="service-icon">{s.icon}</div>
+              <h3 style={{fontSize:14}}>{s.name}</h3>
+              <div className="service-save" style={{marginTop:8}}>From {s.creditMin} credits</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div>
+          <button className="btn btn-sm btn-ghost" onClick={() => setSelected(null)} style={{marginBottom:16}}>← Back to services</button>
+          <BookingWizard service={selected} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DashCredits({ user, formatPrice }) {
+  const { updateCredits } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
+
+  const handlePurchase = (pkg) => {
+    updateCredits(pkg.credits);
+    addToast(`🎉 ${pkg.credits} credits purchased! New balance: ${(user.credits + pkg.credits).toLocaleString()}`);
+  };
+
+  return (
+    <div>
+      <div className="dash-header"><h1>Credits</h1><p>Manage your credits, purchase more, and view history.</p></div>
+      <div className="credit-balance-card">
+        <div className="balance-label">Available Credits</div>
+        <div className="balance-value">{user.credits.toLocaleString()}</div>
+        <div className="balance-sub">≈ {formatPrice(Math.round(user.credits * 0.22))} value • Credits never expire</div>
+      </div>
+      <h3 style={{marginBottom:16}}>Buy Credit Packages</h3>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:12,marginBottom:32}}>
+        {CREDIT_PACKAGES.slice(0, 4).map(pkg => (
+          <div key={pkg.id} className={`credit-pkg${pkg.popular ? ' popular' : ''}`}>
+            {pkg.popular && <div className="popular-badge">Best Value</div>}
+            <div className="amount">{pkg.credits}</div>
+            <div className="label">credits</div>
+            <div className="price">{formatPrice(pkg.price)}</div>
+            <div className="per">{formatPrice(pkg.perCredit, false)}p per credit</div>
+            <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => handlePurchase(pkg)}>Buy Now</button>
+          </div>
+        ))}
+      </div>
+      <h3 style={{marginBottom:12}}>Transaction History</h3>
+      <div className="card"><div className="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance</th></tr></thead>
+        <tbody>
+          <tr><td>Today</td><td><span className="badge badge-success">Daily Login</span></td><td style={{color:'var(--success)'}}>+5</td><td>{user.credits.toLocaleString()}</td></tr>
+          <tr><td>Yesterday</td><td><span className="badge badge-info">Purchase</span></td><td style={{color:'var(--success)'}}>+200</td><td>{(user.credits - 5).toLocaleString()}</td></tr>
+          <tr><td>2 days ago</td><td><span className="badge badge-warning">Service</span></td><td style={{color:'var(--error)'}}>-500</td><td>{(user.credits - 205).toLocaleString()}</td></tr>
+          <tr><td>3 days ago</td><td><span className="badge badge-primary">Referral</span></td><td style={{color:'var(--success)'}}>+50</td><td>{(user.credits + 295).toLocaleString()}</td></tr>
+        </tbody>
+      </table></div></div>
+    </div>
+  );
+}
+
+function DashRewards({ user, onClaim }) {
+  return (
+    <div>
+      <div className="dash-header"><h1>Rewards & Achievements</h1><p>Earn credits, build streaks, and unlock badges.</p></div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+        <div className="card">
+          <h3 style={{fontSize:16,marginBottom:12}}>🔥 Daily Login Streak</h3>
+          <div className="streak-header"><div className="streak-count">🔥 {user.streak} days</div><button className="btn btn-sm btn-primary" onClick={onClaim}>Claim +5</button></div>
+          <div className="streak-bar" style={{marginBottom:12}}><div className="streak-bar-fill" style={{width:`${Math.min(100, (user.streak % 30) / 30 * 100)}%`}}/></div>
+          <div className="streak-days">
+            {Array.from({length: 7}, (_, i) => {
+              const completed = i < (user.streak % 7);
+              const isCurrent = i === (user.streak % 7);
+              return <div key={i} className={`streak-day ${completed ? 'completed' : isCurrent ? 'current' : 'upcoming'}`}>{completed ? '✓' : i + 1}</div>;
+            })}
+          </div>
+          <div style={{marginTop:12,fontSize:13,color:'var(--gray-500)'}}>
+            <div>7-day streak bonus: <strong>+25 credits</strong></div>
+            <div>30-day streak bonus: <strong>+100 credits</strong></div>
+          </div>
+        </div>
+        <div className="card">
+          <h3 style={{fontSize:16,marginBottom:12}}>📊 Your Stats</h3>
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Total credits earned</span><strong>{(user.credits + 500).toLocaleString()}</strong></div>
+            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Projects completed</span><strong>{user.projectsCompleted}</strong></div>
+            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Referrals converted</span><strong>{user.referrals}</strong></div>
+            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Badges unlocked</span><strong>{user.badges?.length || 0}/{BADGES.length}</strong></div>
+            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Member since</span><strong>{user.joinDate}</strong></div>
+          </div>
+        </div>
+      </div>
+      <h3 style={{marginBottom:16}}>🏆 Achievement Badges</h3>
+      <div className="badges-grid">
+        {BADGES.map(b => {
+          const earned = user.badges?.includes(b.id);
+          return (
+            <div key={b.id} className={`badge-item${earned ? '' : ' locked'}`}>
+              <div className="badge-icon">{b.icon}</div>
+              <div className="name">{b.name}</div>
+              <div style={{fontSize:11,color:'var(--gray-400)',marginTop:2}}>{earned ? 'Unlocked!' : b.desc}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function DashReferrals({ user }) {
+  const { addToast } = useContext(NotificationContext);
+  const refLink = `https://creativekaygency.com/ref/${user.referralCode}`;
+  const copyLink = () => { navigator.clipboard?.writeText(refLink); addToast('Referral link copied!'); };
+
+  return (
+    <div>
+      <div className="dash-header"><h1>Referral Program</h1><p>Share your link and earn credits when friends make a purchase.</p></div>
+      <div className="card" style={{marginBottom:24}}>
+        <h3 style={{fontSize:16,marginBottom:4}}>Your Referral Link</h3>
+        <p style={{fontSize:13,color:'var(--gray-500)',marginBottom:12}}>Share this link. When someone signs up AND makes a purchase, you both get 50 bonus credits.</p>
+        <div className="referral-link-box">
+          <input value={refLink} readOnly />
+          <button className="btn btn-sm btn-primary" onClick={copyLink}>Copy</button>
+        </div>
+        <div style={{display:'flex',gap:8,marginTop:12}}>
+          <button className="share-btn" onClick={() => addToast('Share link copied for Twitter!')}>𝕏 Twitter</button>
+          <button className="share-btn" onClick={() => addToast('Share link copied for Facebook!')}>f Facebook</button>
+          <button className="share-btn" onClick={() => addToast('Share link copied for WhatsApp!')}>📱 WhatsApp</button>
+          <button className="share-btn" onClick={() => addToast('Share link copied for LinkedIn!')}>in LinkedIn</button>
+        </div>
+      </div>
+      <div className="referral-stats" style={{marginBottom:24}}>
+        <div className="card" style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{user.referrals + 5}</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Links Shared</div></div>
+        <div className="card" style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--success)'}}>{user.referrals}</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Converted</div></div>
+        <div className="card" style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--warning)'}}>{user.referrals * 50}</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Credits Earned</div></div>
+      </div>
+    </div>
+  );
+}
+
+function DashSettings({ user }) {
+  const { addToast } = useContext(NotificationContext);
+  return (
+    <div>
+      <div className="dash-header"><h1>Settings</h1><p>Manage your account settings and preferences.</p></div>
+      <div className="card" style={{marginBottom:24}}>
+        <h3 style={{fontSize:16,marginBottom:16}}>Profile Information</h3>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+          <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" defaultValue={user.name} /></div>
+          <div className="form-group"><label className="form-label">Email</label><input className="form-input" defaultValue={user.email} type="email" /></div>
+        </div>
+        <button className="btn btn-primary" onClick={() => addToast('Profile updated!')}>Save Changes</button>
+      </div>
+      <div className="card" style={{marginBottom:24}}>
+        <h3 style={{fontSize:16,marginBottom:16}}>Change Password</h3>
+        <div className="form-group"><label className="form-label">Current Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+          <div className="form-group"><label className="form-label">New Password</label><input className="form-input" type="password" placeholder="Min 8 characters" /></div>
+          <div className="form-group"><label className="form-label">Confirm New Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
+        </div>
+        <button className="btn btn-secondary" onClick={() => addToast('Password updated!')}>Update Password</button>
+      </div>
+      <div className="card">
+        <h3 style={{fontSize:16,marginBottom:16}}>Subscription</h3>
+        {user.plan ? <div><span className="badge badge-primary" style={{fontSize:13,padding:'5px 12px',marginRight:8}}>{user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} Plan</span><span style={{color:'var(--gray-500)',fontSize:14}}>Active</span><div style={{marginTop:12}}><a href="#/pricing" className="btn btn-sm btn-secondary">Change Plan</a></div></div>
+        : <div><p style={{color:'var(--gray-500)',marginBottom:12}}>No active subscription</p><a href="#/pricing" className="btn btn-sm btn-primary">View Plans →</a></div>}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// BOOKING WIZARD
+// ============================================================================
+
+function BookingWizard({ service }) {
+  const { user, updateCredits, addProject } = useContext(AuthContext);
+  const { formatPrice } = useContext(CurrencyContext);
+  const { addToast } = useContext(NotificationContext);
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
+  const [payMethod, setPayMethod] = useState('credits');
+
+  if (!user) { location.hash = '/login'; return null; }
+  if (!service) return null;
+
+  const savings = Math.round((1 - service.creditMin / service.cashMin) * 100);
+  const creditPrice = service.creditMin;
+  const cashPrice = service.cashMin;
+
+  const handleBook = () => {
+    if (payMethod === 'credits') {
+      if (user.credits < creditPrice) { addToast('Insufficient credits. Please buy more or pay cash.', 'error'); return; }
+      updateCredits(-creditPrice);
+    }
+    addProject({ id: 'prj_' + Date.now(), service: service.id, status: 'pending', date: new Date().toISOString().split('T')[0], paid: payMethod, amount: payMethod === 'credits' ? creditPrice : cashPrice, formData });
+    addToast(`🎉 ${service.name} booked successfully!`);
+    setStep(4);
+  };
+
+  const formFieldMap = {
+    pages: { label: 'Number of Pages', type: 'select', options: ['1-3','4-6','7-10','10+'] },
+    features: { label: 'Required Features', type: 'textarea', placeholder: 'List the features you need...' },
+    competitors: { label: 'Competitor Websites', type: 'textarea', placeholder: 'Links to competitor websites for reference...' },
+    timeline: { label: 'Preferred Timeline', type: 'select', options: ['ASAP','1-2 weeks','2-4 weeks','Flexible'] },
+    brandColors: { label: 'Brand Colours', type: 'text', placeholder: 'e.g., Blue, White, Gold' },
+    style: { label: 'Design Style', type: 'select', options: ['Modern/Minimal','Bold/Vibrant','Elegant/Luxury','Playful/Fun','Corporate/Professional'] },
+    colors: { label: 'Colour Preferences', type: 'text', placeholder: 'Preferred colours...' },
+    inspiration: { label: 'Inspiration / References', type: 'textarea', placeholder: 'Links or descriptions of designs you like...' },
+    industry: { label: 'Industry / Niche', type: 'text', placeholder: 'e.g., Health & Wellness' },
+    goal: { label: 'Primary Goal', type: 'select', options: ['Lead generation','Sales','Signups','Information','Brand awareness'] },
+    targetAudience: { label: 'Target Audience', type: 'text', placeholder: 'Who is this for?' },
+    website: { label: 'Website URL', type: 'text', placeholder: 'https://...' },
+    keywords: { label: 'Target Keywords', type: 'textarea', placeholder: 'List your target keywords...' },
+    platform: { label: 'Platform', type: 'select', options: ['WordPress','Shopify','WooCommerce','Custom','Other'] },
+    products: { label: 'Product Details', type: 'textarea', placeholder: 'Describe your products...' },
+    niche: { label: 'Niche / Topic', type: 'text', placeholder: 'Your niche or topic...' },
+    tone: { label: 'Brand Voice / Tone', type: 'select', options: ['Professional','Casual','Friendly','Authoritative','Witty'] },
+    quantity: { label: 'Quantity Needed', type: 'select', options: ['5','10','20','30','50+'] },
+    topic: { label: 'Topic / Subject', type: 'text', placeholder: 'Main topic or subject...' },
+    concept: { label: 'Concept Description', type: 'textarea', placeholder: 'Describe your idea in detail...' },
+  };
+
+  return (
+    <div>
+      <div className="wizard-steps">
+        {['Details','Requirements','Payment','Confirmation'].map((s, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <div className={`wizard-connector${step > i ? ' done' : ''}`}/>}
+            <div className={`wizard-step${step === i + 1 ? ' active' : step > i + 1 ? ' done' : ''}`}>
+              <div className="num">{step > i + 1 ? '✓' : i + 1}</div>{s}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+
+      {step === 1 && <div className="card" style={{maxWidth:700,margin:'0 auto'}}>
+        <div style={{display:'flex',gap:16,marginBottom:20}}>
+          <div style={{fontSize:40}}>{service.icon}</div>
+          <div><h2 style={{fontSize:22}}>{service.name}</h2><div className="badge badge-primary">{CATEGORIES.find(c => c.id === service.category)?.name}</div></div>
+        </div>
+        <p style={{color:'var(--gray-600)',marginBottom:16}}>{service.desc}</p>
+        <div style={{display:'flex',gap:16,marginBottom:16}}>
+          <div style={{flex:1,padding:12,background:'var(--gradient-subtle)',borderRadius:'var(--radius)'}}><div style={{fontSize:12,color:'var(--primary)'}}>Credits</div><div style={{fontSize:18,fontWeight:700,color:'var(--primary)'}}>{service.creditMin}–{service.creditMax}</div></div>
+          <div style={{flex:1,padding:12,background:'var(--gray-50)',borderRadius:'var(--radius)'}}><div style={{fontSize:12,color:'var(--gray-500)'}}>Cash</div><div style={{fontSize:18,fontWeight:700,color:'var(--gray-700)'}}>{formatPrice(service.cashMin)}–{formatPrice(service.cashMax)}</div></div>
+        </div>
+        <button className="btn btn-primary btn-block" onClick={() => setStep(2)}>Continue →</button>
+      </div>}
+
+      {step === 2 && <div className="card" style={{maxWidth:700,margin:'0 auto'}}>
+        <h3 style={{marginBottom:16}}>Project Requirements</h3>
+        {(service.formFields || ['features','timeline','style']).map(field => {
+          const f = formFieldMap[field] || { label: field, type: 'text', placeholder: '' };
+          return (
+            <div key={field} className="form-group">
+              <label className="form-label">{f.label}</label>
+              {f.type === 'textarea' ? <textarea className="form-textarea" placeholder={f.placeholder} value={formData[field] || ''} onChange={e => setFormData({...formData, [field]: e.target.value})} />
+              : f.type === 'select' ? <select className="form-select" value={formData[field] || ''} onChange={e => setFormData({...formData, [field]: e.target.value})}><option value="">Select...</option>{f.options.map(o => <option key={o} value={o}>{o}</option>)}</select>
+              : <input className="form-input" type="text" placeholder={f.placeholder} value={formData[field] || ''} onChange={e => setFormData({...formData, [field]: e.target.value})} />}
+            </div>
+          );
+        })}
+        <div style={{display:'flex',gap:12}}><button className="btn btn-ghost" onClick={() => setStep(1)}>← Back</button><button className="btn btn-primary" style={{flex:1}} onClick={() => setStep(3)}>Continue to Payment →</button></div>
+      </div>}
+
+      {step === 3 && <div className="card" style={{maxWidth:700,margin:'0 auto'}}>
+        <h3 style={{marginBottom:16}}>Choose Payment Method</h3>
+        <div className="payment-options">
+          <div className={`payment-option${payMethod === 'credits' ? ' selected' : ''}`} onClick={() => setPayMethod('credits')}>
+            <div className="save-badge">Save {savings}%</div>
+            <div className="method-icon">🪙</div>
+            <div className="method-name">Pay with Credits</div>
+            <div className="method-price">{creditPrice} credits</div>
+            <div className="method-detail">Balance: {user.credits.toLocaleString()}</div>
+            {user.credits < creditPrice && <div style={{color:'var(--error)',fontSize:12,marginTop:4}}>Insufficient credits</div>}
+          </div>
+          <div className={`payment-option${payMethod === 'card' ? ' selected' : ''}`} onClick={() => setPayMethod('card')}>
+            <div className="method-icon">💳</div>
+            <div className="method-name">Credit / Debit Card</div>
+            <div className="method-price">{formatPrice(cashPrice)}</div>
+            <div className="method-detail">Via Stripe</div>
+          </div>
+          <div className={`payment-option${payMethod === 'paypal' ? ' selected' : ''}`} onClick={() => setPayMethod('paypal')}>
+            <div className="method-icon">🅿️</div>
+            <div className="method-name">PayPal</div>
+            <div className="method-price">{formatPrice(cashPrice)}</div>
+            <div className="method-detail">Secure checkout</div>
+          </div>
+        </div>
+        {user.plan && <div style={{marginTop:12,padding:12,background:'var(--success-light)',borderRadius:'var(--radius)',fontSize:13}}><strong>✨ {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} Plan</strong> — You have priority queue access!</div>}
+        {!user.plan && <div style={{marginTop:12,padding:12,background:'var(--info-light)',borderRadius:'var(--radius)',fontSize:13}}>💡 <strong>Subscribe</strong> for better rates and priority queue. <a href="#/pricing" style={{color:'var(--primary)',fontWeight:600}}>View Plans</a></div>}
+        <div style={{display:'flex',gap:12,marginTop:20}}><button className="btn btn-ghost" onClick={() => setStep(2)}>← Back</button><button className="btn btn-primary" style={{flex:1}} onClick={handleBook}>Confirm & Book →</button></div>
+      </div>}
+
+      {step === 4 && <div className="card" style={{maxWidth:700,margin:'0 auto',textAlign:'center'}}>
+        <div style={{fontSize:64,marginBottom:12}}>🎉</div>
+        <h2>Booking Confirmed!</h2>
+        <p style={{color:'var(--gray-500)',marginBottom:20}}>{service.name} has been booked. We'll start working on it right away.</p>
+        <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:16,marginBottom:20}}>
+          <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}><span>Service</span><strong>{service.name}</strong></div>
+          <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}><span>Payment</span><strong>{payMethod === 'credits' ? `${creditPrice} credits` : formatPrice(cashPrice)}</strong></div>
+          <div style={{display:'flex',justifyContent:'space-between'}}><span>Status</span><span className="badge badge-warning">Pending Review</span></div>
+        </div>
+        <a href="#/dashboard/projects" className="btn btn-primary">View My Projects →</a>
+      </div>}
+    </div>
+  );
+}
+
+function BookServicePage({ serviceId }) {
+  const service = SERVICES.find(s => s.id === serviceId);
+  if (!service) return <NotFoundPage />;
+  useEffect(() => { document.title = `Book ${service.name} - Creative Kaygency`; }, [service]);
+  return (
+    <div>
+      <div className="page-header"><div className="container"><div className="breadcrumb"><a href="#/">Home</a> / <a href="#/services">Services</a> / Book</div><h1>Book: {service.name}</h1></div></div>
+      <section className="section-sm"><div className="container"><BookingWizard service={service} /></div></section>
+    </div>
+  );
+}
+
+// ============================================================================
+// ADMIN DASHBOARD
+// ============================================================================
+
+function AdminPage() {
+  const { user, isAdmin } = useContext(AuthContext);
+  const { formatPrice } = useContext(CurrencyContext);
+  const { addToast } = useContext(NotificationContext);
+  const [tab, setTab] = useState('overview');
+  const [creditRatio, setCreditRatio] = useState(1.25);
+
+  useEffect(() => { document.title = 'Admin Dashboard - Creative Kaygency'; }, []);
+  if (!user || !isAdmin) { location.hash = '/login'; return null; }
+
+  const adminTabs = [
+    { id: 'overview', icon: '📊', label: 'Overview' },
+    { id: 'users', icon: '👥', label: 'Users' },
+    { id: 'bookings', icon: '📅', label: 'Bookings' },
+    { id: 'services', icon: '🛒', label: 'Services' },
+    { id: 'blog', icon: '📝', label: 'Blog' },
+    { id: 'settings', icon: '⚙️', label: 'Settings' },
+  ];
+
+  const mockUsers = [
+    { id: 1, name: 'Sarah Mitchell', email: 'sarah@techstart.io', credits: 450, plan: 'professional', status: 'active', joined: '2024-01-20' },
+    { id: 2, name: 'James Robertson', email: 'james@freshbite.com', credits: 1200, plan: 'enterprise', status: 'active', joined: '2024-02-05' },
+    { id: 3, name: 'Emma Thompson', email: 'emma@summit.co', credits: 80, plan: 'starter', status: 'active', joined: '2024-02-15' },
+    { id: 4, name: 'Demo User', email: 'demo@creative-kaygency.com', credits: 2450, plan: 'professional', status: 'active', joined: '2024-01-15' },
+    { id: 5, name: 'David Chen', email: 'david@startup.io', credits: 0, plan: null, status: 'inactive', joined: '2024-03-01' },
+  ];
+
+  const mockBookings = [
+    { id: 'BK001', user: 'Sarah Mitchell', service: 'Business Website', status: 'in-progress', date: '2024-03-12', amount: '£1,200' },
+    { id: 'BK002', user: 'James Robertson', service: 'E-commerce Store', status: 'pending', date: '2024-03-15', amount: '3,200 credits' },
+    { id: 'BK003', user: 'Emma Thompson', service: 'Logo Design', status: 'completed', date: '2024-03-08', amount: '£300' },
+    { id: 'BK004', user: 'Demo User', service: 'On-Page SEO', status: 'in-progress', date: '2024-03-10', amount: '500 credits' },
+  ];
+
+  return (
+    <div className="dashboard-layout">
+      <aside className="dashboard-sidebar">
+        <div style={{marginBottom:16,padding:'0 14px'}}><div className="badge badge-error" style={{marginBottom:4}}>ADMIN</div><div style={{fontSize:16,fontWeight:700}}>{user.name}</div></div>
+        <nav className="sidebar-nav">
+          {adminTabs.map(t => <button key={t.id} className={`sidebar-link${tab === t.id ? ' active' : ''}`} onClick={() => setTab(t.id)}><span className="icon">{t.icon}</span>{t.label}</button>)}
+          <div className="sidebar-section-title">Navigation</div>
+          <a href="#/dashboard" className="sidebar-link"><span className="icon">📊</span>User Dashboard</a>
+          <a href="#/" className="sidebar-link"><span className="icon">🏠</span>View Site</a>
+        </nav>
+      </aside>
+      <main className="dashboard-content">
+        {tab === 'overview' && <div>
+          <div className="dash-header"><h1>Admin Overview</h1><p>Platform analytics and key metrics at a glance.</p></div>
+          <div className="dash-stats">
+            <div className="dash-stat-card"><div className="label">Revenue (Month)</div><div className="value" style={{color:'var(--success)'}}>{formatPrice(12450)}</div><div className="change up">↑ 23% vs last month</div></div>
+            <div className="dash-stat-card"><div className="label">Active Users</div><div className="value" style={{color:'var(--info)'}}>127</div><div className="change up">↑ 15 new this week</div></div>
+            <div className="dash-stat-card"><div className="label">Active Subscriptions</div><div className="value" style={{color:'var(--primary)'}}>43</div><div className="change up">↑ 8% growth</div></div>
+            <div className="dash-stat-card"><div className="label">Credits in Circulation</div><div className="value" style={{color:'var(--warning)'}}>45.2K</div><div className="change">Total platform credits</div></div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+            <div className="card"><h3 style={{fontSize:16,marginBottom:12}}>Revenue Breakdown</h3><div className="admin-chart-placeholder">Revenue chart placeholder — Connect analytics for live data</div></div>
+            <div className="card"><h3 style={{fontSize:16,marginBottom:12}}>Popular Services</h3>
+              {['Business Website','E-commerce Store','Logo Design','On-Page SEO','Monthly Social Pack'].map((s,i) => (
+                <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid var(--gray-50)'}}><span>{s}</span><span style={{fontWeight:600}}>{[24,18,15,12,9][i]} bookings</span></div>
+              ))}
+            </div>
+          </div>
+        </div>}
+
+        {tab === 'users' && <div>
+          <div className="dash-header"><h1>User Management</h1><p>View and manage all platform users.</p></div>
+          <div className="card"><div className="table-wrap"><table>
+            <thead><tr><th>Name</th><th>Email</th><th>Credits</th><th>Plan</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              {mockUsers.map(u => <tr key={u.id}>
+                <td style={{fontWeight:600}}>{u.name}</td><td>{u.email}</td><td>{u.credits}</td>
+                <td>{u.plan ? <span className="badge badge-primary">{u.plan}</span> : <span className="badge badge-warning">Free</span>}</td>
+                <td><span className={`badge badge-${u.status === 'active' ? 'success' : 'error'}`}>{u.status}</span></td>
+                <td><div className="admin-table-actions"><button className="btn btn-sm btn-ghost" onClick={() => addToast(`Editing ${u.name}`)}>Edit</button><button className="btn btn-sm btn-ghost" style={{color:'var(--error)'}} onClick={() => addToast(`${u.name} suspended`,'warning')}>Suspend</button></div></td>
+              </tr>)}
+            </tbody>
+          </table></div></div>
+        </div>}
+
+        {tab === 'bookings' && <div>
+          <div className="dash-header"><h1>Booking Management</h1><p>Review and manage all service bookings.</p></div>
+          <div className="card"><div className="table-wrap"><table>
+            <thead><tr><th>ID</th><th>User</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              {mockBookings.map(b => <tr key={b.id}>
+                <td style={{fontWeight:500}}>{b.id}</td><td>{b.user}</td><td>{b.service}</td><td>{b.amount}</td>
+                <td><span className={`badge badge-${b.status === 'completed' ? 'success' : b.status === 'in-progress' ? 'info' : 'warning'}`}>{b.status}</span></td>
+                <td>{b.date}</td>
+                <td><div className="admin-table-actions">
+                  <button className="btn btn-sm btn-success" onClick={() => addToast(`Booking ${b.id} approved`)}>Approve</button>
+                  <button className="btn btn-sm btn-ghost" style={{color:'var(--error)'}} onClick={() => addToast(`Booking ${b.id} rejected`,'error')}>Reject</button>
+                </div></td>
+              </tr>)}
+            </tbody>
+          </table></div></div>
+        </div>}
+
+        {tab === 'services' && <div>
+          <div className="dash-header"><h1>Service Management</h1><p>Adjust pricing and service details.</p></div>
+          <div className="card"><div className="table-wrap"><table>
+            <thead><tr><th>Service</th><th>Category</th><th>Cash (Min)</th><th>Cash (Max)</th><th>Credits (Min)</th><th>Credits (Max)</th><th>Actions</th></tr></thead>
+            <tbody>
+              {SERVICES.slice(0, 10).map(s => <tr key={s.id}>
+                <td style={{fontWeight:600}}>{s.icon} {s.name}</td>
+                <td><span className="badge badge-primary">{s.category}</span></td>
+                <td>{formatPrice(s.cashMin)}</td><td>{formatPrice(s.cashMax)}</td>
+                <td>{s.creditMin}</td><td>{s.creditMax}</td>
+                <td><button className="btn btn-sm btn-ghost" onClick={() => addToast(`Editing ${s.name} pricing`)}>Edit</button></td>
+              </tr>)}
+            </tbody>
+          </table></div></div>
+        </div>}
+
+        {tab === 'blog' && <div>
+          <div className="dash-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}><div><h1>Blog Management</h1><p>Create and manage blog content.</p></div><button className="btn btn-primary" onClick={() => addToast('Blog editor opening...')}>+ New Post</button></div>
+          <div className="card"><div className="table-wrap"><table>
+            <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              {BLOG_POSTS.map(p => <tr key={p.slug}>
+                <td style={{fontWeight:600}}>{p.title}</td>
+                <td><span className="badge badge-info">{p.category}</span></td>
+                <td>{p.date}</td>
+                <td><div className="admin-table-actions"><button className="btn btn-sm btn-ghost" onClick={() => addToast('Editing post...')}>Edit</button><button className="btn btn-sm btn-ghost" style={{color:'var(--error)'}} onClick={() => addToast('Post deleted','warning')}>Delete</button></div></td>
+              </tr>)}
+            </tbody>
+          </table></div></div>
+        </div>}
+
+        {tab === 'settings' && <div>
+          <div className="dash-header"><h1>Platform Settings</h1><p>Configure global platform settings.</p></div>
+          <div className="card" style={{marginBottom:24}}>
+            <h3 style={{fontSize:16,marginBottom:16}}>Credit-to-Cash Ratio</h3>
+            <p style={{fontSize:14,color:'var(--gray-500)',marginBottom:12}}>This ratio determines how credits translate to cash value. Current: 1 credit ≈ {formatPrice(creditRatio)} value.</p>
+            <div style={{display:'flex',alignItems:'center',gap:12}}>
+              <input type="range" min="0.5" max="3" step="0.05" value={creditRatio} onChange={e => setCreditRatio(parseFloat(e.target.value))} style={{flex:1}} />
+              <span style={{fontWeight:700,minWidth:60}}>{formatPrice(creditRatio)}</span>
+            </div>
+            <button className="btn btn-sm btn-primary" style={{marginTop:12}} onClick={() => addToast('Credit ratio updated!')}>Save Ratio</button>
+          </div>
+          <div className="card" style={{marginBottom:24}}>
+            <h3 style={{fontSize:16,marginBottom:16}}>Announcement Bar</h3>
+            <div className="form-group"><label className="form-label">Announcement Text</label><input className="form-input" defaultValue="LIMITED LAUNCH PRICING — Save Up To 20% With Credits — Start Free Today" /></div>
+            <button className="btn btn-sm btn-primary" onClick={() => addToast('Announcement updated!')}>Update</button>
+          </div>
+          <div className="card">
+            <h3 style={{fontSize:16,marginBottom:16}}>Default Currency</h3>
+            <select className="form-select" style={{maxWidth:200}} defaultValue="GBP"><option value="GBP">GBP (£)</option><option value="USD">USD ($)</option><option value="EUR">EUR (€)</option></select>
+            <button className="btn btn-sm btn-primary" style={{marginTop:12}} onClick={() => addToast('Default currency updated!')}>Save</button>
+          </div>
+        </div>}
+      </main>
+    </div>
+  );
+}
+
+// ============================================================================
+// PORTFOLIO, BLOG, COMPANY, KNOWLEDGE PAGES
+// ============================================================================
+
+function PortfolioPage() {
+  const [filter, setFilter] = useState('all');
+  useEffect(() => { document.title = 'Portfolio - Creative Kaygency'; }, []);
+  const filtered = filter === 'all' ? PORTFOLIO_ITEMS : PORTFOLIO_ITEMS.filter(p => p.category === filter);
+
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>Our Portfolio</h1><p>Explore our latest work across websites, e-commerce, graphics, and more.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div className="filter-tabs">
+          {['all','websites','ecommerce','graphics','digital','seo','social'].map(f => <button key={f} className={`filter-tab${filter === f ? ' active' : ''}`} onClick={() => setFilter(f)}>{f === 'all' ? 'All' : CATEGORIES.find(c => c.id === f)?.name || f}</button>)}
+        </div>
+        <div className="portfolio-grid">
+          {filtered.map(item => (
+            <div key={item.id} className="portfolio-item">
+              <div className="portfolio-thumb" style={{background: item.gradient}}>{CATEGORIES.find(c => c.id === item.category)?.icon || '✨'}</div>
+              <div className="portfolio-overlay"><h3>{item.title}</h3><span className="cat">{CATEGORIES.find(c => c.id === item.category)?.name || item.category}</span></div>
+            </div>
+          ))}
+        </div>
+      </div></section>
+      <section className="cta-section"><div className="container" style={{position:'relative'}}><h2>Want Results Like These?</h2><p>Let's build something amazing together.</p><a href="#/register" className="btn btn-lg btn-dark">Start Your Project →</a></div></section>
+    </div>
+  );
+}
+
+function PricingPage() {
+  const { formatPrice } = useContext(CurrencyContext);
+  const [annual, setAnnual] = useState(false);
+  useEffect(() => { document.title = 'Pricing - Creative Kaygency'; }, []);
+
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>Simple, Transparent Pricing</h1><p>Choose a plan or pay per project. Save up to 20% with credits.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div className="toggle-wrap">
+          <span className={`toggle-label${!annual ? ' active' : ''}`}>Monthly</span>
+          <div className={`toggle-switch${annual ? ' active' : ''}`} onClick={() => setAnnual(!annual)}><div className="toggle-knob"/></div>
+          <span className={`toggle-label${annual ? ' active' : ''}`}>Annual <span className="annual-save">Save 20%</span></span>
+        </div>
+        <PricingCards />
+      </div></section>
+
+      <section className="section section-alt"><div className="container">
+        <div className="section-header"><h2>Credit Packages</h2><p>Buy credits separately or combine with a subscription for maximum savings.</p></div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:16}}>
+          {CREDIT_PACKAGES.slice(0, 4).map(pkg => (
+            <div key={pkg.id} className={`credit-pkg${pkg.popular ? ' popular' : ''}`}>
+              {pkg.popular && <div className="popular-badge">Best Value</div>}
+              <div className="amount">{pkg.credits}</div><div className="label">credits</div>
+              <div className="price">{formatPrice(pkg.price)}</div>
+              <div className="per">{formatPrice(pkg.perCredit, false)}p per credit</div>
+              <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => location.hash = '/register'}>Get Started</button>
+            </div>
+          ))}
+        </div>
+      </div></section>
+
+      <section className="section"><div className="container">
+        <div className="section-header"><h2>Frequently Asked Questions</h2></div>
+        <div className="faq-list">
+          {FAQ_DATA.map((f,i) => <FAQItem key={i} q={f.q} a={f.a} />)}
+        </div>
+      </div></section>
+    </div>
+  );
+}
+
+function FAQItem({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`faq-item${open ? ' open' : ''}`}>
+      <button className="faq-question" onClick={() => setOpen(!open)}>{q}<span className="arrow">▼</span></button>
+      <div className="faq-answer">{a}</div>
+    </div>
+  );
+}
+
+function BlogPage() {
+  useEffect(() => { document.title = 'Blog - Creative Kaygency'; }, []);
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>Blog</h1><p>Expert insights, guides, and tips to help grow your business.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div className="blog-grid">
+          {BLOG_POSTS.map((p,i) => (
+            <a key={p.slug} href={`#/blog/${p.slug}`} className="blog-card">
+              <div className="blog-card-image" style={{background: PORTFOLIO_ITEMS[i % PORTFOLIO_ITEMS.length]?.gradient || 'var(--gradient-subtle)'}}>{['🌐','💰','🔍','🛒','🎨','📧'][i % 6]}</div>
+              <div className="blog-card-body">
+                <div className="blog-card-category">{p.category}</div>
+                <h3 className="blog-card-title">{p.title}</h3>
+                <p className="blog-card-excerpt">{p.excerpt}</p>
+                <div className="blog-card-meta"><span>{p.date}</span><span>•</span><span>{p.readTime} read</span></div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div></section>
+    </div>
+  );
+}
+
+function BlogPostPage({ slug }) {
+  const post = BLOG_POSTS.find(p => p.slug === slug);
+  const { addToast } = useContext(NotificationContext);
+  if (!post) return <NotFoundPage />;
+  useEffect(() => { document.title = `${post.title} - Creative Kaygency`; }, [post]);
+
+  return (
+    <div className="blog-detail">
+      <div className="breadcrumb"><a href="#/">Home</a> / <a href="#/blog">Blog</a> / {post.title}</div>
+      <h1>{post.title}</h1>
+      <div className="meta"><span>By {post.author}</span><span>{post.date}</span><span>{post.readTime} read</span><span className="badge badge-primary">{post.category}</span></div>
+      <div className="content"><p>{post.content}</p><p>This is a comprehensive guide that covers all the essential aspects of {post.category.toLowerCase()}. Our team has years of experience delivering results for businesses of all sizes, and we've distilled our knowledge into actionable insights you can implement today.</p><h2>Key Takeaways</h2><p>The most important thing to remember is that consistency and quality always win in the long run. Whether you're building a website, optimizing for search engines, or creating content, the principles remain the same: understand your audience, deliver value, and continuously improve.</p><p>Ready to take action? <a href="#/register" style={{color:'var(--primary)',fontWeight:600}}>Get started with Creative Kaygency today</a> and let us help you achieve your digital goals.</p></div>
+      <div className="share-buttons">
+        <span style={{fontSize:14,fontWeight:600,color:'var(--gray-600)'}}>Share:</span>
+        <button className="share-btn" onClick={() => addToast('Link copied for Twitter!')}>𝕏 Twitter</button>
+        <button className="share-btn" onClick={() => addToast('Link copied for Facebook!')}>f Facebook</button>
+        <button className="share-btn" onClick={() => addToast('Link copied for LinkedIn!')}>in LinkedIn</button>
+        <button className="share-btn" onClick={() => { navigator.clipboard?.writeText(window.location.href); addToast('Link copied!'); }}>🔗 Copy Link</button>
+      </div>
+    </div>
+  );
+}
+
+function AboutPage() {
+  useEffect(() => { document.title = 'About Us - Creative Kaygency'; }, []);
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>About Creative Kaygency</h1><p>We're on a mission to make premium digital services accessible to every business.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40,alignItems:'center',marginBottom:48}}>
+          <div>
+            <h2 style={{fontSize:28,marginBottom:12}}>Our Story</h2>
+            <p style={{color:'var(--gray-600)',lineHeight:1.8,marginBottom:16}}>Creative Kaygency was founded with a simple belief: every business deserves access to world-class digital services without the world-class price tag. Our innovative credit-based system and subscription model makes premium design, development, and marketing services affordable and predictable.</p>
+            <p style={{color:'var(--gray-600)',lineHeight:1.8}}>We've delivered 500+ projects for businesses across 15+ industries, and our gamified platform keeps clients engaged and coming back. From logos to full SaaS platforms, we've got the expertise to make your vision a reality.</p>
+          </div>
+          <div style={{background:'var(--gradient)',borderRadius:'var(--radius-xl)',height:300,display:'flex',alignItems:'center',justifyContent:'center',fontSize:64}}>🚀</div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3, 1fr)',gap:24}}>
+          {[{icon:'💡',title:'Innovation',desc:'We leverage cutting-edge tech and AI to deliver better results, faster.'},{icon:'🤝',title:'Partnership',desc:'We\'re not just service providers — we\'re growth partners invested in your success.'},{icon:'⚡',title:'Speed',desc:'Our subscription model means projects start immediately with VIP turnaround available.'}].map((v,i) => (
+            <div key={i} className="card" style={{textAlign:'center'}}><div style={{fontSize:40,marginBottom:12}}>{v.icon}</div><h3>{v.title}</h3><p style={{color:'var(--gray-500)',marginTop:6}}>{v.desc}</p></div>
+          ))}
+        </div>
+      </div></section>
+      <section className="cta-section"><div className="container" style={{position:'relative'}}><h2>Let's Build Something Great Together</h2><p>Join our growing community of successful businesses.</p><a href="#/register" className="btn btn-lg btn-dark">Get Started Free →</a></div></section>
+    </div>
+  );
+}
+
+function ContactPage() {
+  const { addToast } = useContext(NotificationContext);
+  useEffect(() => { document.title = 'Contact Us - Creative Kaygency'; }, []);
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>Contact Us</h1><p>Have a question or want to discuss a project? We'd love to hear from you.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div className="contact-grid">
+          <div>
+            <div className="contact-info-cards">
+              <div className="contact-info-card"><div className="contact-info-icon">📧</div><div><h4>Email</h4><p style={{color:'var(--gray-500)',fontSize:14}}>hello@creativekaygency.com</p></div></div>
+              <div className="contact-info-card"><div className="contact-info-icon">📞</div><div><h4>Phone</h4><p style={{color:'var(--gray-500)',fontSize:14}}>+44 (0) 123 456 7890</p></div></div>
+              <div className="contact-info-card"><div className="contact-info-icon">📍</div><div><h4>Office</h4><p style={{color:'var(--gray-500)',fontSize:14}}>London, United Kingdom</p></div></div>
+              <div className="contact-info-card"><div className="contact-info-icon">⏰</div><div><h4>Hours</h4><p style={{color:'var(--gray-500)',fontSize:14}}>Mon-Fri 9am–6pm GMT</p></div></div>
+            </div>
+          </div>
+          <div className="card">
+            <h3 style={{marginBottom:16}}>Send Us a Message</h3>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+              <div className="form-group"><label className="form-label">First Name</label><input className="form-input" placeholder="John" /></div>
+              <div className="form-group"><label className="form-label">Last Name</label><input className="form-input" placeholder="Smith" /></div>
+            </div>
+            <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" placeholder="you@example.com" /></div>
+            <div className="form-group"><label className="form-label">Subject</label><select className="form-select"><option>General Inquiry</option><option>Project Quote</option><option>Support</option><option>Partnership</option></select></div>
+            <div className="form-group"><label className="form-label">Message</label><textarea className="form-textarea" placeholder="Tell us about your project or question..." rows="5"/></div>
+            <button className="btn btn-primary btn-block" onClick={() => addToast('Message sent! We\'ll get back to you shortly.')}>Send Message →</button>
+          </div>
+        </div>
+      </div></section>
+    </div>
+  );
+}
+
+function FAQPage() {
+  useEffect(() => { document.title = 'FAQ - Creative Kaygency'; }, []);
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>Frequently Asked Questions</h1><p>Find answers to common questions about our platform, services, and pricing.</p></div></div>
+      <section className="section-sm"><div className="container"><div className="faq-list">{FAQ_DATA.map((f,i) => <FAQItem key={i} q={f.q} a={f.a} />)}</div></div></section>
+      <section className="cta-section"><div className="container" style={{position:'relative'}}><h2>Still Have Questions?</h2><p>Our team is ready to help.</p><a href="#/contact" className="btn btn-lg btn-dark">Contact Us →</a></div></section>
+    </div>
+  );
+}
+
+function KnowledgePage() {
+  useEffect(() => { document.title = 'Knowledge Base - Creative Kaygency'; }, []);
+  return (
+    <div>
+      <div className="page-header"><div className="container"><h1>Knowledge Base</h1><p>Everything you need to know about using Creative Kaygency.</p></div></div>
+      <section className="section-sm"><div className="container">
+        <div className="kb-search"><span className="search-icon">🔍</span><input placeholder="Search for help articles..." /></div>
+        <div className="kb-categories">
+          {KB_CATEGORIES.map(cat => (
+            <div key={cat.id} className="kb-category" onClick={() => {}}>
+              <div className="icon">{cat.icon}</div>
+              <h3>{cat.name}</h3>
+              <div className="count">{cat.count} articles</div>
+              <ul style={{marginTop:10}}>
+                {cat.articles.slice(0,3).map((a,i) => <li key={i} style={{fontSize:13,color:'var(--primary)',padding:'3px 0',cursor:'pointer'}}>→ {a}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div></section>
+    </div>
+  );
+}
+
+function NotFoundPage() {
+  useEffect(() => { document.title = '404 - Page Not Found'; }, []);
+  return <div className="page-404"><div className="big">404</div><h2>Page Not Found</h2><p>The page you're looking for doesn't exist or has been moved.</p><a href="#/" className="btn btn-primary">Go Home →</a></div>;
+}
+
+// ============================================================================
+// ROUTER & APP
+// ============================================================================
+
+function useHashRoute() {
+  const [hash, setHash] = useState(window.location.hash.slice(1) || '/');
+  useEffect(() => {
+    const handler = () => { setHash(window.location.hash.slice(1) || '/'); window.scrollTo(0, 0); };
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
+  return hash;
+}
+
+function App() {
+  const route = useHashRoute();
+  const path = route.split('?')[0];
+
+  let page;
+  if (path === '/' || path === '') page = <HomePage />;
+  else if (path === '/services') page = <ServicesPage />;
+  else if (path.startsWith('/services/')) page = <ServiceDetailPage serviceId={path.split('/services/')[1]} />;
+  else if (path.startsWith('/book/')) page = <BookServicePage serviceId={path.split('/book/')[1]} />;
+  else if (path === '/portfolio') page = <PortfolioPage />;
+  else if (path === '/pricing') page = <PricingPage />;
+  else if (path === '/blog') page = <BlogPage />;
+  else if (path.startsWith('/blog/')) page = <BlogPostPage slug={path.split('/blog/')[1]} />;
+  else if (path === '/login') page = <LoginPage />;
+  else if (path === '/register') page = <RegisterPage />;
+  else if (path.startsWith('/dashboard')) page = <DashboardPage />;
+  else if (path.startsWith('/admin')) page = <AdminPage />;
+  else if (path === '/about') page = <AboutPage />;
+  else if (path === '/contact') page = <ContactPage />;
+  else if (path === '/faq') page = <FAQPage />;
+  else if (path === '/knowledge') page = <KnowledgePage />;
+  else page = <NotFoundPage />;
+
+  const isDashboard = path.startsWith('/dashboard') || path.startsWith('/admin');
+
+  return (
+    <AuthProvider>
+      <CurrencyProvider>
+        <NotificationProvider>
+          <div>
+            <AnnouncementBar />
+            <Navbar />
+            <Toasts />
+            <main style={{minHeight: isDashboard ? 'auto' : 'calc(100vh - 200px)'}}>
+              {page}
+            </main>
+            {!isDashboard && <Footer />}
+          </div>
+        </NotificationProvider>
+      </CurrencyProvider>
+    </AuthProvider>
+  );
+}
+
+// ============================================================================
+// RENDER
+// ============================================================================
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>

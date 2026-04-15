@@ -1,0 +1,4 @@
+# Netlify redirects — serve static pre-rendered pages to bots, SPA to users
+# Bot detection via User-Agent header
+/  /index.html  200  User-Agent=*bot*,*crawl*,*spider*,*Googlebot*,*Bingbot*,*Slurp*,*DuckDuckBot*,*facebookexternalhit*,*Twitterbot*,*LinkedInBot*
+/*  /app.html  200

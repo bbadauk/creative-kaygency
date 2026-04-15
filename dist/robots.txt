@@ -1,0 +1,17 @@
+# Creative Kaygency — robots.txt
+# https://www.creativekaygency.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.creativekaygency.com/sitemap.xml
+
+# Disallow private/authenticated areas
+Disallow: /dashboard
+Disallow: /kay-control-panel
+Disallow: /login
+Disallow: /register
+
+# Crawl-delay (optional, be kind to server)
+Crawl-delay: 1
