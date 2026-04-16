@@ -2299,8 +2299,11 @@ function AuthProvider({ children }) {
       return { success: false, error: error.message };
     }
     la.count = 0;
-    // Profile is loaded via onAuthStateChange listener
-    return { success: true };
+    // Fetch profile so caller has user data immediately
+    const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
+    const userName = profile?.name || data.user.email.split('@')[0];
+    const userIsAdmin = profile?.is_admin === true;
+    return { success: true, user: { name: userName, isAdmin: userIsAdmin } };
   };
 
   const register = async (name, email, password, referralCode) => {
@@ -4020,15 +4023,37 @@ function ServiceDetailPage({ serviceId }) {
 function LoginPage() {
   const { login } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => {
+    try { return localStorage.getItem('ck_remembered_email') || ''; } catch(e) { return ''; }
+  });
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(() => {
+    try { return !!localStorage.getItem('ck_remembered_email'); } catch(e) { return false; }
+  });
+  const [isLoading, setIsLoading] = useState(false);
   useSEO({ title: 'Log In - Creative Kaygency | Access Your Account', description: 'Log in to your Creative Kaygency account to manage projects, earn credits, track orders, and access all 40+ professional digital design services.', keywords: 'login, sign in, Creative Kaygency account', canonical: 'https://www.creativekaygency.com/login', noindex: true });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await login(email, password);
-    if (result.success) { addToast(`Welcome back, ${result.user.name}!`); navigate(result.user.isAdmin ? '/kay-control-panel' : '/dashboard'); }
-    else addToast(result.error, 'error');
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      const result = await login(email, password);
+      if (result.success) {
+        // Remember email for next visit
+        try {
+          if (rememberMe) localStorage.setItem('ck_remembered_email', email.toLowerCase().trim());
+          else localStorage.removeItem('ck_remembered_email');
+        } catch(e) {}
+        addToast('Welcome back, ' + (result.user ? result.user.name : '') + '!');
+        navigate(result.user && result.user.isAdmin ? '/kay-control-panel' : '/dashboard');
+      } else {
+        addToast(result.error, 'error');
+      }
+    } catch(err) {
+      addToast('Login failed. Please try again.', 'error');
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -4044,7 +4069,11 @@ function LoginPage() {
       <form onSubmit={handleSubmit}>
         <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required autoComplete="email" /></div>
         <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required autoComplete="current-password" /></div>
-        <button type="submit" className="btn btn-primary btn-block btn-lg">Log In</button>
+        <label className="form-checkbox" style={{marginBottom:16,cursor:'pointer',display:'flex',alignItems:'center',gap:8,fontSize:14}}>
+          <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} style={{accentColor:'var(--primary)'}} />
+          <span style={{color:'var(--text-secondary)'}}>Remember my email</span>
+        </label>
+        <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={isLoading}>{isLoading ? 'Logging in...' : 'Log In'}</button>
       </form>
       <div className="auth-footer">Don't have an account? <a href={routeHref("/register")}>Sign Up Free</a></div>
     </div></div>
