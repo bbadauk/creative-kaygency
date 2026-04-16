@@ -1349,11 +1349,10 @@ console.log('%c⚠️ STOP!', 'color:#FF0000;font-size:48px;font-weight:900;text
 console.log('%cThis is a browser feature intended for developers. If someone told you to paste something here to get free credits, unlock features, or "verify" your account — they are trying to scam you. Close this window and report the person to us at hello@creativekaygency.com', 'color:#333;font-size:16px;line-height:1.6;padding:12px 0');
 console.log('%cAll credit transactions are server-validated and audit-logged.', 'color:#7C3AED;font-size:13px;font-weight:600');
 
-// ── Security: Freeze critical global objects to prevent prototype pollution ──
-if (Object.freeze) {
-  Object.freeze(Object.prototype);
-  Object.freeze(Array.prototype);
-}
+// ── Security: Prototype pollution prevention ──
+// Note: Object.freeze(Object.prototype) was removed because it breaks
+// React, Supabase, and virtually all JS libraries that create plain objects.
+// Instead, prototype pollution is mitigated by input sanitisation and CSP headers.
 // Prevent overriding of security functions
 Object.defineProperty(window, 'sanitiseHTML', { value: sanitiseHTML, writable: false, configurable: false });
 Object.defineProperty(window, 'sanitiseURL', { value: sanitiseURL, writable: false, configurable: false });
