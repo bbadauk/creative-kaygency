@@ -170,14 +170,16 @@
   --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:16px}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;font-family:var(--font);background:#FAFAFF;background:var(--bg);color:#1F2937;color:var(--gray-800);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;font-family:var(--font);background:#FAFAFF;background:var(--bg);color:#1F2937;color:var(--gray-800);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+/* Reduced motion for accessibility */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
 a{text-decoration:none;color:inherit;transition:all .2s ease}
 button{cursor:pointer;font-family:var(--font);border:none;background:none}
 input,textarea,select{font-family:var(--font)}
 ul,ol{list-style:none}
 h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
-#root{min-height:100vh}
+#root{min-height:100vh;min-height:100dvh}
 .app-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-size:18px;color:var(--primary);font-weight:600;gap:24px;background:#f8f7ff}
 .app-loading .loader-logo{font-size:32px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px}
 .app-loading .loader-spinner{width:48px;height:48px;border:4px solid #e9e5f5;border-top:4px solid var(--primary);border-radius:50%;animation:ck-spin 0.8s linear infinite}
@@ -215,7 +217,7 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 .nav-services-highlight{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff!important;padding:6px 16px;border-radius:50px;font-weight:600;letter-spacing:.3px;box-shadow:0 2px 8px rgba(99,102,241,.3)}
 .nav-services-highlight:hover{opacity:.9;color:#fff!important;box-shadow:0 4px 12px rgba(99,102,241,.45)}
 .navbar.scrolled .nav-services-highlight{color:#fff!important}
-.mega-menu{position:absolute;top:100%;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);padding:24px 28px;min-width:960px;max-width:96vw;opacity:0;visibility:hidden;transition:all .2s;pointer-events:none;border:1px solid var(--gray-100);margin-top:12px;z-index:100}
+.mega-menu{position:absolute;top:100%;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);padding:24px 28px;min-width:min(960px,96vw);max-width:96vw;opacity:0;visibility:hidden;transition:all .2s;pointer-events:none;border:1px solid var(--gray-100);margin-top:12px;z-index:100}
 .nav-dropdown:hover .mega-menu{opacity:1;visibility:visible;pointer-events:all;margin-top:0}
 .mega-menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
 .mega-menu-col{padding:8px 12px;border-radius:var(--radius-lg)}
@@ -255,7 +257,7 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 /* Mobile */
 .mobile-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
 .mobile-toggle span{width:22px;height:2px;background:var(--dark);border-radius:2px}
-.mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;bottom:0;background:#fff;z-index:80;padding:24px;flex-direction:column;gap:8px;overflow-y:auto}
+.mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;bottom:0;background:#fff;z-index:80;padding:24px;flex-direction:column;gap:8px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .mobile-menu.open{display:flex}
 .mobile-menu a{display:block;padding:14px 16px;font-size:16px;font-weight:500;border-radius:var(--radius);color:var(--gray-700)}
 .mobile-menu a:hover{background:var(--bg-alt);color:var(--primary)}
@@ -510,7 +512,7 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 .testimonial-role{font-size:12px;color:var(--gray-400)}
 
 /* Just Purchased Widget */
-.just-purchased{position:fixed;bottom:24px;left:24px;z-index:70;width:320px;pointer-events:none}
+.just-purchased{position:fixed;bottom:24px;left:24px;z-index:70;width:320px;max-width:calc(100vw - 48px);pointer-events:none}
 .jp-toast{background:#fff;border-radius:var(--radius-lg);padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,0.12),0 0 0 1px rgba(0,0,0,0.04);display:flex;align-items:center;gap:12px;animation:jpSlideIn .5s ease forwards;pointer-events:auto;position:relative;overflow:hidden}
 .jp-toast::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gradient)}
 .jp-toast.exit{animation:jpSlideOut .4s ease forwards}
@@ -558,7 +560,7 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 .footer-social a:hover{background:var(--primary);color:#fff}
 
 /* Auth Pages */
-.auth-page{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.auth-page{min-height:calc(100vh - 70px);min-height:calc(100dvh - 70px);display:flex;align-items:center;justify-content:center;padding:40px 24px}
 .auth-card{background:#fff;border-radius:var(--radius-xl);padding:40px;max-width:440px;width:100%;box-shadow:var(--shadow-lg);border:1px solid var(--gray-100)}
 .auth-card h2{font-size:26px;text-align:center;margin-bottom:4px}
 .auth-card .subtitle{text-align:center;color:var(--gray-500);font-size:14.5px;margin-bottom:28px}
@@ -572,9 +574,9 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 .demo-hint{background:var(--info-light);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius);padding:10px 14px;font-size:12.5px;color:var(--info);margin-bottom:20px;text-align:center}
 
 /* Dashboard Layout */
-.dashboard-layout{display:flex;min-height:calc(100vh - 70px)}
-.dashboard-sidebar{width:260px;background:#fff;border-right:1px solid var(--gray-100);padding:24px 16px;flex-shrink:0;position:-webkit-sticky;position:sticky;top:70px;height:calc(100vh - 70px);overflow-y:auto}
-.sidebar-nav{display:flex;flex-direction:column;gap:4px}
+.dashboard-layout{display:flex;min-height:calc(100vh - 70px);min-height:calc(100dvh - 70px)}
+.dashboard-sidebar{width:260px;background:#fff;border-right:1px solid var(--gray-100);padding:24px 16px;flex-shrink:0;position:-webkit-sticky;position:sticky;top:70px;height:calc(100vh - 70px);height:calc(100dvh - 70px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sidebar-nav{display:flex;flex-direction:column;gap:4px;-webkit-overflow-scrolling:touch}
 .sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);font-size:14px;font-weight:500;color:var(--gray-600);transition:all .2s;cursor:pointer;text-decoration:none;background:none;border:none;width:100%;text-align:left}
 .sidebar-link:hover{background:var(--bg-alt);color:var(--primary)}
 .sidebar-link.active{background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(236,72,153,0.08));color:var(--primary);font-weight:600}
@@ -1000,6 +1002,28 @@ tr:hover td{background:var(--gray-50)}
   .hiw-content p{font-size:14px}
   .faq-search-box input{font-size:14px;padding:12px 16px 12px 42px}
 }
+/* 600px intermediate breakpoint — bridges 768→480 gap */
+@media(max-width:600px){
+  .payment-options{grid-template-columns:1fr}
+  .blog-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr}
+  .kb-categories{grid-template-columns:1fr}
+  .credit-packages{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .portfolio-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr;max-width:100%}
+  .footer-grid{grid-template-columns:1fr}
+  .referral-stats{grid-template-columns:1fr}
+  .hiw-benefit-grid{grid-template-columns:1fr}
+  .sitemap-grid{grid-template-columns:1fr}
+  .badges-grid{grid-template-columns:repeat(2,1fr)}
+  .credit-promo{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .section-header h2{font-size:26px}
+  .page-header h1{font-size:28px}
+  .cta-section h2{font-size:28px}
+  .balance-value{font-size:36px}
+}
 @media(max-width:480px){
   .hero h1{font-size:22px}
   .hero-actions{flex-direction:column}
@@ -1012,7 +1036,7 @@ tr:hover td{background:var(--gray-50)}
   .service-card-full .service-icon{height:130px}
   .section-header h2{font-size:24px}
   .container{padding-left:16px;padding-right:16px}
-  .just-purchased{width:260px;bottom:12px;left:12px}
+  .just-purchased{width:calc(100vw - 32px);max-width:260px;bottom:12px;left:12px}
   .testimonial-card{width:270px}
   .mobile-menu{padding:16px}
   .mobile-menu a{padding:12px 14px;font-size:15px}
@@ -1030,6 +1054,9 @@ tr:hover td{background:var(--gray-50)}
   .portfolio-strip-header p{font-size:16px}
   .hiw-benefit{padding:24px 16px}
   .hiw-benefit-icon{width:44px;height:44px;font-size:22px}
+  .stats-grid{grid-template-columns:1fr}
+  .pay-option-card{padding:24px 16px}
+  .pay-compare-banner{padding:20px 16px}
 }
 /* Cross-browser & touch fixes */
 ::selection{background:rgba(124,58,237,0.15);color:var(--dark)}
@@ -1061,6 +1088,11 @@ img{max-width:100%;height:auto}
   .announcement-bar{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
   .navbar-inner{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
   .footer{padding-bottom:max(24px,env(safe-area-inset-bottom))}
+  .mobile-menu{padding-bottom:max(24px,env(safe-area-inset-bottom));padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
+  .chat-fab{bottom:max(100px,calc(100px + env(safe-area-inset-bottom)));right:max(24px,env(safe-area-inset-right))}
+  .just-purchased{bottom:max(24px,env(safe-area-inset-bottom));left:max(24px,env(safe-area-inset-left))}
+  .container{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
+  .chat-input-bar{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 }
 /* Announcement bar responsive */
 @media(max-width:768px){
@@ -1088,11 +1120,30 @@ img{max-width:100%;height:auto}
   .sidebar-link{min-height:44px}
   .mega-menu-item{min-height:48px}
   .faq-tab{min-height:44px}
+  .filter-tab{min-height:44px}
+  .ticket-filter-btn{min-height:44px}
+  .currency-option{min-height:44px}
+  .mobile-menu a{min-height:48px}
+  .faq-question{min-height:48px}
+  .social-btn{min-height:44px}
+  .share-btn{min-height:44px}
+  .chat-quick-btn{min-height:36px}
+  .nav-dropdown-trigger{min-height:44px}
+  .jp-close{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+  .toggle-switch{min-width:52px;min-height:44px}
+  .wizard-step .num{min-width:44px;min-height:44px}
+}
+/* inset:0 fallback for older browsers */
+@supports not (inset:0){
+  .portfolio-overlay{top:0;right:0;bottom:0;left:0}
+  .mockup-samples{top:0;right:0;bottom:0;left:0}
 }
 /* Responsive inline grid overrides — override inline 4-col and 3-col grids */
 @media(max-width:1024px){
   .resp-grid-4{grid-template-columns:repeat(2,1fr)!important}
   .resp-grid-3{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:768px){
   .resp-grid-2col{grid-template-columns:1fr!important}
 }
 @media(max-width:600px){
@@ -1100,11 +1151,11 @@ img{max-width:100%;height:auto}
   .resp-grid-3{grid-template-columns:1fr!important}
 }
 /* Live Chat Widget */
-.chat-fab{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;font-family:inherit}
+.chat-fab{position:fixed;bottom:100px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:12px;font-family:inherit}
 .chat-fab-btn{width:60px;height:60px;border-radius:50%;background:var(--gradient);border:none;color:#fff;font-size:26px;cursor:pointer;box-shadow:0 6px 28px rgba(124,58,237,0.4);transition:all .3s;display:flex;align-items:center;justify-content:center;position:relative}
 .chat-fab-btn:hover{transform:scale(1.08);box-shadow:0 8px 36px rgba(124,58,237,0.5)}
 .chat-fab-btn .chat-badge{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--secondary);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
-.chat-window{width:380px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 120px);background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.2);display:flex;flex-direction:column;overflow:hidden;animation:chatSlideUp .3s ease}
+.chat-window{width:380px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 180px);max-height:calc(100dvh - 180px);background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.2);display:flex;flex-direction:column;overflow:hidden;animation:chatSlideUp .3s ease}
 @keyframes chatSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .chat-header{background:var(--gradient);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px}
 .chat-header-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -1112,7 +1163,7 @@ img{max-width:100%;height:auto}
 .chat-header-info p{margin:0;font-size:11px;opacity:.85}
 .chat-header-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:18px;padding:4px}
 .chat-header-close:hover{color:#fff}
-.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.chat-messages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;display:flex;flex-direction:column;gap:10px}
 .chat-msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.5}
 .chat-msg.bot{background:var(--bg-alt);color:var(--dark);border-bottom-left-radius:4px;align-self:flex-start}
 .chat-msg.user{background:var(--gradient);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
@@ -1129,7 +1180,7 @@ img{max-width:100%;height:auto}
 .chat-input-bar button{width:36px;height:36px;border-radius:50%;background:var(--gradient);border:none;color:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
 .chat-input-bar button:hover{transform:scale(1.05)}
 .chat-input-bar button:disabled{opacity:.4;cursor:not-allowed;transform:none}
-@media(max-width:480px){.chat-window{width:calc(100vw - 16px);height:calc(100vh - 80px);border-radius:16px}.chat-fab{bottom:16px;right:8px}}
+@media(max-width:480px){.chat-window{width:calc(100vw - 16px);height:calc(100vh - 160px);height:calc(100dvh - 160px);border-radius:16px}.chat-fab{bottom:90px;right:8px}}
 /* Print styles */
 @media print{
   .navbar,.announcement-bar,.mobile-toggle,.footer,.just-purchased,.admin-fab{display:none!important}
@@ -3315,7 +3366,7 @@ function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section-header"><div className="badge badge-primary">🔥 Full Service Agency</div><h2>Everything You Need, Under One Roof</h2><p>Stop juggling multiple freelancers and agencies. We handle your entire digital presence from design to deployment to ongoing growth.</p></div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32}}>
+          <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32}}>
             {[
               {icon:'🌐',t:'Websites & Landing Pages',items:['Business websites from 1–50+ pages','High-converting landing pages','Multi-step sales funnels','Brochure sites & microsites','CMS setup (WordPress, custom)','Mobile-first responsive design']},
               {icon:'🛒',t:'E-Commerce & Stores',items:['Shopify & WooCommerce builds','Product upload & catalog setup','Payment gateway integration','Cart abandonment optimization','Inventory & shipping config','Conversion rate optimization']},
@@ -3338,7 +3389,7 @@ function HomePage() {
       <section className="section section-alt">
         <div className="container">
           <div className="section-header"><div className="badge badge-error">⚠️ The Problem</div><h2>Why DIY and Cheap Freelancers Cost You More</h2><p>We've seen it hundreds of times. Businesses try to save money and end up spending more fixing mistakes.</p></div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'center'}}>
+          <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'center'}}>
             <div>
               {[
                 {icon:'❌',text:'DIY website builders look amateur and kill credibility'},
@@ -3396,7 +3447,7 @@ function HomePage() {
         <div className="container">
           <div className="section-header"><div className="badge badge-success">💡 Real Example</div><h2>See How Much You Save With Credits</h2></div>
           <div className="card" style={{maxWidth:720,margin:'0 auto',padding:32}}>
-            <div style={{display:'grid',gridTemplateColumns:'1fr auto 1fr',gap:24,alignItems:'center',textAlign:'center'}}>
+            <div className="resp-grid-3" style={{display:'grid',gridTemplateColumns:'1fr auto 1fr',gap:24,alignItems:'center',textAlign:'center'}}>
               <div>
                 <div style={{fontSize:13,color:'var(--gray-400)',marginBottom:4}}>WITHOUT Credits</div>
                 <div style={{fontSize:14,fontWeight:600,marginBottom:8}}>Logo + Website + SEO</div>
@@ -3973,7 +4024,7 @@ function DashOverview({ user, projects, formatPrice, onClaim, onNavigate }) {
         <div className="dash-stat-card"><div className="label">Current Streak</div><div className="value" style={{color:'var(--warning)'}}>{user.streak} 🔥</div><div className="change up">Days</div></div>
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+      <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
         <div className="card">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
             <h3 style={{fontSize:16}}>Daily Login Reward</h3>
@@ -4298,7 +4349,7 @@ function DashRewards({ user, onClaim }) {
   return (
     <div>
       <div className="dash-header"><h1>Rewards & Achievements</h1><p>Earn credits, build streaks, and unlock badges.</p></div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+      <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
         <div className="card">
           <h3 style={{fontSize:16,marginBottom:12}}>🔥 Daily Login Streak</h3>
           <div className="streak-header"><div className="streak-count">🔥 {user.streak} days</div><button className="btn btn-sm btn-primary" onClick={onClaim}>Claim +2</button></div>
@@ -4634,7 +4685,7 @@ function DashMyAds({ userAds }) {
           <div className="dash-stat-card"><div className="label">CPM</div><div className="value">{formatPrice(parseFloat(cpm))}</div><div className="change">Cost per 1K views</div></div>
         </div>
 
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+        <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
           <div className="card">
             <h3 style={{fontSize:16,marginBottom:16}}>Performance Overview</h3>
             {dailyData.length > 0 ? (
@@ -4683,7 +4734,7 @@ function DashMyAds({ userAds }) {
 
         <div className="card" style={{marginBottom:24}}>
           <h3 style={{fontSize:16,marginBottom:16}}>Ad Creative Preview</h3>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+          <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
             <div>
               <div style={{fontSize:12,fontWeight:600,color:'var(--gray-500)',marginBottom:8}}>Sidebar Format</div>
               <div style={{borderRadius:'var(--radius)',overflow:'hidden',border:'1px solid var(--gray-100)'}}>
@@ -4786,7 +4837,7 @@ function DashSettings({ user }) {
       <div className="dash-header"><h1>Settings</h1><p>Manage your account settings and preferences.</p></div>
       <div className="card" style={{marginBottom:24}}>
         <h3 style={{fontSize:16,marginBottom:16}}>Profile Information</h3>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+        <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
           <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" defaultValue={user.name} /></div>
           <div className="form-group"><label className="form-label">Email</label><input className="form-input" defaultValue={user.email} type="email" /></div>
         </div>
@@ -4795,7 +4846,7 @@ function DashSettings({ user }) {
       <div className="card" style={{marginBottom:24}}>
         <h3 style={{fontSize:16,marginBottom:16}}>Change Password</h3>
         <div className="form-group"><label className="form-label">Current Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+        <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
           <div className="form-group"><label className="form-label">New Password</label><input className="form-input" type="password" placeholder="Min 8 characters" /></div>
           <div className="form-group"><label className="form-label">Confirm New Password</label><input className="form-input" type="password" placeholder="••••••••" /></div>
         </div>
@@ -5098,7 +5149,7 @@ function SupportPage() {
                 ))}
               </div>
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+            <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
               <div className="form-group">
                 <label className="form-label">Subject *</label>
                 <input className="form-input" placeholder="Brief description of your issue" value={newTicket.subject} onChange={e => setNewTicket(p => ({...p, subject: e.target.value}))} maxLength={200} />
@@ -5488,7 +5539,7 @@ function AdminPage() {
             <div className="dash-header"><h1>Financial Dashboard</h1><p>Complete revenue, payments, credits, and financial analytics for Creative Kaygency.</p></div>
 
             {/* ── KPI Cards ── */}
-            <div className="dash-stats" style={{gridTemplateColumns:'repeat(5, 1fr)'}}>
+            <div className="dash-stats resp-grid-4" style={{gridTemplateColumns:'repeat(5, 1fr)'}}>
               <div className="dash-stat-card"><div className="label">Net Revenue (Month)</div><div className="value" style={{color:'var(--success)'}}>{formatPrice(netRevenue)}</div><div className="change up">After {formatPrice(totalRefunds)} refunds</div></div>
               <div className="dash-stat-card"><div className="label">Revenue Today</div><div className="value" style={{color:'var(--primary)'}}>{formatPrice(todayRevenue)}</div><div className="change up">{todayTxns.length} transaction{todayTxns.length !== 1 ? 's' : ''}</div></div>
               <div className="dash-stat-card"><div className="label">This Week</div><div className="value" style={{color:'var(--info)'}}>{formatPrice(weekRevenue)}</div><div className="change up">{weekTxns.filter(t => t.amount > 0).length} payments received</div></div>
@@ -5563,7 +5614,7 @@ function AdminPage() {
                 </div>
               </div>
 
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+              <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
                 {/* Top services */}
                 <div className="card" style={{padding:20}}>
                   <h3 style={{fontSize:15,marginBottom:16}}>Top Services by Revenue</h3>
@@ -5665,7 +5716,7 @@ function AdminPage() {
 
             {/* ════════ BREAKDOWN ════════ */}
             {finTab === 'breakdown' && (<div>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+              <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
                 {/* Revenue source breakdown */}
                 <div className="card" style={{padding:20}}>
                   <h3 style={{fontSize:15,marginBottom:16}}>Revenue by Source</h3>
@@ -5701,7 +5752,7 @@ function AdminPage() {
                 </div>
               </div>
 
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+              <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
                 {/* Payment method split */}
                 <div className="card" style={{padding:20}}>
                   <h3 style={{fontSize:15,marginBottom:16}}>Payment Method Split</h3>
@@ -5939,7 +5990,7 @@ function AdminPage() {
               <button className="btn btn-primary" onClick={() => { setUserForm({id:Math.max(...managedUsers.map(u=>u.id),0)+1,name:'',email:'',password:'',phone:'',company:'',plan:'starter',credits:0,status:'active',referralCode:'',notes:''}); setUserView('create'); }} style={{whiteSpace:'nowrap'}}>➕ Create User</button>
             </div>
             <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap'}}>
-              <input type="text" placeholder="Search users..." value={userSearch} onChange={e => setUserSearch(e.target.value)} style={{flex:1,minWidth:200,padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}} />
+              <input type="text" placeholder="Search users..." value={userSearch} onChange={e => setUserSearch(e.target.value)} style={{flex:1,minWidth:0,flex:'1 1 150px',padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}} />
               <select value={userStatusFilter} onChange={e => setUserStatusFilter(e.target.value)} style={{padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}}>
                 <option value="all">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option>
               </select>
@@ -6311,7 +6362,7 @@ function AdminPage() {
               ); })}
             </div>
             <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap'}}>
-              <input className="form-input" placeholder="Search portfolio items..." value={portfolioSearch} onChange={e => setPortfolioSearch(e.target.value)} style={{flex:1,minWidth:200}} />
+              <input className="form-input" placeholder="Search portfolio items..." value={portfolioSearch} onChange={e => setPortfolioSearch(e.target.value)} style={{flex:'1 1 150px',minWidth:0}} />
               <select className="form-input" style={{width:'auto'}} value={portfolioCatFilter} onChange={e => setPortfolioCatFilter(e.target.value)}>
                 <option value="all">All Categories</option>
                 {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
@@ -6363,7 +6414,7 @@ function AdminPage() {
               <div><h1>{editingPortfolio ? 'Edit Portfolio Item' : 'Add New Portfolio Item'}</h1><p>{editingPortfolio ? 'Update the details for this portfolio piece.' : 'Create a new portfolio showcase item.'}</p></div>
               <button className="btn btn-ghost" onClick={() => setPortfolioView('list')}>← Back to List</button>
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
+            <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
               <div className="card" style={{padding:24}}>
                 <h3 style={{fontSize:16,fontWeight:700,marginBottom:20}}>Item Details</h3>
                 <div className="form-group">
@@ -6472,7 +6523,7 @@ function AdminPage() {
             </div>
 
             <div style={{display:'flex',gap:12,marginBottom:16,flexWrap:'wrap'}}>
-              <input type="text" placeholder="Search services..." value={svcSearch} onChange={e => setSvcSearch(e.target.value)} style={{flex:1,minWidth:200,padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}} />
+              <input type="text" placeholder="Search services..." value={svcSearch} onChange={e => setSvcSearch(e.target.value)} style={{flex:1,minWidth:0,flex:'1 1 150px',padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}} />
               <select value={svcCatFilter} onChange={e => setSvcCatFilter(e.target.value)} style={{padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}}>
                 <option value="all">All Categories</option>
                 {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
@@ -6716,7 +6767,7 @@ function AdminPage() {
 
             <div className="card" style={{marginTop:20,padding:20}}>
               <h3 style={{fontSize:15,marginBottom:16}}>🔗 SEO & URL Settings</h3>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}} className="resp-grid-2col">
+              <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}
                 <div>
                   <label style={{fontSize:12,fontWeight:600,marginBottom:4,display:'block'}}>URL Slug</label>
                   <div style={{display:'flex',alignItems:'center',gap:0,border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',overflow:'hidden'}}>
@@ -6824,7 +6875,7 @@ function AdminPage() {
           return (<div>
             {blogView === 'list' && (<div>
               <div className="dash-header" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}><div><h1>Blog Management</h1><p>Create and manage blog posts. Total: {blogPosts.length}</p></div><div style={{display:'flex',gap:8}}><button className="btn btn-primary" onClick={() => { setBlogView('form'); setEditingBlog(null); setBlogForm({ slug: '', title: '', category: '', excerpt: '', content: '', date: '', readTime: '', author: 'Kay', image: '', metaTitle: '', metaDescription: '', metaKeywords: '', canonicalUrl: '', ogImage: '', status: 'published', featured: false, tags: [] }); }}>+ New Post</button><button className="btn btn-secondary" onClick={() => { if (confirm('Reset all blog posts to defaults? This cannot be undone.')) { resetBlog(); addToast('Blog reset to defaults'); } }}>Reset Defaults</button></div></div>
-              <div className="card"><div style={{padding:16,display:'flex',gap:12,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}><input className="form-input" placeholder="Search posts..." value={blogSearch} onChange={e => setBlogSearch(e.target.value)} style={{flex:1,minWidth:200}} /><select className="form-input" value={blogCatFilter} onChange={e => setBlogCatFilter(e.target.value)} style={{minWidth:150}}><option value="all">All Categories</option>{blogCategories.map(c => <option key={c} value={c}>{c}</option>)}</select></div><div className="table-wrap"><table>
+              <div className="card"><div style={{padding:16,display:'flex',gap:12,marginBottom:16,flexWrap:'wrap',alignItems:'center'}}><input className="form-input" placeholder="Search posts..." value={blogSearch} onChange={e => setBlogSearch(e.target.value)} style={{flex:'1 1 150px',minWidth:0}} /><select className="form-input" value={blogCatFilter} onChange={e => setBlogCatFilter(e.target.value)} style={{minWidth:150}}><option value="all">All Categories</option>{blogCategories.map(c => <option key={c} value={c}>{c}</option>)}</select></div><div className="table-wrap"><table>
                 <thead><tr><th style={{width:'35%'}}>Title</th><th style={{width:'15%'}}>Category</th><th style={{width:'12%'}}>Date</th><th style={{width:'10%'}}>Status</th><th style={{width:'8%'}}>Featured</th><th style={{width:'20%'}}>Actions</th></tr></thead>
                 <tbody>
                   {filteredPosts.map(p => <tr key={p.slug} style={{background:p.status==='draft'?'rgba(244,114,182,0.05)':'transparent'}}>
@@ -7239,7 +7290,7 @@ function AdminPage() {
           </div>}
           {giveawayView === 'create' && <div className="card" style={{padding:20}}>
             <h3 style={{fontSize:16,marginBottom:16}}>Create New Giveaway</h3>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+            <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
               <div><label style={{fontSize:12,fontWeight:600,marginBottom:4,display:'block'}}>Giveaway Name *</label><input type="text" value={giveawayForm.name} onChange={e => setGiveawayForm({...giveawayForm,name:e.target.value})} style={{width:'100%',padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}} /></div>
               <div><label style={{fontSize:12,fontWeight:600,marginBottom:4,display:'block'}}>Credit Prize *</label><input type="number" min={0} value={giveawayForm.credits} onChange={e => setGiveawayForm({...giveawayForm,credits:Number(e.target.value)})} style={{width:'100%',padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}} /></div>
               <div><label style={{fontSize:12,fontWeight:600,marginBottom:4,display:'block'}}>Type</label><select value={giveawayForm.type} onChange={e => setGiveawayForm({...giveawayForm,type:e.target.value})} style={{width:'100%',padding:'8px 12px',border:'1px solid var(--gray-200)',borderRadius:'var(--radius)',fontSize:13}}><option value="random-draw">Random Draw</option><option value="first-come">First Come</option><option value="competition">Competition</option></select></div>
@@ -7498,7 +7549,7 @@ function TestimonialsPage() {
         {showReviewForm && (
           <div className="card" style={{padding:24,marginBottom:32,background:'var(--gray-50)',borderRadius:'var(--radius-lg)'}}>
             <h3 style={{fontSize:18,marginBottom:16}}>Share Your Experience</h3>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+            <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
               <input type="text" placeholder="Your Name" value={newReview.name} onChange={e => setNewReview({...newReview,name:e.target.value})} style={{padding:'10px 14px',border:'1px solid var(--gray-300)',borderRadius:'var(--radius)',fontSize:14}} />
               <input type="text" placeholder="Company Name" value={newReview.company} onChange={e => setNewReview({...newReview,company:e.target.value})} style={{padding:'10px 14px',border:'1px solid var(--gray-300)',borderRadius:'var(--radius)',fontSize:14}} />
             </div>
