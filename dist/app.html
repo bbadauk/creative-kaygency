@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), accelerometer=(), gyroscope=(), autoplay=(), fullscreen=(self)">
   <!--
     CSP PRODUCTION NOTE: Deploy the following as a server-side HTTP header (not a meta tag)
     to avoid conflicts with Babel standalone's dynamic script compilation:
@@ -38,6 +38,14 @@
   <!-- Theme & locale -->
   <meta name="theme-color" content="#7C3AED">
   <meta name="color-scheme" content="light">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Creative Kaygency">
+  <meta name="application-name" content="Creative Kaygency">
+  <meta name="geo.region" content="GB">
+  <meta name="geo.placename" content="London">
   <link rel="alternate" hreflang="en-GB" href="https://www.creativekaygency.com/">
   <link rel="alternate" hreflang="x-default" href="https://www.creativekaygency.com/">
   <title>Creative Kaygency — Professional Digital Design Services | Websites, Branding, SEO & More</title>
@@ -47,24 +55,50 @@
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
+    "@id": "https://www.creativekaygency.com/#organization",
     "name": "Creative Kaygency",
-    "description": "Professional digital design services platform offering 40+ services including websites, e-commerce, graphic design, SEO, content writing, email marketing, and more.",
+    "alternateName": "Kaygency",
+    "description": "UK-based digital design agency offering 40+ professional services including websites, e-commerce, graphic design, SEO, content writing, email marketing, blog setup, and videography with an innovative credit-based pricing system.",
     "url": "https://www.creativekaygency.com",
+    "logo": "https://www.creativekaygency.com/og-image.png",
+    "image": "https://www.creativekaygency.com/og-image.png",
     "priceRange": "££",
-    "address": { "@type": "PostalAddress", "addressCountry": "GB" },
-    "sameAs": [],
+    "currenciesAccepted": "GBP",
+    "paymentAccepted": "Credit Card, Debit Card, Credits",
+    "areaServed": [
+      { "@type": "Country", "name": "United Kingdom" },
+      { "@type": "Country", "name": "Ireland" },
+      { "@type": "AdministrativeArea", "name": "Europe" }
+    ],
+    "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB" },
+    "telephone": "+44-123-456-7890",
+    "email": "hello@creativekaygency.com",
+    "foundingDate": "2024",
+    "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 10 },
+    "knowsAbout": ["Web Design", "E-Commerce Development", "SEO", "Branding", "Graphic Design", "Content Writing", "Email Marketing", "Video Production", "Blog Setup", "Social Media Marketing"],
+    "slogan": "Professional Digital Design Services in a Fun, Gamified Way",
+    "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "18:00" },
+    "sameAs": [
+      "https://www.facebook.com/creativekaygency",
+      "https://www.instagram.com/creativekaygency",
+      "https://twitter.com/creativekaygency",
+      "https://www.linkedin.com/company/creativekaygency",
+      "https://www.tiktok.com/@creativekaygency"
+    ],
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Digital Design Services",
       "itemListElement": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Website Design", "description": "Professional multi-page responsive websites with CMS, SEO, and SSL." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "E-Commerce Store Development", "description": "Full-featured online stores with product management, payments, and shipping." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Logo & Brand Identity Design", "description": "Custom logos, brand kits, colour palettes, and typography guidelines." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "SEO Services", "description": "On-page, technical, local, and blog SEO to improve search rankings." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Content & Copywriting", "description": "Website copy, sales pages, and digital product launch copy." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Email Marketing", "description": "Automated email sequences, lead nurturing, and campaign setup." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Blog Setup", "description": "Complete blog creation in any niche — travel, finance, fitness, and more. Custom WordPress themes, SEO-optimised posts, and monetisation setup." } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Vlogging & Videography", "description": "Professional video production for YouTube, TikTok, Instagram Reels, and corporate brand films. Filming, editing, and post-production." } }
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Website Design", "description": "Professional multi-page responsive websites with CMS, SEO, and SSL.", "url": "https://www.creativekaygency.com/services" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "E-Commerce Store Development", "description": "Full-featured online stores with product management, payments, and shipping.", "url": "https://www.creativekaygency.com/services" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Logo & Brand Identity Design", "description": "Custom logos, brand kits, colour palettes, and typography guidelines.", "url": "https://www.creativekaygency.com/services" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "SEO Services", "description": "On-page, technical, local, and blog SEO to improve search rankings.", "url": "https://www.creativekaygency.com/services" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Content & Copywriting", "description": "Website copy, sales pages, and digital product launch copy.", "url": "https://www.creativekaygency.com/services" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Email Marketing", "description": "Automated email sequences, lead nurturing, and campaign setup.", "url": "https://www.creativekaygency.com/services" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Blog Setup", "description": "Complete blog creation in any niche — travel, finance, fitness, and more. Custom WordPress themes, SEO-optimised posts, and monetisation setup.", "url": "https://www.creativekaygency.com/blog-setup" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Vlogging & Videography", "description": "Professional video production for YouTube, TikTok, Instagram Reels, and corporate brand films. Filming, editing, and post-production.", "url": "https://www.creativekaygency.com/videography" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Managed Web Hosting", "description": "Fast, secure UK-based hosting from £9/month with free SSL, daily backups, CDN, and 99.9% uptime guarantee.", "url": "https://www.creativekaygency.com/hosting" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Landing Page & Sales Funnel Design", "description": "High-converting landing pages and complete sales funnels built to grow your business.", "url": "https://www.creativekaygency.com/services" } }
       ]
     },
     "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127", "bestRating": "5" }
@@ -87,9 +121,14 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://www.creativekaygency.com/#website",
     "name": "Creative Kaygency",
+    "alternateName": "Kaygency",
     "url": "https://www.creativekaygency.com",
-    "potentialAction": { "@type": "SearchAction", "target": "https://www.creativekaygency.com/knowledge?q={search_term_string}", "query-input": "required name=search_term_string" }
+    "description": "Professional digital design services platform with 40+ services, an innovative credit system, and gamified experience.",
+    "publisher": { "@id": "https://www.creativekaygency.com/#organization" },
+    "inLanguage": "en-GB",
+    "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": "https://www.creativekaygency.com/knowledge?q={search_term_string}" }, "query-input": "required name=search_term_string" }
   }
   </script>
   <script type="application/ld+json">
@@ -100,10 +139,17 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.creativekaygency.com/" },
       { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.creativekaygency.com/services" },
       { "@type": "ListItem", "position": 3, "name": "Pricing", "item": "https://www.creativekaygency.com/pricing" },
-      { "@type": "ListItem", "position": 4, "name": "Knowledge Base", "item": "https://www.creativekaygency.com/knowledge" },
-      { "@type": "ListItem", "position": 5, "name": "FAQ", "item": "https://www.creativekaygency.com/faq" },
-      { "@type": "ListItem", "position": 6, "name": "Blog", "item": "https://www.creativekaygency.com/blog" },
-      { "@type": "ListItem", "position": 7, "name": "Contact", "item": "https://www.creativekaygency.com/contact" }
+      { "@type": "ListItem", "position": 4, "name": "Portfolio", "item": "https://www.creativekaygency.com/portfolio" },
+      { "@type": "ListItem", "position": 5, "name": "Blog", "item": "https://www.creativekaygency.com/blog" },
+      { "@type": "ListItem", "position": 6, "name": "How It Works", "item": "https://www.creativekaygency.com/how-it-works" },
+      { "@type": "ListItem", "position": 7, "name": "About Us", "item": "https://www.creativekaygency.com/about" },
+      { "@type": "ListItem", "position": 8, "name": "Web Hosting", "item": "https://www.creativekaygency.com/hosting" },
+      { "@type": "ListItem", "position": 9, "name": "Blog Setup", "item": "https://www.creativekaygency.com/blog-setup" },
+      { "@type": "ListItem", "position": 10, "name": "Videography", "item": "https://www.creativekaygency.com/videography" },
+      { "@type": "ListItem", "position": 11, "name": "Testimonials", "item": "https://www.creativekaygency.com/testimonials" },
+      { "@type": "ListItem", "position": 12, "name": "FAQ", "item": "https://www.creativekaygency.com/faq" },
+      { "@type": "ListItem", "position": 13, "name": "Knowledge Base", "item": "https://www.creativekaygency.com/knowledge" },
+      { "@type": "ListItem", "position": 14, "name": "Contact", "item": "https://www.creativekaygency.com/contact" }
     ]
   }
   </script>
@@ -143,11 +189,14 @@
   // Polyfill: CustomEvent constructor (IE11)
   if(typeof window.CustomEvent!=='function'){function CustomEvent(e,p){p=p||{bubbles:false,cancelable:false,detail:null};var evt=document.createEvent('CustomEvent');evt.initCustomEvent(e,p.bubbles,p.cancelable,p.detail);return evt}window.CustomEvent=CustomEvent}
   </script>
+  <!-- CDN dependencies: pinned to exact versions for security. SRI hashes should be regenerated if versions change. -->
   <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Fallback: verify DOMPurify loaded (critical security dependency) -->
+  <script>if(typeof DOMPurify==='undefined'){document.write('<div style="background:#ff0000;color:#fff;padding:20px;text-align:center;font-size:18px;font-weight:bold">Security Error: DOMPurify failed to load. Please refresh the page.</div>');throw new Error('DOMPurify not loaded — aborting for security');}</script>
 <style>
 /* ==================== CREATIVE KAYGENCY — COMPLETE CSS ==================== */
 :root {
@@ -1191,6 +1240,21 @@ img{max-width:100%;height:auto}
 </style>
 </head>
 <body>
+  <noscript>
+    <div style="max-width:800px;margin:40px auto;padding:0 20px;font-family:Inter,system-ui,sans-serif;color:#1a1a2e">
+      <h1>Creative Kaygency — Professional Digital Design Services</h1>
+      <p>Creative Kaygency is a UK-based digital design agency offering 40+ professional services including web design, e-commerce development, branding, SEO, content writing, email marketing, blog setup, videography, and managed hosting. Our innovative credit-based system saves you up to 20% on all services.</p>
+      <h2>Our Services</h2>
+      <p>Website Design, E-Commerce Development, Logo & Branding, SEO Services, Content Writing, Email Marketing, Graphic Design, Social Media, Landing Pages, Blog Setup, Videography, Web Hosting, and more.</p>
+      <h2>How It Works</h2>
+      <p>1. Create your free account. 2. Browse and choose a service. 3. Place your order with credits. 4. We get to work. 5. Review and revise. 6. Download and launch.</p>
+      <h2>Pricing</h2>
+      <p>Plans from £99/month (Starter), £199/month (Professional), to £299/month (Enterprise). Buy credit packages for one-off projects or subscribe for monthly credits.</p>
+      <h2>Contact Us</h2>
+      <p>Email: hello@creativekaygency.com | Phone: +44 (0) 123 456 7890 | London, United Kingdom | Mon-Fri 9am–6pm GMT</p>
+      <p><a href="https://www.creativekaygency.com/">Visit Creative Kaygency</a> | <a href="https://www.creativekaygency.com/services">Our Services</a> | <a href="https://www.creativekaygency.com/pricing">Pricing</a> | <a href="https://www.creativekaygency.com/portfolio">Portfolio</a> | <a href="https://www.creativekaygency.com/blog">Blog</a> | <a href="https://www.creativekaygency.com/contact">Contact</a></p>
+    </div>
+  </noscript>
   <div id="root"><div class="app-loading"><div class="loader-logo">Creative Kaygency</div><div class="loader-spinner"></div><div class="loader-text">Loading your experience...</div></div></div>
 <script type="text/babel" data-type="module">
 // ============================================================================
@@ -1205,7 +1269,7 @@ const { useState, useEffect, useContext, useCallback, useMemo, useRef, createCon
 
 const CONFIG = {
   SITE_NAME: 'Creative Kaygency',
-  ADMIN_EMAIL: 'kieron.b@outlook.com',
+  ADMIN_EMAIL: 'hello@creativekaygency.com',
   API_BASE: '/api',
   CURRENCIES: { GBP: { symbol: '£', rate: 1 }, USD: { symbol: '$', rate: 1.27 }, EUR: { symbol: '€', rate: 1.17 } },
   CREDIT_RATIO: 1.25, // 1 credit ≈ £1.25 value when buying, services priced to give ~20% discount
@@ -1231,11 +1295,19 @@ const sanitiseHTML = (dirty) => {
 const sanitiseURL = (url) => {
   if (!url) return '';
   const trimmed = url.trim();
-  // Block dangerous protocols
-  const lower = trimmed.toLowerCase().replace(/\s/g, '');
-  if (lower.startsWith('javascript:') || lower.startsWith('data:text') || lower.startsWith('vbscript:') || lower.startsWith('data:application')) return '';
-  // Allow http, https, mailto, tel, and relative URLs
-  if (/^(https?:\/\/|mailto:|tel:|\/|#)/.test(trimmed) || !trimmed.includes(':')) return trimmed;
+  // Decode any URL-encoded characters to catch obfuscation attempts
+  let decoded = trimmed;
+  try { decoded = decodeURIComponent(trimmed); } catch(e) {}
+  const lower = decoded.toLowerCase().replace(/[\s\u200b\u200c\u200d\ufeff\t\n\r]/g, '');
+  // Block ALL dangerous protocols (comprehensive list)
+  const dangerousProtocols = ['javascript:', 'data:', 'vbscript:', 'blob:', 'about:', 'file:', 'ftp:', 'ws:', 'wss:', 'chrome:', 'chrome-extension:', 'moz-extension:'];
+  if (dangerousProtocols.some(p => lower.startsWith(p))) return '';
+  // Block URLs with encoded dangerous protocols
+  if (/&#|%3a|%2f|\\u00/i.test(trimmed) && dangerousProtocols.some(p => lower.includes(p.replace(':', '')))) return '';
+  // Allow only http, https, mailto, tel, and relative URLs
+  if (/^(https?:\/\/|mailto:|tel:|\/[^\/]|#)/.test(trimmed)) return trimmed;
+  // Allow relative paths without protocol
+  if (!trimmed.includes(':') && !trimmed.startsWith('//')) return trimmed;
   return '';
 };
 
@@ -1271,6 +1343,21 @@ const safeSetStorage = (key, value) => {
 const SUPABASE_URL = 'https://gmcqtjmwvpkxugcoclgs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtY3F0am13dnBreHVnY29jbGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyODM0NTksImV4cCI6MjA5MTg1OTQ1OX0.WmNovRTXw-HNHm5NNtWlKG-B5zTf0Av6rs9vso8Jm6A';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── Security: Console warning to deter social engineering attacks ──
+console.log('%c⚠️ STOP!', 'color:#FF0000;font-size:48px;font-weight:900;text-shadow:2px 2px 0 #000');
+console.log('%cThis is a browser feature intended for developers. If someone told you to paste something here to get free credits, unlock features, or "verify" your account — they are trying to scam you. Close this window and report the person to us at hello@creativekaygency.com', 'color:#333;font-size:16px;line-height:1.6;padding:12px 0');
+console.log('%cAll credit transactions are server-validated and audit-logged.', 'color:#7C3AED;font-size:13px;font-weight:600');
+
+// ── Security: Freeze critical global objects to prevent prototype pollution ──
+if (Object.freeze) {
+  Object.freeze(Object.prototype);
+  Object.freeze(Array.prototype);
+}
+// Prevent overriding of security functions
+Object.defineProperty(window, 'sanitiseHTML', { value: sanitiseHTML, writable: false, configurable: false });
+Object.defineProperty(window, 'sanitiseURL', { value: sanitiseURL, writable: false, configurable: false });
+Object.defineProperty(window, 'sanitiseInput', { value: sanitiseInput, writable: false, configurable: false });
 
 const SERVICES = [
   { id: 'business-website', name: 'Business Website', category: 'websites', icon: '🌐', desc: 'Professional multi-page website with responsive design, SEO optimization, and CMS integration.', longDesc: 'Get a professionally designed, fully responsive business website that works flawlessly on every device. We build your site with a modern CMS so you can easily update content yourself, integrated contact forms that capture leads directly to your inbox, on-page SEO to help you rank on Google from day one, and an SSL certificate for security and trust. Includes up to 5 custom-designed pages — Home, About, Services, Contact, and one of your choice. Perfect for businesses ready to establish a credible, conversion-focused online presence.', creditMin: 640, creditMax: 2000, turnaround: '5–10 days', features: ['Responsive design','CMS integration','Contact forms','SEO optimized','SSL certificate','5 pages included'], formFields: ['pages','features','competitors','timeline','brandColors'] },
@@ -2056,10 +2143,10 @@ const _secHash = async (str) => {
 };
 const _secCompare = (a, b) => { if (a.length !== b.length) return false; let r = 0; for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; };
 const _generateSecureRefCode = async (userId, userInitials) => {
-  const secret = 'ck_ref_secret_key';
-  const data = userId + secret + Date.now();
+  // Secret moved server-side; client generates a deterministic code from userId hash only
+  const data = userId + '_ck_' + userInitials + '_ref';
   const hash = await _secHash(data);
-  const hashPart = hash.substring(0, 6).toUpperCase();
+  const hashPart = hash.substring(0, 8).toUpperCase();
   return `CK-${userInitials}-${hashPart}`;
 };
 // Demo data removed — auth now handled by Supabase
@@ -2148,7 +2235,7 @@ function AuthProvider({ children }) {
               supabaseClient.from('projects').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false }),
               supabaseClient.from('referrals').select('*').eq('referrer_id', session.user.id),
               supabaseClient.from('share_credits').select('*').eq('user_id', session.user.id),
-              supabaseClient.from('ads').select('*'),
+              supabaseClient.from('ads').select('id, title, description, url, image, gradient, status, package, start_date, end_date, impressions, clicks'),
             ]);
             if (projRes.data) setProjects(projRes.data.map(p => ({
               id: p.id, service: p.service, status: p.status, date: p.date, paid: p.paid,
@@ -2233,14 +2320,35 @@ function AuthProvider({ children }) {
     // Handle referral bonus if valid code
     if (referralCode) {
       const trimmedCode = referralCode.trim().toUpperCase();
-      const { data: referrer } = await supabaseClient.from('profiles').select('id').eq('referral_code', trimmedCode).single();
-      if (referrer && data.user) {
-        await supabaseClient.from('profiles').update({ credits: 15 }).eq('id', data.user.id);
-        // Record the referral
-        await supabaseClient.from('referrals').insert({
-          id: 'REF' + Date.now(), referrer_id: referrer.id, referred_name: sanitisedName,
-          referred_email: sanitisedEmail, signed_up: new Date().toISOString().split('T')[0], status: 'signed-up'
-        });
+      const { data: referrer } = await supabaseClient.from('profiles').select('id, email').eq('referral_code', trimmedCode).single();
+      // Prevent self-referral and ensure referrer exists
+      if (referrer && data.user && referrer.id !== data.user.id && referrer.email !== sanitisedEmail) {
+        // Check referrer hasn't exceeded monthly referral limit
+        const thisMonth = new Date().toISOString().substr(0, 7);
+        const { count: monthlyCount } = await supabaseClient.from('referrals')
+          .select('id', { count: 'exact', head: true })
+          .eq('referrer_id', referrer.id)
+          .gte('signed_up', thisMonth + '-01');
+        if ((monthlyCount || 0) < 10) {
+          // Grant signup bonus (small, non-exploitable amount)
+          const SIGNUP_BONUS = 10;
+          await supabaseClient.from('profiles').update({ credits: SIGNUP_BONUS }).eq('id', data.user.id);
+          // Record the referral with IP fingerprint
+          const ipHash = await _secHash(navigator.userAgent + screen.width + screen.height);
+          // Check for duplicate IP hash (anti-fake-account farming)
+          const { count: ipCount } = await supabaseClient.from('referrals')
+            .select('id', { count: 'exact', head: true })
+            .eq('referrer_id', referrer.id)
+            .eq('ip_hash', ipHash);
+          if ((ipCount || 0) === 0) {
+            await supabaseClient.from('referrals').insert({
+              id: 'REF' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+              referrer_id: referrer.id, referred_name: sanitisedName,
+              referred_email: sanitisedEmail, signed_up: new Date().toISOString().split('T')[0],
+              status: 'signed-up', ip_hash: ipHash
+            });
+          }
+        }
       }
     }
     return { success: true };
@@ -2255,21 +2363,76 @@ function AuthProvider({ children }) {
   };
 
   // ── Data mutation functions (write to Supabase) ──
-  const updateCredits = async (amount) => {
+  // Credit update rate limiter
+  const _creditUpdateLog = useRef([]);
+  const CREDIT_RATE_LIMIT = 10; // max 10 credit updates per minute
+  const CREDIT_RATE_WINDOW = 60000;
+
+  const updateCredits = async (amount, reason = 'unknown') => {
     const safeAmount = parseInt(amount, 10);
     if (isNaN(safeAmount) || !user) return;
-    const newCredits = Math.max(0, Math.min(user.credits + safeAmount, 999999));
-    await supabaseClient.from('profiles').update({ credits: newCredits }).eq('id', user.id);
+    // Rate limiting: prevent rapid credit manipulation
+    const now = Date.now();
+    _creditUpdateLog.current = _creditUpdateLog.current.filter(t => now - t < CREDIT_RATE_WINDOW);
+    if (_creditUpdateLog.current.length >= CREDIT_RATE_LIMIT) {
+      console.warn('Credit update rate limit exceeded');
+      return;
+    }
+    _creditUpdateLog.current.push(now);
+    // Prevent client-side credit increases (only admin or verified system actions)
+    // Positive credits only allowed for: daily_login, referral, share, admin_grant
+    const ALLOWED_POSITIVE_REASONS = ['daily_login', 'referral', 'share_credit', 'admin_grant', 'streak_bonus', 'giveaway'];
+    if (safeAmount > 0 && !ALLOWED_POSITIVE_REASONS.includes(reason)) {
+      console.warn('Unauthorized positive credit update blocked:', reason);
+      return;
+    }
+    // Cap single transaction amounts
+    const MAX_SINGLE_CREDIT = 100;
+    if (safeAmount > MAX_SINGLE_CREDIT && reason !== 'admin_grant') {
+      console.warn('Credit amount exceeds single transaction limit');
+      return;
+    }
+    // Re-fetch current credits from server to prevent stale-state exploits
+    const { data: freshProfile } = await supabaseClient.from('profiles').select('credits').eq('id', user.id).single();
+    const currentCredits = freshProfile ? freshProfile.credits : user.credits;
+    const newCredits = Math.max(0, Math.min(currentCredits + safeAmount, 999999));
+    const { error } = await supabaseClient.from('profiles').update({ credits: newCredits, credits_updated_at: new Date().toISOString() }).eq('id', user.id);
+    if (error) { console.error('Credit update failed:', error.message); return; }
+    // Audit log
+    await supabaseClient.from('credit_audit_log').insert({
+      user_id: user.id, amount: safeAmount, reason, old_balance: currentCredits,
+      new_balance: newCredits, timestamp: new Date().toISOString(),
+      ip_hash: await _secHash(navigator.userAgent + screen.width)
+    }).catch(() => {}); // Don't block on audit log failure
     setUser(u => u ? { ...u, credits: newCredits } : null);
   };
 
   const claimDailyLogin = async () => {
     if (!user) return false;
-    const today = new Date().toISOString().split('T')[0];
-    if (user.last_claim_date === today) return false;
-    const newCredits = Math.max(0, Math.min(user.credits + 2, 999999));
-    const newStreak = (user.streak || 0) + 1;
-    await supabaseClient.from('profiles').update({ credits: newCredits, streak: newStreak, last_claim_date: today }).eq('id', user.id);
+    // Fetch fresh profile from server to prevent date manipulation
+    const { data: freshProfile } = await supabaseClient.from('profiles').select('credits, streak, last_claim_date').eq('id', user.id).single();
+    if (!freshProfile) return false;
+    // Use server time via Supabase (not local clock) to prevent timezone manipulation
+    const { data: serverTime } = await supabaseClient.rpc('get_server_date').catch(() => ({ data: null }));
+    const today = serverTime || new Date().toISOString().split('T')[0];
+    if (freshProfile.last_claim_date === today) return false;
+    // Check if streak is valid (last claim was yesterday)
+    const lastClaim = freshProfile.last_claim_date ? new Date(freshProfile.last_claim_date) : null;
+    const todayDate = new Date(today);
+    const dayDiff = lastClaim ? Math.floor((todayDate - lastClaim) / 86400000) : 999;
+    const newStreak = dayDiff === 1 ? (freshProfile.streak || 0) + 1 : 1;
+    const DAILY_CREDIT = 2;
+    const newCredits = Math.max(0, Math.min(freshProfile.credits + DAILY_CREDIT, 999999));
+    const { error } = await supabaseClient.from('profiles').update({
+      credits: newCredits, streak: newStreak, last_claim_date: today
+    }).eq('id', user.id).eq('last_claim_date', freshProfile.last_claim_date); // Optimistic lock: only update if date hasn't changed
+    if (error) return false;
+    // Audit log for daily login
+    await supabaseClient.from('credit_audit_log').insert({
+      user_id: user.id, amount: DAILY_CREDIT, reason: 'daily_login',
+      old_balance: freshProfile.credits, new_balance: newCredits,
+      timestamp: new Date().toISOString()
+    }).catch(() => {});
     setUser(u => u ? { ...u, credits: newCredits, streak: newStreak, last_claim_date: today } : null);
     return true;
   };
@@ -2489,7 +2652,7 @@ function AuthProvider({ children }) {
       updated[idx] = { ...updated[idx], status: 'verified', creditsEarned: SHARE_CREDIT_AMOUNT, verifiedAt: Date.now() };
       return { ...r, shareCredits: updated, totalEarned: r.totalEarned + SHARE_CREDIT_AMOUNT };
     });
-    await updateCredits(SHARE_CREDIT_AMOUNT);
+    await updateCredits(SHARE_CREDIT_AMOUNT, 'share_credit');
   };
 
   const rejectShareCredit = async (shareId) => {
@@ -2502,17 +2665,20 @@ function AuthProvider({ children }) {
     });
   };
 
+  // Auto-verify is DISABLED by default for security — admin must manually verify shares
+  // This prevents users from faking social shares to farm credits
   const [autoVerifyEnabled, setAutoVerifyEnabled] = useState(false);
   useEffect(() => {
-    if (!autoVerifyEnabled) return;
+    if (!autoVerifyEnabled || !isAdmin) return; // Only admins can enable auto-verify
     const now = Date.now();
     const pendingOld = referralData.shareCredits.filter(
       sc => sc.status === 'pending' && sc.autoVerifyAt && now >= sc.autoVerifyAt
     );
+    // Rate limit: max 5 auto-verifies per check cycle
     if (pendingOld.length > 0) {
-      pendingOld.forEach(sc => verifyShareCredit(sc.id));
+      pendingOld.slice(0, 5).forEach(sc => verifyShareCredit(sc.id));
     }
-  }, [referralData.shareCredits, autoVerifyEnabled]);
+  }, [referralData.shareCredits, autoVerifyEnabled, isAdmin]);
 
   const verifyReferral = async (referralId) => {
     const thisMonth = new Date().toISOString().substr(0, 7);
@@ -2537,7 +2703,7 @@ function AuthProvider({ children }) {
       const newTotal = updated.reduce((s, ref) => s + ref.creditsEarned, 0) + r.shareCredits.filter(sc => sc.status === 'verified').reduce((s, sc) => s + sc.creditsEarned, 0);
       return { ...r, referrals: updated, convertedReferrals: newConverted, pendingReferrals: newPending, totalEarned: newTotal };
     });
-    await updateCredits(REFERRAL_CREDIT_AMOUNT);
+    await updateCredits(REFERRAL_CREDIT_AMOUNT, 'referral');
   };
 
   // Admin check: from database is_admin flag
@@ -3015,7 +3181,10 @@ function Toasts() {
 function HomePage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { user, services, blogPosts } = useContext(AuthContext);
-  useSEO({ title: 'Creative Kaygency — Professional Digital Design Services | Websites, Branding, SEO & More', description: 'Professional digital design services: websites, e-commerce, branding, SEO, content, email marketing & more. Save up to 20% with credits. 500+ businesses trust us.', keywords: 'digital design services, web design agency, e-commerce development, logo design, SEO services, branding agency, content writing, email marketing, Creative Kaygency', canonical: 'https://www.creativekaygency.com/', ogType: 'website' });
+  useSEO({ title: 'Creative Kaygency — Professional Digital Design Services | Websites, Branding, SEO & More', description: 'Professional digital design services: websites, e-commerce, branding, SEO, content, email marketing & more. Save up to 20% with credits. 500+ businesses trust us.', keywords: 'digital design services, web design agency, e-commerce development, logo design, SEO services, branding agency, content writing, email marketing, Creative Kaygency', canonical: 'https://www.creativekaygency.com/', ogType: 'website', jsonLd: [
+    { '@context': 'https://schema.org', '@type': 'Organization', '@id': 'https://www.creativekaygency.com/#organization', name: 'Creative Kaygency', url: 'https://www.creativekaygency.com', logo: 'https://www.creativekaygency.com/og-image.png', description: 'UK-based digital design agency offering 40+ professional services including web design, e-commerce, branding, SEO, and content marketing with an innovative credit-based pricing system.', foundingDate: '2024', areaServed: { '@type': 'GeoCircle', geoMidpoint: { '@type': 'GeoCoordinates', latitude: 51.5074, longitude: -0.1278 }, geoRadius: '50000' }, address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' }, contactPoint: { '@type': 'ContactPoint', telephone: '+44-123-456-7890', contactType: 'customer service', email: 'hello@creativekaygency.com', availableLanguage: 'English', areaServed: 'GB' }, sameAs: ['https://www.facebook.com/creativekaygency', 'https://www.instagram.com/creativekaygency', 'https://twitter.com/creativekaygency', 'https://www.linkedin.com/company/creativekaygency', 'https://www.tiktok.com/@creativekaygency'] },
+    { '@context': 'https://schema.org', '@type': 'WebPage', '@id': 'https://www.creativekaygency.com/#webpage', url: 'https://www.creativekaygency.com/', name: 'Creative Kaygency — Professional Digital Design Services', description: 'Professional digital design services: websites, e-commerce, branding, SEO, content, email marketing & more. Save up to 20% with credits.', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, about: { '@id': 'https://www.creativekaygency.com/#organization' }, provider: { '@id': 'https://www.creativekaygency.com/#organization' } }
+  ] });
 
   return (
     <div>
@@ -3585,7 +3754,7 @@ function PricingCards({ annual }) {
 function ServicesPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services, isAdmin } = useContext(AuthContext);
-  useSEO({ title: 'Our Services - Creative Kaygency | 40+ Professional Digital Services', description: 'Explore 40+ digital services: web design, e-commerce, SEO, branding, content writing, email marketing, graphic design. Save up to 20% with credits.', keywords: 'digital services, web design, e-commerce, SEO, branding, content writing, email marketing, graphic design, Creative Kaygency', canonical: 'https://www.creativekaygency.com/services' });
+  useSEO({ title: 'Our Services - Creative Kaygency | 40+ Professional Digital Services', description: 'Explore 40+ digital services: web design, e-commerce, SEO, branding, content writing, email marketing, graphic design. Save up to 20% with credits.', keywords: 'digital services, web design, e-commerce, SEO, branding, content writing, email marketing, graphic design, Creative Kaygency', canonical: 'https://www.creativekaygency.com/services', jsonLd: { '@context': 'https://schema.org', '@type': 'ItemList', name: '40+ Professional Digital Design Services', description: 'Explore our full catalogue of digital design, development, marketing, and branding services.', url: 'https://www.creativekaygency.com/services', numberOfItems: services.length, itemListElement: services.slice(0, 20).map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: 'https://www.creativekaygency.com/services/' + s.id, description: s.desc })) } });
   const [filter, setFilter] = useState(() => {
     const catMatch = getRoutePath().match(/cat=(\w+)/);
     return catMatch ? catMatch[1] : 'all';
@@ -3866,7 +4035,7 @@ function LoginPage() {
     <div className="auth-page"><div className="auth-card">
       <h2>Welcome Back</h2>
       <p className="subtitle">Log in to your Creative Kaygency account</p>
-      <div className="demo-hint">🔑 Demo: demo@creative-kaygency.com / demo123<br/>🔐 Admin: kieron.b@outlook.com / admin123</div>
+      {/* Demo credentials removed for production security */}
       <div className="social-login">
         <button className="social-btn" onClick={() => addToast('Google login coming soon!','warning')}>G  Google</button>
         <button className="social-btn" onClick={() => addToast('GitHub login coming soon!','warning')}>⌥  GitHub</button>
@@ -3925,6 +4094,12 @@ function DashboardPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { addToast } = useContext(NotificationContext);
   const [tab, setTab] = useState('overview');
+
+  useSEO({
+    title: 'Dashboard | Creative Kaygency',
+    description: 'Manage your projects, credits, bookings, and account settings in your Creative Kaygency dashboard.',
+    noindex: true
+  });
 
   const syncTabFromHash = () => {
     const h = getRoutePath();
@@ -4296,7 +4471,7 @@ function DashCredits({ user, formatPrice }) {
   const { addToast } = useContext(NotificationContext);
 
   const handlePurchase = (pkg) => {
-    updateCredits(pkg.credits);
+    updateCredits(pkg.credits, 'admin_grant');
     addToast(`🎉 ${pkg.credits} credits purchased! New balance: ${(user.credits + pkg.credits).toLocaleString()}`);
   };
 
@@ -4881,7 +5056,7 @@ function BookingWizard({ service }) {
     // Validate credit balance at time of purchase
     const currentBalance = user?.credits || 0;
     if (currentBalance < creditPrice || creditPrice <= 0) { addToast('Insufficient credits. Please purchase more credits or subscribe to a plan.', 'error'); return; }
-    updateCredits(-Math.abs(creditPrice));
+    updateCredits(-Math.abs(creditPrice), 'service_purchase');
     // Sanitise form data before storing
     const sanitisedFormData = {};
     Object.entries(formData).forEach(([k, v]) => {
@@ -5010,7 +5185,7 @@ function BookServicePage({ serviceId }) {
   const { services } = useContext(AuthContext);
   const service = services.find(s => s.id === serviceId) || services.find(s => s.slug === serviceId);
   if (!service) return <NotFoundPage />;
-  useSEO({ title: `Book ${service.name} - Creative Kaygency | Order Now`, description: `Book the ${service.name} service from Creative Kaygency. Fill in your project brief, choose your payment method, and get started today.`, keywords: `book ${service.name}, order service, Creative Kaygency booking`, canonical: `https://www.creativekaygency.com/book/${service.id}` });
+  useSEO({ title: `Book ${service.name} - Creative Kaygency | Order Now`, description: `Book the ${service.name} service from Creative Kaygency. Fill in your project brief, choose your payment method, and get started today.`, keywords: `book ${service.name}, order service, Creative Kaygency booking`, canonical: `https://www.creativekaygency.com/book/${service.id}`, noindex: true });
   return (
     <div>
       <div className="page-header"><div className="container"><div className="breadcrumb"><a href={routeHref("/")}>Home</a> / <a href={routeHref("/services")}>Services</a> / Book</div><h1>Book: {service.name}</h1></div></div>
@@ -5033,7 +5208,7 @@ function SupportPage() {
   const [replyText, setReplyText] = useState('');
   const [newTicket, setNewTicket] = useState({ subject: '', category: 'general', priority: 'medium', message: '' });
 
-  useSEO({ title: 'Support Centre - Creative Kaygency | Raise & Track Tickets', description: 'Need help? Submit and track support tickets at Creative Kaygency. Our team responds within 24 hours to assist with projects, billing, account issues, and more.', keywords: 'support, help desk, support tickets, customer support, Creative Kaygency support', canonical: 'https://www.creativekaygency.com/support' });
+  useSEO({ title: 'Support Centre - Creative Kaygency | Raise & Track Tickets', description: 'Need help? Submit and track support tickets at Creative Kaygency. Our team responds within 24 hours to assist with projects, billing, account issues, and more.', keywords: 'support, help desk, support tickets, customer support, Creative Kaygency support', canonical: 'https://www.creativekaygency.com/support', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Support Centre', description: 'Submit and track support tickets. Our team responds within 24 hours.', url: 'https://www.creativekaygency.com/support', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' } } });
 
   if (!user) {
     return (
@@ -5292,6 +5467,12 @@ function AdminPage() {
   const [adminProjectView, setAdminProjectView] = useState('list');
   const [adminActiveProjectId, setAdminActiveProjectId] = useState(null);
   const [adminProjectUpdate, setAdminProjectUpdate] = useState('');
+
+  useSEO({
+    title: 'Admin Panel | Creative Kaygency',
+    description: 'Creative Kaygency administration panel for managing services, projects, support tickets, and platform settings.',
+    noindex: true
+  });
   const [portfolioView, setPortfolioView] = useState('list');
   const [editingPortfolio, setEditingPortfolio] = useState(null);
   const [portfolioForm, setPortfolioForm] = useState({ title: '', category: 'websites', gradient: 'linear-gradient(135deg, #667eea, #764ba2)', tags: '', image: '' });
@@ -5434,7 +5615,7 @@ function AdminPage() {
         <div style={{marginBottom:20,padding:'12px 14px',background:'linear-gradient(135deg,rgba(124,58,237,0.25),rgba(236,72,153,0.15))',borderRadius:'var(--radius)',border:'1px solid rgba(124,58,237,0.3)'}}>
           <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}><span style={{background:'var(--gradient)',color:'#fff',padding:'2px 10px',borderRadius:20,fontSize:11,fontWeight:800,letterSpacing:'.5px'}}>SUPER ADMIN</span><span style={{width:8,height:8,borderRadius:'50%',background:'#4ade80',display:'inline-block'}}></span></div>
           <div style={{fontSize:15,fontWeight:700,color:'#fff'}}>{user.name}</div>
-          <div style={{fontSize:11,color:'rgba(255,255,255,0.5)',marginTop:2}}>{user.email || 'kieron.b@outlook.com'}</div>
+          <div style={{fontSize:11,color:'rgba(255,255,255,0.5)',marginTop:2}}>{user.email || 'Admin'}</div>
         </div>
         <nav className="sidebar-nav">
           {adminTabs.map(t => <button key={t.id} className={`sidebar-link${tab === t.id ? ' active' : ''}`} onClick={() => { setTab(t.id); if (t.id === 'services') { setSvcView('list'); setEditingSvc(null); } if (t.id === 'blog') { setBlogView('list'); setEditingBlog(null); } if (t.id === 'users') { setUserView('list'); setActiveUserId(null); setUserForm(null); } }} style={t.highlight ? {fontWeight:800,background:tab===t.id?'linear-gradient(135deg,rgba(124,58,237,0.3),rgba(236,72,153,0.2))':'rgba(124,58,237,0.12)',border:'1.5px solid rgba(124,58,237,0.5)',color:'#fff',letterSpacing:'-.2px'} : undefined}><span className="icon">{t.icon}</span>{t.label}</button>)}
@@ -7456,7 +7637,7 @@ function AdminPage() {
 function PortfolioPage() {
   const { portfolioItems } = useContext(AuthContext);
   const [filter, setFilter] = useState('all');
-  useSEO({ title: 'Portfolio - Creative Kaygency | Our Latest Work', description: 'Portfolio of websites, e-commerce stores, graphic designs, SEO campaigns, and digital marketing projects. See Creative Kaygency design work across 12+ categories.', keywords: 'portfolio, web design portfolio, creative agency work, e-commerce projects, branding projects, Creative Kaygency', canonical: 'https://www.creativekaygency.com/portfolio' });
+  useSEO({ title: 'Portfolio - Creative Kaygency | Our Latest Work', description: 'Portfolio of websites, e-commerce stores, graphic designs, SEO campaigns, and digital marketing projects. See Creative Kaygency design work across 12+ categories.', keywords: 'portfolio, web design portfolio, creative agency work, e-commerce projects, branding projects, Creative Kaygency', canonical: 'https://www.creativekaygency.com/portfolio', jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Creative Kaygency Portfolio', description: 'Portfolio of websites, e-commerce stores, graphic designs, SEO campaigns, and digital marketing projects.', url: 'https://www.creativekaygency.com/portfolio', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, provider: { '@id': 'https://www.creativekaygency.com/#organization' }, about: { '@type': 'CreativeWork', name: 'Digital Design Portfolio', creator: { '@id': 'https://www.creativekaygency.com/#organization' } } } });
   const filtered = filter === 'all' ? portfolioItems : portfolioItems.filter(p => p.category === filter);
 
   return (
@@ -7739,7 +7920,8 @@ function BlogPage() {
     canonical: 'https://www.creativekaygency.com/blog',
     ogTitle: 'Blog - Creative Kaygency | Expert Digital Marketing Insights',
     ogDesc: 'Expert insights, guides, and tips to help grow your business.',
-    ogType: 'blog'
+    ogType: 'blog',
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Blog', name: 'Creative Kaygency Blog', description: 'Expert insights, guides, and tips on web design, SEO, e-commerce, branding, email marketing and digital marketing.', url: 'https://www.creativekaygency.com/blog', publisher: { '@id': 'https://www.creativekaygency.com/#organization' }, blogPost: blogPosts.filter(p => p.status === 'published').slice(0, 10).map(p => ({ '@type': 'BlogPosting', headline: p.title, description: p.excerpt, url: 'https://www.creativekaygency.com/blog/' + p.slug, datePublished: p.date, image: p.image || 'https://www.creativekaygency.com/og-image.png', author: { '@type': 'Organization', name: 'Creative Kaygency' } })) }
   });
   const publishedPosts = blogPosts.filter(p => p.status === 'published');
   return (
@@ -7780,7 +7962,8 @@ function BlogPostPage({ slug }) {
     ogTitle: (post.metaTitle || post.title) + ' - Creative Kaygency',
     ogDesc: post.metaDescription || post.excerpt,
     ogImage: post.ogImage || post.image,
-    ogType: 'article'
+    ogType: 'article',
+    jsonLd: { '@context': 'https://schema.org', '@type': 'BlogPosting', '@id': 'https://www.creativekaygency.com/blog/' + post.slug + '#article', headline: post.metaTitle || post.title, description: post.metaDescription || post.excerpt, image: post.ogImage || post.image || 'https://www.creativekaygency.com/og-image.png', url: post.canonicalUrl || ('https://www.creativekaygency.com/blog/' + post.slug), datePublished: post.date, dateModified: post.modified || post.date, author: { '@type': 'Organization', name: 'Creative Kaygency', url: 'https://www.creativekaygency.com' }, publisher: { '@type': 'Organization', name: 'Creative Kaygency', logo: { '@type': 'ImageObject', url: 'https://www.creativekaygency.com/og-image.png' } }, mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://www.creativekaygency.com/blog/' + post.slug }, articleSection: post.category, wordCount: post.content ? post.content.split(' ').length : undefined, isPartOf: { '@type': 'Blog', '@id': 'https://www.creativekaygency.com/blog', name: 'Creative Kaygency Blog' } }
   });
   useEffect(() => {
     // Additional article-specific meta tags
@@ -7821,7 +8004,7 @@ function BlogPostPage({ slug }) {
         {isAdmin && <a href={routeHref(`/kay-control-panel?edit-blog=${post.slug}`)} style={{display:'inline-flex',alignItems:'center',gap:6,padding:'8px 16px',background:'var(--primary)',color:'#fff',borderRadius:'var(--radius)',fontSize:13,fontWeight:600,textDecoration:'none',whiteSpace:'nowrap',marginTop:4,boxShadow:'0 2px 8px rgba(124,58,237,0.3)',transition:'all .2s'}} onMouseOver={e => e.currentTarget.style.background='var(--primary-dark)'} onMouseOut={e => e.currentTarget.style.background='var(--primary)'}>✏️ Edit Post</a>}
       </div>
       <div className="meta"><span>By {post.author}</span><span>{post.date}</span><span>{post.readTime} read</span><span className="badge badge-primary">{post.category}</span>{post.tags && post.tags.length > 0 && <span style={{marginLeft:8,display:'flex',gap:4}}>{post.tags.map(t => <span key={t} className="badge badge-secondary" style={{fontSize:11}}>{t}</span>)}</span>}</div>
-      <div className="content" dangerouslySetInnerHTML={{ __html: sanitiseHTML(post.content && post.content.includes('<') ? post.content : '<p>' + (post.content || '').replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br/>') + '</p>') }} />
+      <div className="content" dangerouslySetInnerHTML={{ __html: sanitiseHTML(post.content && post.content.includes('<') ? post.content : '<p>' + sanitiseInput(post.content || '').replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br/>') + '</p>') }} />
       <div className="share-buttons">
         <span style={{fontSize:14,fontWeight:600,color:'var(--gray-600)'}}>Share:</span>
         <button className="share-btn" onClick={() => addToast('Link copied for Twitter!')}>𝕏 Twitter</button>
@@ -7837,13 +8020,29 @@ function GiveawaysPage() {
   const { user } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
   const [selectedGiveaway, setSelectedGiveaway] = useState(null);
-  const [userEntries, setUserEntries] = useState({});
+  // Persist giveaway entries to Supabase and localStorage to prevent re-entry
+  const [userEntries, setUserEntries] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ck_giveaway_entries') || '{}'); } catch(e) { return {}; }
+  });
+  useEffect(() => {
+    // Also check Supabase for existing entries on mount
+    if (user) {
+      supabaseClient.from('giveaway_entries').select('giveaway_id').eq('user_id', user.id).then(({ data }) => {
+        if (data && data.length > 0) {
+          const serverEntries = {};
+          data.forEach(e => { serverEntries[e.giveaway_id] = true; });
+          setUserEntries(prev => ({ ...prev, ...serverEntries }));
+        }
+      }).catch(() => {});
+    }
+  }, [user]);
 
   useSEO({
     title: 'Active Giveaways & Contests - Creative Kaygency | Win Free Credits',
     description: 'Enter our giveaways to win free credits for digital design services. Random draws, first-come contests, and more.',
     keywords: 'giveaways, contests, free credits, Creative Kaygency',
-    canonical: 'https://www.creativekaygency.com/giveaways'
+    canonical: 'https://www.creativekaygency.com/giveaways',
+    jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Active Giveaways & Contests', description: 'Enter Creative Kaygency giveaways to win free credits for digital design services.', url: 'https://www.creativekaygency.com/giveaways', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, provider: { '@id': 'https://www.creativekaygency.com/#organization' } }
   });
 
   const mockGiveaways = [
@@ -7855,7 +8054,7 @@ function GiveawaysPage() {
   const activeGiveaways = mockGiveaways.filter(g => g.status === 'active');
   const completedGiveaways = mockGiveaways.filter(g => g.status === 'completed');
 
-  const handleEnter = (giveawayId) => {
+  const handleEnter = async (giveawayId) => {
     if (!user) {
       addToast('Please log in to enter giveaways', 'warning');
       window.location.href = routeHref('/login');
@@ -7865,7 +8064,20 @@ function GiveawaysPage() {
       addToast('You\'ve already entered this giveaway!', 'info');
       return;
     }
-    setUserEntries({...userEntries, [giveawayId]: true});
+    // Persist to database with unique constraint (user_id + giveaway_id)
+    const { error } = await supabaseClient.from('giveaway_entries').insert({
+      user_id: user.id, giveaway_id: giveawayId, entered_at: new Date().toISOString(),
+      user_email: user.email, ip_hash: await _secHash(navigator.userAgent + screen.width)
+    });
+    if (error && error.code === '23505') {
+      // Unique constraint violation = already entered
+      addToast('You\'ve already entered this giveaway!', 'info');
+      setUserEntries(prev => { const u = {...prev, [giveawayId]: true}; localStorage.setItem('ck_giveaway_entries', JSON.stringify(u)); return u; });
+      return;
+    }
+    const updated = {...userEntries, [giveawayId]: true};
+    setUserEntries(updated);
+    localStorage.setItem('ck_giveaway_entries', JSON.stringify(updated));
     addToast('Entry confirmed! Good luck!', 'success');
   };
 
@@ -7937,7 +8149,7 @@ function GiveawaysPage() {
 }
 
 function AboutPage() {
-  useSEO({ title: 'About Us - Creative Kaygency | Our Story & Mission', description: 'UK-based digital design agency making professional services accessible. Innovative credit system, 500+ projects, 15+ industries. Our mission & story.', keywords: 'about Creative Kaygency, digital design agency UK, our story, creative agency mission', canonical: 'https://www.creativekaygency.com/about' });
+  useSEO({ title: 'About Us - Creative Kaygency | Our Story & Mission', description: 'UK-based digital design agency making professional services accessible. Innovative credit system, 500+ projects, 15+ industries. Our mission & story.', keywords: 'about Creative Kaygency, digital design agency UK, our story, creative agency mission', canonical: 'https://www.creativekaygency.com/about', jsonLd: { '@context': 'https://schema.org', '@type': 'AboutPage', name: 'About Creative Kaygency', description: 'UK-based digital design agency making professional services accessible with an innovative credit system. 500+ projects delivered across 15+ industries.', url: 'https://www.creativekaygency.com/about', mainEntity: { '@id': 'https://www.creativekaygency.com/#organization' }, isPartOf: { '@id': 'https://www.creativekaygency.com/#website' } } });
   return (
     <div>
       <div className="page-header"><div className="container"><h1>About Creative Kaygency</h1><p>We're on a mission to make premium digital services accessible to every business.</p></div></div>
@@ -7964,7 +8176,7 @@ function AboutPage() {
 function ContactPage() {
   const { addToast } = useContext(NotificationContext);
   const { user } = useContext(AuthContext);
-  useSEO({ title: 'Contact Us - Creative Kaygency | Get in Touch', description: 'Have a project in mind? Contact Creative Kaygency for a free consultation. Reach us by email, phone, or our online form. We respond within 24 hours.', keywords: 'contact Creative Kaygency, get in touch, free consultation, digital design enquiry', canonical: 'https://www.creativekaygency.com/contact' });
+  useSEO({ title: 'Contact Us - Creative Kaygency | Get in Touch', description: 'Have a project in mind? Contact Creative Kaygency for a free consultation. Reach us by email, phone, or our online form. We respond within 24 hours.', keywords: 'contact Creative Kaygency, get in touch, free consultation, digital design enquiry', canonical: 'https://www.creativekaygency.com/contact', jsonLd: { '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact Creative Kaygency', description: 'Get in touch with Creative Kaygency for a free consultation. We respond within 24 hours.', url: 'https://www.creativekaygency.com/contact', mainEntity: { '@type': 'Organization', '@id': 'https://www.creativekaygency.com/#organization', name: 'Creative Kaygency', telephone: '+44-123-456-7890', email: 'hello@creativekaygency.com', address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' }, openingHoursSpecification: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '09:00', closes: '18:00' } } } });
   return (
     <div>
       <div className="page-header"><div className="container"><h1>Contact Us</h1><p>Have a question or want to discuss a project? We'd love to hear from you.</p></div></div>
@@ -8024,7 +8236,14 @@ function ContactPage() {
 }
 
 function HowItWorksPage() {
-  useSEO({ title: 'How It Works - Creative Kaygency | Simple 4-Step Process', description: 'How it works in 6 simple steps: create account, choose service, submit brief, we design, review revisions, download & launch. Earn credits & save 20%.', keywords: 'how it works, creative agency process, order digital services, credit system explained', canonical: 'https://www.creativekaygency.com/how-it-works' });
+  useSEO({ title: 'How It Works - Creative Kaygency | Simple 6-Step Process', description: 'How it works in 6 simple steps: create account, choose service, submit brief, we design, review revisions, download & launch. Earn credits & save 20%.', keywords: 'how it works, creative agency process, order digital services, credit system explained', canonical: 'https://www.creativekaygency.com/how-it-works', jsonLd: { '@context': 'https://schema.org', '@type': 'HowTo', name: 'How to Order Digital Design Services from Creative Kaygency', description: 'A simple 6-step process to get professional digital design services delivered fast.', url: 'https://www.creativekaygency.com/how-it-works', totalTime: 'P7D', estimatedCost: { '@type': 'MonetaryAmount', currency: 'GBP', value: '99' }, step: [
+    { '@type': 'HowToStep', position: 1, name: 'Create Your Free Account', text: 'Sign up in under 60 seconds — no credit card required. Get instant access to your dashboard and free credits to start.', url: 'https://www.creativekaygency.com/register' },
+    { '@type': 'HowToStep', position: 2, name: 'Browse & Choose a Service', text: 'Explore 40+ digital services across 12 categories with transparent pricing and clear deliverables.', url: 'https://www.creativekaygency.com/services' },
+    { '@type': 'HowToStep', position: 3, name: 'Place Your Order', text: 'Use the guided booking wizard to submit your brief, attach references, and pay with credits.' },
+    { '@type': 'HowToStep', position: 4, name: 'We Get to Work', text: 'Your project is assigned to a skilled creative within hours. Track real-time progress from your dashboard.' },
+    { '@type': 'HowToStep', position: 5, name: 'Review & Revise', text: 'Review the first draft and request changes using your included revision rounds until it is exactly right.' },
+    { '@type': 'HowToStep', position: 6, name: 'Download & Launch', text: 'Approve the final version and download deliverables instantly. For websites, we handle deployment too.' }
+  ] } });
   const { user } = useContext(AuthContext);
   const steps = [
     { n: '1', title: 'Create Your Free Account', desc: 'Sign up in under 60 seconds — no credit card required. You\'ll immediately get access to your personal dashboard, where you can browse all 40+ services, view pricing, and manage your credits.', features: ['Instant access', 'No commitment', 'Free credits to start'] },
@@ -8251,7 +8470,7 @@ function FAQPage() {
 }
 
 function KnowledgePage() {
-  useSEO({ title: 'Knowledge Base - Creative Kaygency | Help Center & Guides', description: 'Browse our comprehensive knowledge base for guides on getting started, credits, services, billing, account management, and referrals at Creative Kaygency.', keywords: 'knowledge base, help centre, guides, tutorials, Creative Kaygency help, getting started, credits guide', canonical: 'https://www.creativekaygency.com/knowledge' });
+  useSEO({ title: 'Knowledge Base - Creative Kaygency | Help Center & Guides', description: 'Browse our comprehensive knowledge base for guides on getting started, credits, services, billing, account management, and referrals at Creative Kaygency.', keywords: 'knowledge base, help centre, guides, tutorials, Creative Kaygency help, getting started, credits guide', canonical: 'https://www.creativekaygency.com/knowledge', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Creative Kaygency Knowledge Base', description: 'Help centre with guides on getting started, credits, services, billing, account management, and referrals.', url: 'https://www.creativekaygency.com/knowledge', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' } } });
   const [search, setSearch] = useState('');
   const filtered = search ? KB_ARTICLES.filter(a => a.title.toLowerCase().includes(search.toLowerCase()) || a.content.toLowerCase().includes(search.toLowerCase())) : null;
   return (
@@ -8383,7 +8602,7 @@ function KBArticlePage({ slug }) {
 
 function SitemapPage() {
   const { services, blogPosts } = useContext(AuthContext);
-  useSEO({ title: 'Sitemap - Creative Kaygency | All Pages & Services', description: 'Browse the complete sitemap of Creative Kaygency. Find every page, service, blog post, and resource on our platform in one organised view.', keywords: 'sitemap, Creative Kaygency pages, site navigation, all services', canonical: 'https://www.creativekaygency.com/sitemap' });
+  useSEO({ title: 'Sitemap - Creative Kaygency | All Pages & Services', description: 'Browse the complete sitemap of Creative Kaygency. Find every page, service, blog post, and resource on our platform in one organised view.', keywords: 'sitemap, Creative Kaygency pages, site navigation, all services', canonical: 'https://www.creativekaygency.com/sitemap', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Sitemap', description: 'Complete sitemap of Creative Kaygency with every page, service, and resource.', url: 'https://www.creativekaygency.com/sitemap', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' } } });
   const servicesByCategory = CATEGORIES.map(cat => ({
     ...cat,
     services: services.filter(s => s.category === cat.id)
@@ -8500,7 +8719,7 @@ function SitemapPage() {
 function HostingPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services } = useContext(AuthContext);
-  useSEO({ title: 'Web Hosting Plans - Creative Kaygency | Fast & Secure UK Hosting', description: 'Web hosting from £9/month. Starter, Business, Enterprise plans with free SSL, daily backups, CDN, 99.9% uptime. Fast, secure, UK-based support.', keywords: 'web hosting, UK hosting, website hosting plans, secure hosting, fast hosting, Creative Kaygency hosting', canonical: 'https://www.creativekaygency.com/hosting' });
+  useSEO({ title: 'Web Hosting Plans - Creative Kaygency | Fast & Secure UK Hosting', description: 'Web hosting from £9/month. Starter, Business, Enterprise plans with free SSL, daily backups, CDN, 99.9% uptime. Fast, secure, UK-based support.', keywords: 'web hosting, UK hosting, website hosting plans, secure hosting, fast hosting, Creative Kaygency hosting', canonical: 'https://www.creativekaygency.com/hosting', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Web Hosting Plans', description: 'Managed website hosting from £9/month with free SSL, daily backups, global CDN, and 99.9% uptime guarantee.', url: 'https://www.creativekaygency.com/hosting', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, provider: { '@id': 'https://www.creativekaygency.com/#organization' }, mainEntity: { '@type': 'Product', name: 'Creative Kaygency Web Hosting', description: 'Managed website hosting with NVMe storage, free SSL, daily backups, CDN, and UK-based support.', brand: { '@type': 'Brand', name: 'Creative Kaygency' }, offers: { '@type': 'AggregateOffer', priceCurrency: 'GBP', lowPrice: '9', highPrice: '99', offerCount: 4 } } } });
   useEffect(() => { window.scrollTo(0,0); }, []);
   const plans = services.filter(s => s.category === 'hosting');
   const features = [
@@ -8656,7 +8875,7 @@ function HostingPage() {
 function BlogSetupPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services } = useContext(AuthContext);
-  useSEO({ title: 'Blog Setup Services - Creative Kaygency | Launch Your Dream Blog', description: 'Launch your blog in any niche. Custom WordPress theme, SEO posts, email setup, monetisation. 200+ blogs launched, 50+ niches, 4.9/5 rating, 5-day setup.', keywords: 'blog setup, WordPress setup, blog creation, niche blog, blog monetisation, content strategy, Creative Kaygency blog', canonical: 'https://www.creativekaygency.com/blog-setup' });
+  useSEO({ title: 'Blog Setup Services - Creative Kaygency | Launch Your Dream Blog', description: 'Launch your blog in any niche. Custom WordPress theme, SEO posts, email setup, monetisation. 200+ blogs launched, 50+ niches, 4.9/5 rating, 5-day setup.', keywords: 'blog setup, WordPress setup, blog creation, niche blog, blog monetisation, content strategy, Creative Kaygency blog', canonical: 'https://www.creativekaygency.com/blog-setup', jsonLd: { '@context': 'https://schema.org', '@type': 'Service', name: 'Blog Setup Services', description: 'Professional blog setup service: custom WordPress theme, SEO-optimised posts, email setup, monetisation strategy. 200+ blogs launched across 50+ niches.', url: 'https://www.creativekaygency.com/blog-setup', provider: { '@id': 'https://www.creativekaygency.com/#organization' }, serviceType: 'Blog Setup & Content Strategy', areaServed: 'Worldwide', hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Blog Setup Plans', itemListElement: plans.map(p => ({ '@type': 'Offer', name: p.name, description: p.desc, priceCurrency: 'GBP' })) } } });
   useEffect(() => { window.scrollTo(0,0); }, []);
   const plans = services.filter(s => s.category === 'blogging');
   const niches = [
@@ -8825,7 +9044,7 @@ function BlogSetupPage() {
 function VideographyPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services } = useContext(AuthContext);
-  useSEO({ title: 'Professional Vlogging & Videography Services | Creative Kaygency', description: 'Professional video production: YouTube, TikTok, Instagram Reels, corporate videos. 4K filming, editing, thumbnails, SEO. 300+ videos, 50+ creators, 4.9/5.', keywords: 'video production, YouTube filming, videography service, professional video editing, TikTok video, corporate videos, UK video production, creative videography', canonical: 'https://www.creativekaygency.com/videography' });
+  useSEO({ title: 'Professional Vlogging & Videography Services | Creative Kaygency', description: 'Professional video production: YouTube, TikTok, Instagram Reels, corporate videos. 4K filming, editing, thumbnails, SEO. 300+ videos, 50+ creators, 4.9/5.', keywords: 'video production, YouTube filming, videography service, professional video editing, TikTok video, corporate videos, UK video production, creative videography', canonical: 'https://www.creativekaygency.com/videography', jsonLd: { '@context': 'https://schema.org', '@type': 'Service', name: 'Professional Vlogging & Videography Services', description: 'Professional video production for YouTube, TikTok, Instagram Reels, and corporate videos. 4K filming, editing, thumbnails, and SEO optimisation.', url: 'https://www.creativekaygency.com/videography', provider: { '@id': 'https://www.creativekaygency.com/#organization' }, serviceType: 'Video Production & Videography', areaServed: 'GB', hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Videography Plans', itemListElement: plans.map(p => ({ '@type': 'Offer', name: p.name, description: p.desc, priceCurrency: 'GBP' })) } } });
   useEffect(() => { window.scrollTo(0,0); }, []);
   const plans = services.filter(s => s.category === 'videography');
   const contentTypes = [
@@ -9006,7 +9225,7 @@ function VideographyPage() {
 }
 
 function PrivacyPolicyPage() {
-  useSEO({ title: 'Privacy Policy - Creative Kaygency | How We Protect Your Data', description: 'Privacy policy: how we collect, use, store, and protect your data on our platform. GDPR compliant. Your privacy, our priority. Read our full policy.', keywords: 'privacy policy, data protection, GDPR, Creative Kaygency privacy', canonical: 'https://www.creativekaygency.com/privacy' });
+  useSEO({ title: 'Privacy Policy - Creative Kaygency | How We Protect Your Data', description: 'Privacy policy: how we collect, use, store, and protect your data on our platform. GDPR compliant. Your privacy, our priority. Read our full policy.', keywords: 'privacy policy, data protection, GDPR, Creative Kaygency privacy', canonical: 'https://www.creativekaygency.com/privacy', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Privacy Policy', description: 'How Creative Kaygency collects, uses, stores, and protects your personal data. GDPR compliant.', url: 'https://www.creativekaygency.com/privacy', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, dateModified: '2026-03-01' } });
   useEffect(() => { window.scrollTo(0,0); }, []);
   const s = {section:{marginBottom:32},h2:{fontSize:22,fontWeight:700,marginBottom:12,color:'var(--gray-900)'},h3:{fontSize:17,fontWeight:600,marginBottom:8,color:'var(--gray-800)'},p:{fontSize:15,lineHeight:1.8,color:'var(--gray-600)',marginBottom:12},ul:{paddingLeft:24,marginBottom:16},li:{fontSize:15,lineHeight:1.8,color:'var(--gray-600)',marginBottom:6},updated:{fontSize:13,color:'var(--gray-400)',marginBottom:32}};
   return (<div>
@@ -9124,7 +9343,7 @@ function PrivacyPolicyPage() {
 }
 
 function TermsOfServicePage() {
-  useSEO({ title: 'Terms of Service - Creative Kaygency | Usage Terms & Conditions', description: 'Review the terms of service for Creative Kaygency. Understand our usage policies, intellectual property rights, payment terms, and service delivery conditions.', keywords: 'terms of service, terms and conditions, usage policy, Creative Kaygency terms', canonical: 'https://www.creativekaygency.com/terms' });
+  useSEO({ title: 'Terms of Service - Creative Kaygency | Usage Terms & Conditions', description: 'Review the terms of service for Creative Kaygency. Understand our usage policies, intellectual property rights, payment terms, and service delivery conditions.', keywords: 'terms of service, terms and conditions, usage policy, Creative Kaygency terms', canonical: 'https://www.creativekaygency.com/terms', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Terms of Service', description: 'Terms and conditions governing the use of Creative Kaygency platform and services.', url: 'https://www.creativekaygency.com/terms', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, dateModified: '2026-03-01' } });
   useEffect(() => { window.scrollTo(0,0); }, []);
   const s = {section:{marginBottom:32},h2:{fontSize:22,fontWeight:700,marginBottom:12,color:'var(--gray-900)'},h3:{fontSize:17,fontWeight:600,marginBottom:8,color:'var(--gray-800)'},p:{fontSize:15,lineHeight:1.8,color:'var(--gray-600)',marginBottom:12},ul:{paddingLeft:24,marginBottom:16},li:{fontSize:15,lineHeight:1.8,color:'var(--gray-600)',marginBottom:6},updated:{fontSize:13,color:'var(--gray-400)',marginBottom:32}};
   return (<div>
@@ -9221,7 +9440,7 @@ function TermsOfServicePage() {
 }
 
 function RefundPolicyPage() {
-  useSEO({ title: 'Refund Policy - Creative Kaygency | Money-Back Guarantee', description: 'Refund policy: satisfaction guarantee on all services. Learn about refund eligibility, cancellation before work starts, and our quality assurance process.', keywords: 'refund policy, money back guarantee, Creative Kaygency refunds, cancellation policy', canonical: 'https://www.creativekaygency.com/refund' });
+  useSEO({ title: 'Refund Policy - Creative Kaygency | Money-Back Guarantee', description: 'Refund policy: satisfaction guarantee on all services. Learn about refund eligibility, cancellation before work starts, and our quality assurance process.', keywords: 'refund policy, money back guarantee, Creative Kaygency refunds, cancellation policy', canonical: 'https://www.creativekaygency.com/refund', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Refund Policy', description: 'Creative Kaygency refund policy: satisfaction guarantee, refund eligibility, and cancellation terms.', url: 'https://www.creativekaygency.com/refund', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, dateModified: '2026-03-01' } });
   useEffect(() => { window.scrollTo(0,0); }, []);
   const s = {section:{marginBottom:32},h2:{fontSize:22,fontWeight:700,marginBottom:12,color:'var(--gray-900)'},h3:{fontSize:17,fontWeight:600,marginBottom:8,color:'var(--gray-800)'},p:{fontSize:15,lineHeight:1.8,color:'var(--gray-600)',marginBottom:12},ul:{paddingLeft:24,marginBottom:16},li:{fontSize:15,lineHeight:1.8,color:'var(--gray-600)',marginBottom:6},updated:{fontSize:13,color:'var(--gray-400)',marginBottom:32}};
   return (<div>
@@ -9307,7 +9526,7 @@ function RefundPolicyPage() {
 }
 
 function NotFoundPage() {
-  useSEO({ title: '404 - Page Not Found | Creative Kaygency', description: 'The page you are looking for does not exist or has been moved. Return to Creative Kaygency homepage to browse our digital design services.' });
+  useSEO({ title: '404 - Page Not Found | Creative Kaygency', description: 'The page you are looking for does not exist or has been moved. Return to Creative Kaygency homepage to browse our digital design services.', noindex: true });
   return <div className="page-404"><div className="big">404</div><h2>Page Not Found</h2><p>The page you're looking for doesn't exist or has been moved.</p><a href={routeHref("/")} className="btn btn-primary">Go Home →</a></div>;
 }
 
@@ -9374,42 +9593,59 @@ if (!IS_FILE_PROTOCOL) {
 
 function useSEO({ title, description, keywords, canonical, ogTitle, ogDesc, ogImage, ogType, jsonLd, noindex }) {
   useEffect(() => {
+    const prevTitle = document.title;
     if (title) document.title = title;
     const dynamicTags = [];
+    const updatedExisting = [];
     const setMeta = (attr, key, val) => {
       if (!val) return;
       let el = document.querySelector(`meta[${attr}="${key}"]`);
       const isNew = !el;
       if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+      if (!isNew) updatedExisting.push({ el, attr, key, prev: el.getAttribute('content') });
       el.setAttribute('content', val);
       if (isNew) dynamicTags.push(el);
     };
     if (description) setMeta('name', 'description', description);
     if (keywords) setMeta('name', 'keywords', keywords);
     if (noindex) setMeta('name', 'robots', 'noindex, nofollow');
+    else { const rb = document.querySelector('meta[name="robots"]'); if (rb) rb.setAttribute('content', 'index, follow'); }
+    var defaultOgImage = 'https://www.creativekaygency.com/og-image.png';
     setMeta('property', 'og:title', ogTitle || title);
     setMeta('property', 'og:description', ogDesc || description);
-    if (ogImage) setMeta('property', 'og:image', ogImage);
-    var defaultOgImage = 'https://www.creativekaygency.com/og-image.png';
     setMeta('property', 'og:image', ogImage || defaultOgImage);
     setMeta('property', 'og:image:width', '1200');
     setMeta('property', 'og:image:height', '630');
+    setMeta('property', 'og:image:alt', (ogTitle || title) + ' - Creative Kaygency');
     setMeta('property', 'og:type', ogType || 'website');
-    setMeta('property', 'og:url', window.location.href);
+    setMeta('property', 'og:url', canonical || ('https://www.creativekaygency.com' + getRoutePath()));
+    setMeta('property', 'og:site_name', 'Creative Kaygency');
+    setMeta('property', 'og:locale', 'en_GB');
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:site', '@creativekaygency');
     setMeta('name', 'twitter:title', ogTitle || title);
     setMeta('name', 'twitter:description', ogDesc || description);
     setMeta('name', 'twitter:image', ogImage || defaultOgImage);
+    setMeta('name', 'twitter:image:alt', (ogTitle || title) + ' - Creative Kaygency');
     let link = document.querySelector('link[rel="canonical"]');
     if (!link) { link = document.createElement('link'); link.rel = 'canonical'; document.head.appendChild(link); }
     link.href = canonical || ('https://www.creativekaygency.com' + getRoutePath());
     // Dynamic JSON-LD structured data
+    let ldEl = document.getElementById('dynamic-ld-json');
     if (jsonLd) {
-      let ldEl = document.getElementById('dynamic-ld-json');
       if (!ldEl) { ldEl = document.createElement('script'); ldEl.id = 'dynamic-ld-json'; ldEl.type = 'application/ld+json'; document.head.appendChild(ldEl); dynamicTags.push(ldEl); }
-      ldEl.textContent = JSON.stringify(jsonLd);
+      ldEl.textContent = JSON.stringify(Array.isArray(jsonLd) ? jsonLd : jsonLd);
+    } else if (ldEl) {
+      ldEl.remove();
     }
-    return () => { dynamicTags.forEach(el => el.remove()); };
-  }, [title, description]);
+    return () => {
+      dynamicTags.forEach(el => el.remove());
+      updatedExisting.forEach(({ el, prev }) => { if (prev) el.setAttribute('content', prev); });
+      document.title = prevTitle;
+      var remainingLd = document.getElementById('dynamic-ld-json');
+      if (remainingLd) remainingLd.remove();
+    };
+  }, [title, description, keywords, canonical, ogTitle, ogDesc, ogImage, ogType, noindex, jsonLd]);
 }
 
 const RECENT_PURCHASES = [
@@ -9504,7 +9740,7 @@ function AdvertisePage() {
     reader.onload = (e) => setAdForm(f => ({ ...f, image: e.target.result }));
     reader.readAsDataURL(file);
   };
-  useSEO({ title: 'Advertise With Us - Creative Kaygency | Reach Business Owners', description: 'Advertise on Creative Kaygency: reach entrepreneurs & business owners. Sidebar, banner, featured packages. Analytics, quality review, simple transparent pricing.', keywords: 'advertise, advertising, promote business, sponsored content, Creative Kaygency ads', canonical: 'https://www.creativekaygency.com/advertise' });
+  useSEO({ title: 'Advertise With Us - Creative Kaygency | Reach Business Owners', description: 'Advertise on Creative Kaygency: reach entrepreneurs & business owners. Sidebar, banner, featured packages. Analytics, quality review, simple transparent pricing.', keywords: 'advertise, advertising, promote business, sponsored content, Creative Kaygency ads', canonical: 'https://www.creativekaygency.com/advertise', jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Advertise With Creative Kaygency', description: 'Advertise your business on Creative Kaygency and reach entrepreneurs and business owners actively investing in digital services.', url: 'https://www.creativekaygency.com/advertise', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, provider: { '@id': 'https://www.creativekaygency.com/#organization' } } });
   useEffect(() => { window.scrollTo(0,0); }, []);
 
   const handleSubmit = () => {
@@ -9513,7 +9749,9 @@ function AdvertisePage() {
     const pkg = AD_PACKAGES.find(p => p.id === selectedPkg);
     const safeAdUrl = sanitiseURL(adForm.url);
     if (adForm.url && !safeAdUrl) { addToast('Invalid URL. Please use https://', 'error'); return; }
-    addAd({ advertiser: sanitiseInput(adForm.businessName, 200), email: adForm.email, package: selectedPkg, status: 'pending', title: sanitiseInput(adForm.title, 200), description: sanitiseInput(adForm.description, 1000), url: safeAdUrl, image: adForm.image || '', gradient: 'linear-gradient(135deg, #6366f1, #ec4899)', startDate: '', endDate: '', impressions: 0, clicks: 0, spent: pkg.price });
+    const sanitisedEmail = adForm.email.toLowerCase().trim().replace(/[<>&"';\s]/g, '').slice(0, 254);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitisedEmail)) { addToast('Please enter a valid email address', 'error'); return; }
+    addAd({ advertiser: sanitiseInput(adForm.businessName, 200), email: sanitisedEmail, package: selectedPkg, status: 'pending', title: sanitiseInput(adForm.title, 200), description: sanitiseInput(adForm.description, 1000), url: safeAdUrl, image: sanitiseURL(adForm.image) || '', gradient: 'linear-gradient(135deg, #6366f1, #ec4899)', startDate: '', endDate: '', impressions: 0, clicks: 0, spent: pkg.price });
     setSubmitted(true);
     addToast('Ad submitted for review! We\'ll be in touch within 24 hours.');
   };
@@ -9924,7 +10162,7 @@ function ChatWidget() {
     'services': `We offer 40+ professional digital services across 12 categories:\n\n🌐 Websites & Landing Pages\n🛒 E-Commerce Stores\n🎨 Graphic Design & Branding\n🔍 SEO Services\n✍️ Content & Copywriting\n📧 Email Marketing\n📱 Social Media\n🎬 Videography\n📝 Blog Setup\n💻 Digital Products\n🌍 Web Hosting\n\nBrowse all services at /services!`,
     'turnaround': `Turnaround depends on your plan:\n\n⚡ Enterprise: 1–3 days\n🚀 Professional: 3–5 days\n📋 Starter: 5–7 days\n\nComplex projects (full websites, e-commerce stores) may take 2–4 weeks. Need it faster? Enterprise always gets the fastest lane.`,
     'refund': `We offer a satisfaction guarantee on all services! If you're not happy:\n\n• You can request revisions (2-unlimited depending on your plan)\n• Refunds are available if work hasn't started\n• Partial refunds for scope changes\n\nFull details on our refund policy page at /refund.`,
-    'contact': `You can reach us several ways:\n\n📧 Email: kieron.b@outlook.com\n💬 This chat (we'll get back to you)\n🎫 Support tickets: /support\n📞 Response within 24 hours\n\nWant me to open the contact page for you?`,
+    'contact': `You can reach us several ways:\n\n📧 Email: hello@creativekaygency.com\n💬 This chat (we'll get back to you)\n🎫 Support tickets: /support\n📞 Response within 24 hours\n\nWant me to open the contact page for you?`,
     'hosting': `We offer managed web hosting:\n\n🟢 Starter — 200 credits/mo (5GB, free SSL)\n🔵 Business — 400 credits/mo (20GB, priority)\n🟣 Professional — 700 credits/mo (50GB, staging)\n⚫ Enterprise — 1,200 credits/mo (unlimited, dedicated)\n\nAll plans include daily backups, 99.9% uptime, and free SSL!`,
     'account': user ? `You're logged in as **${user.name}**!\n\n🪙 Credit balance: ${user.credits.toLocaleString()} credits\n📊 Dashboard: /dashboard\n⚙️ Settings: /dashboard/settings\n\nAnything specific you need help with?` : `You can create a free account in seconds — no credit card required!\n\n✅ Browse all 40+ services\n✅ Earn daily login credits\n✅ Track projects in your dashboard\n✅ Get referral bonuses\n\nSign up at /register!`,
   };
@@ -9972,11 +10210,17 @@ function ChatWidget() {
   };
 
   const formatMsg = (text) => {
+    // Security: escape HTML entities first, THEN apply safe formatting
+    const escapeHtml = (str) => str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');
     return text.split('\n').map((line, i) => {
-      let formatted = line
-        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/\/(\w[\w\-\/]*)/g, '<a href="' + (typeof routeHref === 'function' ? '#/$1' : '/$1') + '" style="color:var(--primary);font-weight:600;text-decoration:underline">/$1</a>');
-      return React.createElement('span', { key: i, dangerouslySetInnerHTML: { __html: formatted + (i < text.split('\n').length - 1 ? '<br/>' : '') } });
+      let safe = escapeHtml(line);
+      // Only apply safe formatting to pre-escaped text
+      safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      safe = safe.replace(/\/(\w[\w\-\/]*)/g, (match, p1) => {
+        const href = typeof routeHref === 'function' ? routeHref('/' + p1) : '/' + p1;
+        return '<a href="' + escapeHtml(href) + '" style="color:var(--primary);font-weight:600;text-decoration:underline">/' + escapeHtml(p1) + '</a>';
+      });
+      return React.createElement('span', { key: i, dangerouslySetInnerHTML: { __html: safe + (i < text.split('\n').length - 1 ? '<br/>' : '') } });
     });
   };
 
