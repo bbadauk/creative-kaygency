@@ -2227,14 +2227,12 @@ function AuthProvider({ children }) {
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
       // Set basic auth state synchronously so UI can render immediately
       if (session?.user) {
-        // Set a minimal user object from session metadata so dashboard can render
         const meta = session.user.user_metadata || {};
-        setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
-        setAuthLoading(false);
-        // Load full profile and data in background (fire-and-forget)
+        // Load profile BEFORE setting authLoading=false so admin guards see the real is_admin value
         (async () => {
           try {
-            let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+            let { data: profile, error: profileError } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+            console.log('[AUTH] Profile fetch result:', { profile, profileError, is_admin: profile?.is_admin });
             if (!profile) {
               const newProfile = {
                 id: session.user.id, email: session.user.email,
@@ -2246,7 +2244,10 @@ function AuthProvider({ children }) {
               profile = newProfile;
             }
             if (profile) {
+              console.log('[AUTH] Setting user from profile, is_admin:', profile.is_admin);
               setUser(profile);
+              setAuthLoading(false);
+              // Load additional data in background
               const [projRes, refsRes, sharesRes, adsRes] = await Promise.all([
                 supabaseClient.from('projects').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false }),
                 supabaseClient.from('referrals').select('*').eq('referrer_id', session.user.id),
@@ -2286,8 +2287,17 @@ function AuthProvider({ children }) {
                   deliverables: p.deliverables || [], timeline: p.timeline || []
                 })));
               }
+            } else {
+              // Profile fetch returned nothing — set minimal user and continue
+              setUser({ id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
+              setAuthLoading(false);
             }
-          } catch (err) { console.error('Error loading user data:', err); }
+          } catch (err) {
+            console.error('Error loading user data:', err);
+            // On error, set minimal user so the app doesn't hang
+            setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
+            setAuthLoading(false);
+          }
         })();
       } else {
         setUser(null);
