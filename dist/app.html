@@ -2461,8 +2461,14 @@ function AuthProvider({ children }) {
     if (profileError || !freshProfile) { console.error('[CLAIM] Profile fetch failed:', profileError); return false; }
     // Use server time via Supabase (not local clock) to prevent timezone manipulation
     console.log('[CLAIM] Step 2: Getting server date');
-    const { data: serverTime, error: rpcError } = await supabaseClient.rpc('get_server_date').catch(e => { console.error('[CLAIM] RPC error:', e); return { data: null, error: e }; });
-    console.log('[CLAIM] Step 2 result:', { serverTime, rpcError });
+    let serverTime = null;
+    try {
+      const rpcResult = await supabaseClient.rpc('get_server_date');
+      serverTime = rpcResult.data;
+      console.log('[CLAIM] Step 2 result:', { serverTime, error: rpcResult.error });
+    } catch (rpcErr) {
+      console.warn('[CLAIM] RPC fallback to client date:', rpcErr);
+    }
     const today = serverTime || new Date().toISOString().split('T')[0];
     console.log('[CLAIM] Today:', today, 'Last claim:', freshProfile.last_claim_date);
     if (freshProfile.last_claim_date === today) { console.log('[CLAIM] Already claimed today'); return false; }
