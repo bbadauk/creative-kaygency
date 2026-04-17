@@ -2227,7 +2227,7 @@ function AuthProvider({ children }) {
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         try {
-          let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
+          let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
           // Auto-create profile if it doesn't exist
           if (!profile) {
             const newProfile = {
@@ -4088,16 +4088,13 @@ function LoginPage() {
         if (rememberMe) localStorage.setItem('ck_remembered_email', email.toLowerCase().trim());
         else localStorage.removeItem('ck_remembered_email');
       } catch(e) {}
-      // Navigate immediately — the onAuthStateChange listener will load profile data
-      setLoginSuccess('Welcome back! Redirecting...');
-      // Check admin status quickly, but don't block on it
-      var destPath = '/dashboard';
-      try {
-        const { data: profile } = await supabaseClient.from('profiles').select('is_admin').eq('id', data.user.id).maybeSingle();
-        if (profile && profile.is_admin === true) destPath = '/kay-control-panel';
-      } catch(e) { /* non-critical — default to dashboard */ }
-      navigate(destPath);
+      // Navigate immediately — onAuthStateChange will load profile data in background
+      console.log('[LOGIN] Auth success, navigating to dashboard');
+      setIsLoading(false);
+      navigate('/dashboard');
+      return;
     } catch(err) {
+      console.error('[LOGIN] Error:', err);
       setLoginError('Connection error. Please try again.');
       setIsLoading(false);
     }
