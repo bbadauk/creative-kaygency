@@ -2225,75 +2225,77 @@ function AuthProvider({ children }) {
   // ── Supabase Auth state listener ──
   useEffect(() => {
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
-      // Defer heavy async work so it doesn't block signInWithPassword resolution
-      setTimeout(async () => {
+      // Set basic auth state synchronously so UI can render immediately
       if (session?.user) {
-        try {
-          let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
-          // Auto-create profile if it doesn't exist
-          if (!profile) {
-            const newProfile = {
-              id: session.user.id, email: session.user.email,
-              name: session.user.user_metadata?.name || session.user.user_metadata?.full_name || session.user.email.split('@')[0],
-              credits: 0, streak: 0, is_admin: false,
-              referral_code: session.user.id.substring(0, 8).toUpperCase()
-            };
-            await supabaseClient.from('profiles').insert(newProfile).catch(() => {});
-            profile = newProfile;
-          }
-          if (profile) {
-            setUser(profile);
-            // Load user-specific data
-            const [projRes, refsRes, sharesRes, adsRes] = await Promise.all([
-              supabaseClient.from('projects').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false }),
-              supabaseClient.from('referrals').select('*').eq('referrer_id', session.user.id),
-              supabaseClient.from('share_credits').select('*').eq('user_id', session.user.id),
-              supabaseClient.from('ads').select('id, title, description, url, image, gradient, status, package, start_date, end_date, impressions, clicks'),
-            ]);
-            if (projRes.data) setProjects(projRes.data.map(p => ({
-              id: p.id, service: p.service, status: p.status, date: p.date, paid: p.paid,
-              amount: p.amount, progress: p.progress, assignedTo: p.assigned_to, userId: p.user_id,
-              userName: p.user_name, userEmail: p.user_email, brief: p.brief,
-              deliverables: p.deliverables || [], timeline: p.timeline || []
-            })));
-            const refs = refsRes.data || [];
-            const shares = sharesRes.data || [];
-            setReferralData({
-              referrals: refs.map(r => ({
-                id: r.id, name: r.referred_name, email: r.referred_email, signedUp: r.signed_up,
-                firstPurchase: r.first_purchase, status: r.status, creditsEarned: r.credits_earned,
-                verifiedAt: r.verified_at, ipHash: r.ip_hash
-              })),
-              shareCredits: shares.map(s => ({
-                id: s.id, platform: s.platform, page: s.page, date: s.shared_date,
-                timestamp: s.timestamp, status: s.status, creditsEarned: s.credits_earned,
-                verifiedAt: s.verified_at, autoVerifyAt: s.auto_verify_at, userAgent: s.user_agent
-              })),
-              totalEarned: refs.reduce((sum, r) => sum + (r.credits_earned || 0), 0) + shares.filter(s => s.status === 'verified').reduce((sum, s) => sum + (s.credits_earned || 0), 0),
-              pendingReferrals: refs.filter(r => r.status === 'signed-up').length,
-              convertedReferrals: refs.filter(r => r.status === 'converted').length,
-            });
-            if (adsRes.data) setAds(adsRes.data);
-            // If admin, load ALL projects
-            if (profile.is_admin) {
-              const { data: allProjects } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
-              if (allProjects) setProjects(allProjects.map(p => ({
+        // Set a minimal user object from session metadata so dashboard can render
+        const meta = session.user.user_metadata || {};
+        setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
+        setAuthLoading(false);
+        // Load full profile and data in background (fire-and-forget)
+        (async () => {
+          try {
+            let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+            if (!profile) {
+              const newProfile = {
+                id: session.user.id, email: session.user.email,
+                name: meta.name || meta.full_name || session.user.email.split('@')[0],
+                credits: 0, streak: 0, is_admin: false,
+                referral_code: session.user.id.substring(0, 8).toUpperCase()
+              };
+              await supabaseClient.from('profiles').insert(newProfile).catch(() => {});
+              profile = newProfile;
+            }
+            if (profile) {
+              setUser(profile);
+              const [projRes, refsRes, sharesRes, adsRes] = await Promise.all([
+                supabaseClient.from('projects').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false }),
+                supabaseClient.from('referrals').select('*').eq('referrer_id', session.user.id),
+                supabaseClient.from('share_credits').select('*').eq('user_id', session.user.id),
+                supabaseClient.from('ads').select('id, title, description, url, image, gradient, status, package, start_date, end_date, impressions, clicks'),
+              ]);
+              if (projRes.data) setProjects(projRes.data.map(p => ({
                 id: p.id, service: p.service, status: p.status, date: p.date, paid: p.paid,
                 amount: p.amount, progress: p.progress, assignedTo: p.assigned_to, userId: p.user_id,
                 userName: p.user_name, userEmail: p.user_email, brief: p.brief,
                 deliverables: p.deliverables || [], timeline: p.timeline || []
               })));
+              const refs = refsRes.data || [];
+              const shares = sharesRes.data || [];
+              setReferralData({
+                referrals: refs.map(r => ({
+                  id: r.id, name: r.referred_name, email: r.referred_email, signedUp: r.signed_up,
+                  firstPurchase: r.first_purchase, status: r.status, creditsEarned: r.credits_earned,
+                  verifiedAt: r.verified_at, ipHash: r.ip_hash
+                })),
+                shareCredits: shares.map(s => ({
+                  id: s.id, platform: s.platform, page: s.page, date: s.shared_date,
+                  timestamp: s.timestamp, status: s.status, creditsEarned: s.credits_earned,
+                  verifiedAt: s.verified_at, autoVerifyAt: s.auto_verify_at, userAgent: s.user_agent
+                })),
+                totalEarned: refs.reduce((sum, r) => sum + (r.credits_earned || 0), 0) + shares.filter(s => s.status === 'verified').reduce((sum, s) => sum + (s.credits_earned || 0), 0),
+                pendingReferrals: refs.filter(r => r.status === 'signed-up').length,
+                convertedReferrals: refs.filter(r => r.status === 'converted').length,
+              });
+              if (adsRes.data) setAds(adsRes.data);
+              if (profile.is_admin) {
+                const { data: allProjects } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
+                if (allProjects) setProjects(allProjects.map(p => ({
+                  id: p.id, service: p.service, status: p.status, date: p.date, paid: p.paid,
+                  amount: p.amount, progress: p.progress, assignedTo: p.assigned_to, userId: p.user_id,
+                  userName: p.user_name, userEmail: p.user_email, brief: p.brief,
+                  deliverables: p.deliverables || [], timeline: p.timeline || []
+                })));
+              }
             }
-          }
-        } catch (err) { console.error('Error loading user data:', err); }
+          } catch (err) { console.error('Error loading user data:', err); }
+        })();
       } else {
         setUser(null);
         setProjects([]);
         setReferralData({ referrals: [], shareCredits: [], totalEarned: 0, pendingReferrals: 0, convertedReferrals: 0 });
         setAds([]);
+        setAuthLoading(false);
       }
-      setAuthLoading(false);
-      }, 0);
     });
     return () => subscription.unsubscribe();
   }, []);
