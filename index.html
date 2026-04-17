@@ -2453,14 +2453,19 @@ function AuthProvider({ children }) {
   };
 
   const claimDailyLogin = async () => {
-    if (!user) return false;
+    if (!user) { console.log('[CLAIM] No user'); return false; }
     // Fetch fresh profile from server to prevent date manipulation
-    const { data: freshProfile } = await supabaseClient.from('profiles').select('credits, streak, last_claim_date').eq('id', user.id).single();
-    if (!freshProfile) return false;
+    console.log('[CLAIM] Step 1: Fetching profile for', user.id);
+    const { data: freshProfile, error: profileError } = await supabaseClient.from('profiles').select('credits, streak, last_claim_date').eq('id', user.id).single();
+    console.log('[CLAIM] Step 1 result:', { freshProfile, profileError });
+    if (profileError || !freshProfile) { console.error('[CLAIM] Profile fetch failed:', profileError); return false; }
     // Use server time via Supabase (not local clock) to prevent timezone manipulation
-    const { data: serverTime } = await supabaseClient.rpc('get_server_date').catch(() => ({ data: null }));
+    console.log('[CLAIM] Step 2: Getting server date');
+    const { data: serverTime, error: rpcError } = await supabaseClient.rpc('get_server_date').catch(e => { console.error('[CLAIM] RPC error:', e); return { data: null, error: e }; });
+    console.log('[CLAIM] Step 2 result:', { serverTime, rpcError });
     const today = serverTime || new Date().toISOString().split('T')[0];
-    if (freshProfile.last_claim_date === today) return false;
+    console.log('[CLAIM] Today:', today, 'Last claim:', freshProfile.last_claim_date);
+    if (freshProfile.last_claim_date === today) { console.log('[CLAIM] Already claimed today'); return false; }
     // Check if streak is valid (last claim was yesterday)
     const lastClaim = freshProfile.last_claim_date ? new Date(freshProfile.last_claim_date) : null;
     const todayDate = new Date(today);
@@ -2468,6 +2473,7 @@ function AuthProvider({ children }) {
     const newStreak = dayDiff === 1 ? (freshProfile.streak || 0) + 1 : 1;
     const DAILY_CREDIT = 2;
     const newCredits = Math.max(0, Math.min(freshProfile.credits + DAILY_CREDIT, 999999));
+    console.log('[CLAIM] Step 3: Updating profile. New credits:', newCredits, 'New streak:', newStreak);
     // Optimistic lock: only update if date hasn't changed
     // IMPORTANT: .eq() doesn't work with NULL in PostgREST — must use .is() for NULL values
     let query = supabaseClient.from('profiles').update({
@@ -2479,14 +2485,16 @@ function AuthProvider({ children }) {
       query = query.eq('last_claim_date', freshProfile.last_claim_date);
     }
     const { error } = await query;
-    if (error) return false;
+    console.log('[CLAIM] Step 3 result:', { error });
+    if (error) { console.error('[CLAIM] Update failed:', error); return false; }
     // Audit log for daily login
     await supabaseClient.from('credit_audit_log').insert({
       user_id: user.id, amount: DAILY_CREDIT, reason: 'daily_login',
       old_balance: freshProfile.credits, new_balance: newCredits,
       timestamp: new Date().toISOString()
-    }).catch(() => {});
+    }).catch(e => console.warn('[CLAIM] Audit log failed:', e));
     setUser(u => u ? { ...u, credits: newCredits, streak: newStreak, last_claim_date: today } : null);
+    console.log('[CLAIM] SUCCESS! Credits updated to', newCredits);
     return true;
   };
 
