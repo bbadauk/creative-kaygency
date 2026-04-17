@@ -4088,22 +4088,15 @@ function LoginPage() {
         if (rememberMe) localStorage.setItem('ck_remembered_email', email.toLowerCase().trim());
         else localStorage.removeItem('ck_remembered_email');
       } catch(e) {}
-      // Check if admin
-      let isAdmin = false;
-      let userName = data.user.email.split('@')[0];
+      // Navigate immediately — the onAuthStateChange listener will load profile data
+      setLoginSuccess('Welcome back! Redirecting...');
+      // Check admin status quickly, but don't block on it
+      var destPath = '/dashboard';
       try {
-        const { data: profile } = await supabaseClient.from('profiles').select('name, is_admin').eq('id', data.user.id).single();
-        if (profile) {
-          userName = profile.name || userName;
-          isAdmin = profile.is_admin === true;
-        }
-      } catch(e) {}
-      setLoginSuccess('Welcome back, ' + userName + '! Redirecting...');
-      // The onAuthStateChange listener will pick up the session and set user state.
-      // We just need to navigate — give it a moment to process.
-      setTimeout(() => {
-        navigate(isAdmin ? '/kay-control-panel' : '/dashboard');
-      }, 800);
+        const { data: profile } = await supabaseClient.from('profiles').select('is_admin').eq('id', data.user.id).maybeSingle();
+        if (profile && profile.is_admin === true) destPath = '/kay-control-panel';
+      } catch(e) { /* non-critical — default to dashboard */ }
+      navigate(destPath);
     } catch(err) {
       setLoginError('Connection error. Please try again.');
       setIsLoading(false);
