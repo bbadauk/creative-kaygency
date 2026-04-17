@@ -2177,6 +2177,7 @@ function AuthProvider({ children }) {
   // ── State ──
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [projects, setProjects] = useState([]);
   const [portfolioItems, setPortfolioItems] = useState(PORTFOLIO_ITEMS); // fallback until DB loads
   const [services, setServices] = useState(SERVICES); // fallback until DB loads
@@ -2228,8 +2229,12 @@ function AuthProvider({ children }) {
       // Set basic auth state synchronously so UI can render immediately
       if (session?.user) {
         const meta = session.user.user_metadata || {};
-        // Load profile BEFORE setting authLoading=false so admin guards see the real is_admin value
-        (async () => {
+        // Set minimal user SYNCHRONOUSLY so dashboard can render immediately
+        setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
+        setAuthLoading(false);
+        // IMPORTANT: Use setTimeout to escape onAuthStateChange callback context.
+        // Supabase queries deadlock if called inside this callback due to internal auth lock.
+        setTimeout(async () => {
           try {
             let { data: profile, error: profileError } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
             console.log('[AUTH] Profile fetch result:', { profile, profileError, is_admin: profile?.is_admin });
@@ -2246,8 +2251,7 @@ function AuthProvider({ children }) {
             if (profile) {
               console.log('[AUTH] Setting user from profile, is_admin:', profile.is_admin);
               setUser(profile);
-              setAuthLoading(false);
-              // Load additional data in background
+              setProfileLoaded(true);
               const [projRes, refsRes, sharesRes, adsRes] = await Promise.all([
                 supabaseClient.from('projects').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false }),
                 supabaseClient.from('referrals').select('*').eq('referrer_id', session.user.id),
@@ -2287,18 +2291,9 @@ function AuthProvider({ children }) {
                   deliverables: p.deliverables || [], timeline: p.timeline || []
                 })));
               }
-            } else {
-              // Profile fetch returned nothing — set minimal user and continue
-              setUser({ id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
-              setAuthLoading(false);
             }
-          } catch (err) {
-            console.error('Error loading user data:', err);
-            // On error, set minimal user so the app doesn't hang
-            setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
-            setAuthLoading(false);
-          }
-        })();
+          } catch (err) { console.error('Error loading user data:', err); }
+        }, 0);
       } else {
         setUser(null);
         setProjects([]);
@@ -2766,7 +2761,7 @@ function AuthProvider({ children }) {
     await supabaseClient.from('settings').upsert({ key: 'announcement', value: text, updated_at: new Date().toISOString() });
   };
 
-  return React.createElement(AuthContext.Provider, { value: { user, authLoading, login, register, logout, updateCredits, claimDailyLogin, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
+  return React.createElement(AuthContext.Provider, { value: { user, authLoading, profileLoaded, login, register, logout, updateCredits, claimDailyLogin, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
 }
 
 function CurrencyProvider({ children }) {
@@ -5672,7 +5667,7 @@ function SupportPage() {
 // ============================================================================
 
 function AdminPage() {
-  const { user, isAdmin, authLoading, projects, updateProject, addProjectUpdate, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } = useContext(AuthContext);
+  const { user, isAdmin, authLoading, profileLoaded, projects, updateProject, addProjectUpdate, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } = useContext(AuthContext);
   const { formatPrice } = useContext(CurrencyContext);
   const { addToast } = useContext(NotificationContext);
   const { getAllTickets, getTicketById, addReply, updateTicketStatus, updateTicketPriority, emailLog, TICKET_CATEGORIES, TICKET_PRIORITIES } = useContext(SupportContext);
@@ -5790,7 +5785,7 @@ function AdminPage() {
       }
     }
   }, []);
-  if (authLoading) return React.createElement('div', {style:{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}, React.createElement('div', {className:'loading-spinner'}));
+  if (authLoading || (user && !profileLoaded)) return React.createElement('div', {style:{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}, React.createElement('div', {className:'loading-spinner'}));
   if (!user || !isAdmin) { navigate('/login'); return null; }
 
   const adminTabs = [
