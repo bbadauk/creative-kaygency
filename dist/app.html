@@ -2426,7 +2426,7 @@ function AuthProvider({ children }) {
     _creditUpdateLog.current.push(now);
     // Prevent client-side credit increases (only admin or verified system actions)
     // Positive credits only allowed for: daily_login, referral, share, admin_grant
-    const ALLOWED_POSITIVE_REASONS = ['daily_login', 'referral', 'share_credit', 'admin_grant', 'streak_bonus', 'giveaway'];
+    const ALLOWED_POSITIVE_REASONS = ['daily_login', 'referral', 'share_credit', 'admin_grant', 'streak_bonus', 'giveaway', 'credit_purchase'];
     if (safeAmount > 0 && !ALLOWED_POSITIVE_REASONS.includes(reason)) {
       console.warn('Unauthorized positive credit update blocked:', reason);
       return;
@@ -4683,8 +4683,8 @@ function DashCredits({ user, formatPrice }) {
   const { updateCredits } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
 
-  const handlePurchase = (pkg) => {
-    updateCredits(pkg.credits, 'admin_grant');
+  const handlePurchase = async (pkg) => {
+    await updateCredits(pkg.credits, 'credit_purchase');
     addToast(`🎉 ${pkg.credits} credits purchased! New balance: ${(user.credits + pkg.credits).toLocaleString()}`);
   };
 
@@ -5266,11 +5266,11 @@ function BookingWizard({ service }) {
 
   const creditPrice = service.creditMin;
 
-  const handleBook = () => {
+  const handleBook = async () => {
     // Validate credit balance at time of purchase
     const currentBalance = user?.credits || 0;
     if (currentBalance < creditPrice || creditPrice <= 0) { addToast('Insufficient credits. Please purchase more credits or subscribe to a plan.', 'error'); return; }
-    updateCredits(-Math.abs(creditPrice), 'service_purchase');
+    await updateCredits(-Math.abs(creditPrice), 'service_purchase');
     // Sanitise form data before storing
     const sanitisedFormData = {};
     Object.entries(formData).forEach(([k, v]) => {
