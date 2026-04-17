@@ -4334,8 +4334,8 @@ function DashboardPage() {
   if (authLoading) return React.createElement('div', {style:{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}, React.createElement('div', {className:'loading-spinner'}));
   if (!user) { navigate('/login'); return null; }
 
-  const handleDailyClaim = () => {
-    const claimed = claimDailyLogin();
+  const handleDailyClaim = async () => {
+    const claimed = await claimDailyLogin();
     if (claimed) addToast('🎉 +2 credits claimed! Keep your streak going!');
     else addToast('You\'ve already claimed today\'s reward!', 'warning');
   };
@@ -4788,7 +4788,7 @@ function DashReferrals({ user }) {
   const [activeTab, setActiveTab] = useState('referrals');
   const refLink = `https://creativekaygency.com/ref/${user.referralCode}`;
   const copyLink = () => { if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(refLink)}else{var ta=document.createElement('textarea');ta.value=refLink;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta)} addToast('Referral link copied!'); };
-  const shareOnPlatform = (platform) => {
+  const shareOnPlatform = async (platform) => {
     const text = `Check out Creative Kaygency - professional digital design services! ${refLink}`;
     const urls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
@@ -4798,7 +4798,7 @@ function DashReferrals({ user }) {
     };
     if (urls[platform.toLowerCase()]) {
       window.open(urls[platform.toLowerCase()], '_blank', 'width=600,height=400');
-      const result = addShareCredit(platform, '/referral');
+      const result = await addShareCredit(platform, '/referral');
       if (result.success) addToast(`Shared on ${platform}! Pending verification.`, 'info');
       else addToast(`Share logged. ${result.reason === 'cooldown' ? '5-min cooldown active.' : result.reason === 'daily_cap' ? 'Daily limit reached.' : 'Already shared today.'}`, 'info');
     }
@@ -10251,7 +10251,7 @@ function FloatingShareBar() {
     } else {
       window.open(shareUrls[platform], '_blank', 'width=600,height=400');
       if (user) {
-        const result = addShareCredit(platform, currentPage);
+        const result = await addShareCredit(platform, currentPage);
         if (result.success) addToast('Share logged! Credits verified within 48h.', 'info');
         else if (result.reason === 'cooldown') addToast('5-min cooldown active.', 'info');
         else if (result.reason === 'daily_cap') addToast('Daily share limit reached.', 'info');
