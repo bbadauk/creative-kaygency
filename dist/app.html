@@ -2224,7 +2224,9 @@ function AuthProvider({ children }) {
 
   // ── Supabase Auth state listener ──
   useEffect(() => {
-    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
+      // Defer heavy async work so it doesn't block signInWithPassword resolution
+      setTimeout(async () => {
       if (session?.user) {
         try {
           let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
@@ -2291,6 +2293,7 @@ function AuthProvider({ children }) {
         setAds([]);
       }
       setAuthLoading(false);
+      }, 0);
     });
     return () => subscription.unsubscribe();
   }, []);
