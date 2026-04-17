@@ -2468,9 +2468,17 @@ function AuthProvider({ children }) {
     const newStreak = dayDiff === 1 ? (freshProfile.streak || 0) + 1 : 1;
     const DAILY_CREDIT = 2;
     const newCredits = Math.max(0, Math.min(freshProfile.credits + DAILY_CREDIT, 999999));
-    const { error } = await supabaseClient.from('profiles').update({
+    // Optimistic lock: only update if date hasn't changed
+    // IMPORTANT: .eq() doesn't work with NULL in PostgREST — must use .is() for NULL values
+    let query = supabaseClient.from('profiles').update({
       credits: newCredits, streak: newStreak, last_claim_date: today
-    }).eq('id', user.id).eq('last_claim_date', freshProfile.last_claim_date); // Optimistic lock: only update if date hasn't changed
+    }).eq('id', user.id);
+    if (freshProfile.last_claim_date === null) {
+      query = query.is('last_claim_date', null);
+    } else {
+      query = query.eq('last_claim_date', freshProfile.last_claim_date);
+    }
+    const { error } = await query;
     if (error) return false;
     // Audit log for daily login
     await supabaseClient.from('credit_audit_log').insert({
@@ -4335,9 +4343,14 @@ function DashboardPage() {
   if (!user) { navigate('/login'); return null; }
 
   const handleDailyClaim = async () => {
-    const claimed = await claimDailyLogin();
-    if (claimed) addToast('🎉 +2 credits claimed! Keep your streak going!');
-    else addToast('You\'ve already claimed today\'s reward!', 'warning');
+    try {
+      const claimed = await claimDailyLogin();
+      if (claimed) addToast('🎉 +2 credits claimed! Keep your streak going!');
+      else addToast('You\'ve already claimed today\'s reward!', 'warning');
+    } catch (err) {
+      console.error('[CLAIM] Daily claim error:', err);
+      addToast('Something went wrong claiming credits. Please try again.', 'error');
+    }
   };
 
   const userAds = ads.filter(a => a.email === user?.email);
