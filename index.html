@@ -4295,7 +4295,7 @@ function RegisterPage() {
 // ============================================================================
 
 function DashboardPage() {
-  const { user, updateCredits, claimDailyLogin, projects, isAdmin, ads } = useContext(AuthContext);
+  const { user, updateCredits, claimDailyLogin, projects, isAdmin, ads, authLoading } = useContext(AuthContext);
   const { formatPrice } = useContext(CurrencyContext);
   const { addToast } = useContext(NotificationContext);
   const [tab, setTab] = useState('overview');
@@ -4324,6 +4324,7 @@ function DashboardPage() {
     return () => window.removeEventListener(evt, syncTabFromHash);
   }, []);
 
+  if (authLoading) return React.createElement('div', {style:{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}, React.createElement('div', {className:'loading-spinner'}));
   if (!user) { navigate('/login'); return null; }
 
   const handleDailyClaim = () => {
@@ -5246,12 +5247,13 @@ function DashSettings({ user }) {
 // ============================================================================
 
 function BookingWizard({ service }) {
-  const { user, updateCredits, addProject } = useContext(AuthContext);
+  const { user, updateCredits, addProject, authLoading } = useContext(AuthContext);
   const { formatPrice } = useContext(CurrencyContext);
   const { addToast } = useContext(NotificationContext);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
 
+  if (authLoading) return React.createElement('div', {style:{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}, React.createElement('div', {className:'loading-spinner'}));
   if (!user) { navigate('/login'); return null; }
   if (!service) return null;
 
@@ -5658,7 +5660,7 @@ function SupportPage() {
 // ============================================================================
 
 function AdminPage() {
-  const { user, isAdmin, projects, updateProject, addProjectUpdate, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } = useContext(AuthContext);
+  const { user, isAdmin, authLoading, projects, updateProject, addProjectUpdate, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } = useContext(AuthContext);
   const { formatPrice } = useContext(CurrencyContext);
   const { addToast } = useContext(NotificationContext);
   const { getAllTickets, getTicketById, addReply, updateTicketStatus, updateTicketPriority, emailLog, TICKET_CATEGORIES, TICKET_PRIORITIES } = useContext(SupportContext);
@@ -5776,6 +5778,7 @@ function AdminPage() {
       }
     }
   }, []);
+  if (authLoading) return React.createElement('div', {style:{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}, React.createElement('div', {className:'loading-spinner'}));
   if (!user || !isAdmin) { navigate('/login'); return null; }
 
   const adminTabs = [
