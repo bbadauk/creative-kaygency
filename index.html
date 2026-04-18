@@ -3401,6 +3401,30 @@ function Toasts() {
 function HomePage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { user, services, blogPosts } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
+  const [homePurchasing, setHomePurchasing] = useState(null);
+  const [homeCheckoutSecret, setHomeCheckoutSecret] = useState(null);
+
+  const handleHomePurchase = async (pkg) => {
+    if (!user) { navigate('/register'); return; }
+    setHomePurchasing(pkg.id);
+    try {
+      const resp = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packageId: pkg.id, userId: user.id, userEmail: user.email || undefined }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.clientSecret) throw new Error(data.error || 'Failed to start checkout');
+      setHomeCheckoutSecret(data.clientSecret);
+    } catch (err) {
+      console.error('Purchase error:', err);
+      addToast('Payment could not be started. Please try again.', 'error');
+    } finally {
+      setHomePurchasing(null);
+    }
+  };
+
   useSEO({ title: 'Creative Kaygency — Professional Digital Design Services | Websites, Branding, SEO & More', description: 'Professional digital design services: websites, e-commerce, branding, SEO, content, email marketing & more. Save up to 20% with credits. 500+ businesses trust us.', keywords: 'digital design services, web design agency, e-commerce development, logo design, SEO services, branding agency, content writing, email marketing, Creative Kaygency', canonical: 'https://www.creativekaygency.com/', ogType: 'website', jsonLd: [
     { '@context': 'https://schema.org', '@type': 'Organization', '@id': 'https://www.creativekaygency.com/#organization', name: 'Creative Kaygency', url: 'https://www.creativekaygency.com', logo: 'https://www.creativekaygency.com/og-image.png', description: 'UK-based digital design agency offering 40+ professional services including web design, e-commerce, branding, SEO, and content marketing with an innovative credit-based pricing system.', foundingDate: '2024', areaServed: { '@type': 'GeoCircle', geoMidpoint: { '@type': 'GeoCoordinates', latitude: 51.5074, longitude: -0.1278 }, geoRadius: '50000' }, address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' }, contactPoint: { '@type': 'ContactPoint', telephone: '+44-123-456-7890', contactType: 'customer service', email: 'hello@creativekaygency.com', availableLanguage: 'English', areaServed: 'GB' }, sameAs: ['https://www.facebook.com/creativekaygency', 'https://www.instagram.com/creativekaygency', 'https://twitter.com/creativekaygency', 'https://www.linkedin.com/company/creativekaygency', 'https://www.tiktok.com/@creativekaygency'] },
     { '@context': 'https://schema.org', '@type': 'WebPage', '@id': 'https://www.creativekaygency.com/#webpage', url: 'https://www.creativekaygency.com/', name: 'Creative Kaygency — Professional Digital Design Services', description: 'Professional digital design services: websites, e-commerce, branding, SEO, content, email marketing & more. Save up to 20% with credits.', isPartOf: { '@id': 'https://www.creativekaygency.com/#website' }, about: { '@id': 'https://www.creativekaygency.com/#organization' }, provider: { '@id': 'https://www.creativekaygency.com/#organization' } }
@@ -3731,8 +3755,10 @@ function HomePage() {
                   <div className="label">Credits</div>
                   <div className="amount">{pkg.credits}</div>
                   <div className="price">{formatPrice(pkg.price)}</div>
-                  <div className="per">/month</div>
-                  <button className="btn btn-sm btn-primary btn-block" style={{marginTop:12}} onClick={() => navigate(user ? '/dashboard/credits' : '/register')}>Get Credits</button>
+                  <div className="per">one-time</div>
+                  <button className="btn btn-sm btn-primary btn-block" style={{marginTop:12}} onClick={() => handleHomePurchase(pkg)} disabled={homePurchasing === pkg.id}>
+                    {homePurchasing === pkg.id ? 'Loading…' : 'Buy Credits'}
+                  </button>
                 </div>
               ))}
             </div>
@@ -3937,6 +3963,8 @@ function HomePage() {
           <p style={{fontSize:13,color:'rgba(255,255,255,0.6)',marginTop:16}}>No credit card required • Cancel anytime • 24hr response guarantee</p>
         </div>
       </section>
+
+      {homeCheckoutSecret && <CheckoutModal clientSecret={homeCheckoutSecret} onClose={() => setHomeCheckoutSecret(null)} onComplete={() => { setHomeCheckoutSecret(null); addToast('Purchase successful! Credits added to your account.', 'success'); }} />}
     </div>
   );
 }
@@ -4979,6 +5007,7 @@ function DashCredits({ user, formatPrice }) {
   const [subStatus, setSubStatus] = React.useState(null);
   const [subLoading, setSubLoading] = React.useState(true);
   const [managingPortal, setManagingPortal] = React.useState(false);
+  const [dashAnnual, setDashAnnual] = React.useState(false);
 
   // Fetch subscription status on mount
   React.useEffect(() => {
@@ -5025,12 +5054,13 @@ function DashCredits({ user, formatPrice }) {
   };
 
   const handleSubscribe = async (plan) => {
+    const planId = dashAnnual ? `${plan.id}-annual` : plan.id;
     setSubscribing(plan.id);
     try {
       const resp = await fetch('/api/create-subscription-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: plan.id, userId: user.id, userEmail: user.email || undefined }),
+        body: JSON.stringify({ planId, userId: user.id, userEmail: user.email || undefined }),
       });
       const data = await resp.json();
       if (!resp.ok || !data.clientSecret) throw new Error(data.error || 'Failed to start subscription checkout');
@@ -5109,20 +5139,32 @@ function DashCredits({ user, formatPrice }) {
         <div style={{marginBottom:24}}>
           <div style={{background:'linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.06))',border:'1px solid rgba(124,58,237,0.15)',borderRadius:'var(--radius)',padding:'20px 24px',marginBottom:16}}>
             <div style={{fontSize:14,fontWeight:700,color:'var(--primary)',marginBottom:6}}>💎 No Active Subscription</div>
-            <div style={{fontSize:13,color:'var(--gray-600)',marginBottom:16}}>Subscribe to get monthly credits at better rates, priority queue access, and faster turnaround. Plans from {formatPrice(99)}/mo.</div>
+            <div style={{fontSize:13,color:'var(--gray-600)',marginBottom:12}}>Subscribe to get monthly credits at better rates, priority queue access, and faster turnaround.</div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,marginTop:8}}>
+              <span style={{fontSize:13,fontWeight:!dashAnnual?700:500,color:!dashAnnual?'var(--gray-900)':'var(--gray-400)'}}>Monthly</span>
+              <div className={`toggle-switch${dashAnnual ? ' active' : ''}`} onClick={() => setDashAnnual(!dashAnnual)} style={{cursor:'pointer'}}><div className="toggle-knob"/></div>
+              <span style={{fontSize:13,fontWeight:dashAnnual?700:500,color:dashAnnual?'var(--gray-900)':'var(--gray-400)'}}>Annual <span style={{background:'linear-gradient(135deg,#10b981,#059669)',color:'#fff',padding:'2px 8px',borderRadius:12,fontSize:11,fontWeight:700,animation:'pulse 2s ease-in-out infinite'}}>Save 20%</span></span>
+            </div>
+            {!dashAnnual && <div style={{textAlign:'center',marginTop:8,fontSize:12,color:'var(--success)',fontWeight:600}}>👆 Switch to annual and save up to £720/year</div>}
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))',gap:12}}>
-            {PLANS.map(plan => (
+            {PLANS.map(plan => {
+              const discount = dashAnnual ? 0.8 : 1;
+              const monthlyPrice = Math.round(plan.price * discount);
+              return (
               <div key={plan.id} className="card" style={{padding:16,textAlign:'center',border:plan.featured?'2px solid var(--primary)':'1px solid var(--gray-100)'}}>
                 {plan.featured && <div style={{fontSize:10,fontWeight:700,color:'var(--primary)',marginBottom:4}}>MOST POPULAR</div>}
                 <div style={{fontSize:16,fontWeight:700,marginBottom:2}}>{plan.name}</div>
-                <div style={{fontSize:24,fontWeight:800,color:'var(--primary)',marginBottom:2}}>{formatPrice(plan.price)}<span style={{fontSize:13,color:'var(--gray-400)',fontWeight:500}}>/mo</span></div>
+                <div style={{fontSize:24,fontWeight:800,color:'var(--primary)',marginBottom:2}}>{formatPrice(monthlyPrice)}<span style={{fontSize:13,color:'var(--gray-400)',fontWeight:500}}>/mo</span></div>
+                {dashAnnual && <div style={{fontSize:11,color:'var(--success)',fontWeight:600,marginBottom:4}}>Billed {formatPrice(monthlyPrice * 12)}/yr — Save {formatPrice(Math.round(plan.price * 12 * 0.2))}</div>}
+                {!dashAnnual && <div style={{fontSize:11,color:'var(--gray-400)',marginBottom:4}}>or {formatPrice(Math.round(plan.price * 0.8))}/mo billed annually</div>}
                 <div style={{fontSize:12,color:'var(--gray-500)',marginBottom:10}}>{plan.credits} credits/mo • {plan.turnaround}</div>
                 <button className={`btn btn-sm btn-block ${plan.featured ? 'btn-primary' : 'btn-secondary'}`} onClick={() => handleSubscribe(plan)} disabled={!!subscribing}>
-                  {subscribing === plan.id ? 'Loading…' : 'Subscribe'}
+                  {subscribing === plan.id ? 'Loading…' : dashAnnual ? `Subscribe Annual` : 'Subscribe'}
                 </button>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
