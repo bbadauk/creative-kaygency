@@ -4317,13 +4317,21 @@ function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', referral: '', terms: false });
   useSEO({ title: 'Sign Up - Creative Kaygency | Create Your Free Account', description: 'Create a free Creative Kaygency account to start ordering professional digital design services, earn daily credits, get referral bonuses, and save up to 20%.', keywords: 'sign up, register, create account, free account, Creative Kaygency registration', canonical: 'https://www.creativekaygency.com/register', noindex: true });
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirm) return addToast('Passwords do not match', 'error');
     if (!form.terms) return addToast('Please accept the terms', 'error');
-    const result = doRegister(form.name, form.email, form.password, form.referral);
-    if (result.success) { addToast(`Welcome to Creative Kaygency, ${form.name}! 🎉`); navigate('/dashboard'); }
-    else addToast(result.error, 'error');
+    setIsSubmitting(true);
+    try {
+      const result = await doRegister(form.name, form.email, form.password, form.referral);
+      if (result.success) { addToast(`Welcome to Creative Kaygency, ${form.name}! 🎉`); navigate('/dashboard'); }
+      else addToast(result.error || 'Registration failed. Please try again.', 'error');
+    } catch (err) {
+      addToast('Something went wrong. Please try again.', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const u = (field, val) => setForm(f => ({ ...f, [field]: val }));
 
@@ -4344,7 +4352,9 @@ function RegisterPage() {
           <input type="checkbox" checked={form.terms} onChange={e => u('terms',e.target.checked)} style={{position:'absolute',opacity:0,width:0,height:0}} />
           <span style={{color:'var(--gray-600)',lineHeight:'1.4'}}>I agree to the <a href={routeHref("/terms")} style={{color:'var(--primary)'}}>Terms of Service</a> and <a href={routeHref("/privacy")} style={{color:'var(--primary)'}}>Privacy Policy</a></span>
         </label>
-        <button type="submit" className="btn btn-primary btn-block btn-lg">Create Account →</button>
+        <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={isSubmitting} style={{opacity:isSubmitting?0.7:1}}>
+          {isSubmitting ? 'Creating Account...' : 'Create Account →'}
+        </button>
       </form>
       <div className="auth-footer">Already have an account? <a href={routeHref("/login")}>Log In</a></div>
     </div></div>
