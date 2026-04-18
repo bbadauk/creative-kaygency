@@ -1,116 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.creativekaygency.com/</loc><lastmod>2026-04-15</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.creativekaygency.com/services</loc><lastmod>2026-04-15</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/business-website</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/landing-page</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/sales-funnel</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/brochure-site</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/ecom-store</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/product-uploads</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/conversion-opt</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/logo-design</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/brand-kit</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/social-graphics</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/onpage-seo</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/technical-seo</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/blog-seo</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/local-seo</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/website-copy</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/sales-copy</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/digital-product-copy</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/email-automation</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/lead-nurturing</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/campaign-setup</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/social-pack-monthly</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/social-captions</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/pdf-creation</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/course-creation</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/saas-tool</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/plugin-dev</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/hosting-starter</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/hosting-business</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/hosting-pro</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/hosting-enterprise</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/lp-optimization</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/ai-content</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/care-plan</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/blog-starter</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/blog-professional</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/blog-authority</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/social-media-video-pack</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/youtube-video-production</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/corporate-promo-video</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/services/monthly-video-retainer</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.creativekaygency.com/pricing</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.creativekaygency.com/about</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/how-it-works</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.creativekaygency.com/portfolio</loc><lastmod>2026-04-15</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/contact</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/faq</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/support</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/hosting</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog-setup</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.creativekaygency.com/videography</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.creativekaygency.com/advertise</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/testimonials</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/giveaways</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/privacy</loc><lastmod>2026-04-15</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.creativekaygency.com/terms</loc><lastmod>2026-04-15</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.creativekaygency.com/refund</loc><lastmod>2026-04-15</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog</loc><lastmod>2026-04-15</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog/why-every-business-needs-website-2024</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog/credit-system-save-money</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog/seo-mistakes-killing-rankings</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog/ecommerce-conversion-tips</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog/brand-identity-guide</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/blog/email-marketing-roi</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/create-your-account</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/understanding-your-dashboard</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/first-project-booking</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/setting-up-notifications</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/quick-start-guide</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/how-credits-work</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/buying-credit-packages</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/earning-free-credits</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/credit-rollover-policy</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/understanding-credit-pricing</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/bulk-credit-discounts</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/service-categories-explained</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/turnaround-times</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/revision-policy</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/service-add-ons</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/custom-requests</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/three-ways-to-pay</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/payment-methods</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/subscription-plans</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/credits-vs-cash-explained</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/invoices-and-receipts</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/refund-policy</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/updating-your-profile</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/changing-your-password</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/notification-settings</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/deleting-your-account</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/how-referrals-work</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/referral-rewards</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/tracking-your-referrals</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/hosting-plans-overview</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/migrating-your-website</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/hosting-backups-and-restores</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/hosting-ssl-and-security</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/knowledge/hosting-domain-and-dns</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=websites</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=ecommerce</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=graphics</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=seo</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=content</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=email</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=social</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=hosting</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=digital</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=additional</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=blogging</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/services?cat=videography</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/sitemap</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- ============================================================ -->
+  <!-- CORE PAGES                                                    -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.creativekaygency.com/services</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.creativekaygency.com/pricing</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.creativekaygency.com/portfolio</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/about</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/contact</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/support</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/faq</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/testimonials</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/giveaways</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/sitemap</loc><lastmod>2026-04-18</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- LEGAL PAGES                                                   -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/terms</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.creativekaygency.com/privacy</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.creativekaygency.com/cookies</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- AUTH PAGES                                                    -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/login</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/register</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/forgot-password</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- ADVERTISING                                                   -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/advertise</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- SERVICE CATEGORY FILTER PAGES                                 -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/services/websites</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/ecommerce</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/graphics</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/seo</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/content</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/email</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/social</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/hosting</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/digital</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/additional</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/blogging</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/videography</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- INDIVIDUAL SERVICE PAGES                                      -->
+  <!-- ============================================================ -->
+  <!-- Websites -->
+  <url><loc>https://www.creativekaygency.com/services/business-website</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/landing-page</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/sales-funnel</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/brochure-site</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- E-Commerce -->
+  <url><loc>https://www.creativekaygency.com/services/ecom-store</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/product-uploads</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/conversion-opt</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Graphics & Branding -->
+  <url><loc>https://www.creativekaygency.com/services/logo-design</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/brand-kit</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/social-graphics</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- SEO -->
+  <url><loc>https://www.creativekaygency.com/services/onpage-seo</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/technical-seo</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/blog-seo</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/local-seo</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Content & Copy -->
+  <url><loc>https://www.creativekaygency.com/services/website-copy</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/sales-copy</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/digital-product-copy</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Email Marketing -->
+  <url><loc>https://www.creativekaygency.com/services/email-automation</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/lead-nurturing</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/campaign-setup</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Social Media -->
+  <url><loc>https://www.creativekaygency.com/services/social-pack-monthly</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/social-captions</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Digital Products -->
+  <url><loc>https://www.creativekaygency.com/services/pdf-creation</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/course-creation</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/saas-tool</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/plugin-dev</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Website Hosting -->
+  <url><loc>https://www.creativekaygency.com/services/hosting-starter</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/hosting-business</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/hosting-pro</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/hosting-enterprise</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Additional Services -->
+  <url><loc>https://www.creativekaygency.com/services/lp-optimization</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/ai-content</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/care-plan</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Blog Setup -->
+  <url><loc>https://www.creativekaygency.com/services/blog-starter</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/blog-professional</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/blog-authority</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- Vlogging & Videography -->
+  <url><loc>https://www.creativekaygency.com/services/social-media-video-pack</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/youtube-video-production</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/corporate-promo-video</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.creativekaygency.com/services/monthly-video-retainer</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- BLOG POSTS                                                    -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/blog/why-every-business-needs-website-2024</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/credit-system-save-money</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/seo-mistakes-killing-rankings</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/ecommerce-conversion-tips</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/brand-identity-guide</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/email-marketing-roi</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/how-much-does-logo-design-cost-uk</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/best-website-builder-small-business-uk</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/social-media-content-strategy-2026</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/shopify-vs-woocommerce-uk-2026</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/local-seo-guide-uk-businesses</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/blog/graphic-design-trends-2026</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- KNOWLEDGE BASE ARTICLES                                       -->
+  <!-- ============================================================ -->
+  <!-- Getting Started -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/create-your-account</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/understanding-your-dashboard</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/first-project-booking</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/setting-up-notifications</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/quick-start-guide</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/new-user-onboarding</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/blog-and-resources</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Credits System -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/how-credits-work</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/buying-credit-packages</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/earning-free-credits</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/credit-rollover-policy</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/understanding-credit-pricing</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/bulk-credit-discounts</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/daily-login-rewards-streaks</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Our Services -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/service-categories-explained</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/turnaround-times</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/revision-policy</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/service-add-ons</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/custom-requests</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/satisfaction-guarantee-explained</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Billing & Payments -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/three-ways-to-pay</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/payment-methods</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/subscription-plans</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/credits-vs-cash-explained</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/invoices-and-receipts</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/refund-policy</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/subscription-plans-guide</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/managing-subscription-stripe</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/how-stripe-checkout-works</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/advertising-on-creative-kaygency</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Account Management -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/updating-your-profile</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/changing-your-password</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/notification-settings</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/deleting-your-account</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/choosing-your-username</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/changing-your-username</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/display-name-preference</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Referral Program -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/how-referrals-work</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/referral-rewards</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/tracking-your-referrals</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/referral-program-complete-guide</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Website Hosting -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/hosting-plans-overview</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/migrating-your-website</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/hosting-backups-and-restores</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/hosting-ssl-and-security</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/hosting-domain-and-dns</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Advertising -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/advertising-packages-overview</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/submitting-your-ad</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/ad-performance-analytics</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Community & Leaderboard -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/community-forum-guide</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/earning-credits-forum</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/community-guidelines</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/leaderboard-explained</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- ============================================================ -->
+  <!-- KNOWLEDGE BASE CATEGORY PAGES                                 -->
+  <!-- ============================================================ -->
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/getting-started</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/credits</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/services</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/billing</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/account</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/referrals</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/hosting</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/advertising</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.creativekaygency.com/knowledge-base/category/community</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
 </urlset>
