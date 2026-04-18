@@ -2786,7 +2786,18 @@ function AuthProvider({ children }) {
     await supabaseClient.from('settings').upsert({ key: 'announcement', value: text, updated_at: new Date().toISOString() });
   };
 
-  return React.createElement(AuthContext.Provider, { value: { user, authLoading, profileLoaded, login, register, logout, updateCredits, claimDailyLogin, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
+  // Refresh user profile from Supabase (used after Stripe payment return)
+  const refreshProfile = async () => {
+    if (!user) return;
+    try {
+      const { data: freshProfile } = await supabaseClient.from('profiles').select('credits, streak, last_claim_date').eq('id', user.id).single();
+      if (freshProfile) {
+        setUser(u => u ? { ...u, ...freshProfile } : null);
+      }
+    } catch (e) { console.warn('Profile refresh failed:', e); }
+  };
+
+  return React.createElement(AuthContext.Provider, { value: { user, authLoading, profileLoaded, login, register, logout, updateCredits, claimDailyLogin, refreshProfile, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
 }
 
 function CurrencyProvider({ children }) {
@@ -4326,7 +4337,13 @@ function RegisterPage() {
         <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={form.password} onChange={e => u('password',e.target.value)} placeholder="Min 8 chars, upper+lower+number" required minLength="8" autoComplete="new-password" />{form.password && form.password.length >= 1 && <div style={{fontSize:12,marginTop:4,color: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(form.password) && form.password.length >= 8 ? 'var(--success)' : 'var(--warning)'}}>{/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(form.password) && form.password.length >= 8 ? '✓ Strong password' : 'Needs uppercase, lowercase, and a number'}</div>}</div>
         <div className="form-group"><label className="form-label">Confirm Password</label><input className="form-input" type="password" value={form.confirm} onChange={e => u('confirm',e.target.value)} placeholder="••••••••" required /></div>
         <div className="form-group"><label className="form-label">Referral Code (optional)</label><input className="form-input" value={form.referral} onChange={e => u('referral',e.target.value)} placeholder="Enter referral code for 25 bonus credits" /></div>
-        <label className="form-checkbox" style={{marginBottom:20}}><input type="checkbox" checked={form.terms} onChange={e => u('terms',e.target.checked)} /><span>I agree to the <a href={routeHref("/terms")} style={{color:'var(--primary)'}}>Terms of Service</a> and <a href={routeHref("/privacy")} style={{color:'var(--primary)'}}>Privacy Policy</a></span></label>
+        <label style={{display:'flex',alignItems:'flex-start',gap:10,cursor:'pointer',fontSize:14,userSelect:'none',marginBottom:20,padding:'6px 0'}}>
+          <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:22,height:22,minWidth:22,borderRadius:4,border:form.terms?'2px solid var(--primary)':'2px solid #888',background:form.terms?'var(--primary)':'transparent',transition:'all 0.2s',flexShrink:0,marginTop:1}}>
+            {form.terms && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>}
+          </span>
+          <input type="checkbox" checked={form.terms} onChange={e => u('terms',e.target.checked)} style={{position:'absolute',opacity:0,width:0,height:0}} />
+          <span style={{color:'var(--gray-600)',lineHeight:'1.4'}}>I agree to the <a href={routeHref("/terms")} style={{color:'var(--primary)'}}>Terms of Service</a> and <a href={routeHref("/privacy")} style={{color:'var(--primary)'}}>Privacy Policy</a></span>
+        </label>
         <button type="submit" className="btn btn-primary btn-block btn-lg">Create Account →</button>
       </form>
       <div className="auth-footer">Already have an account? <a href={routeHref("/login")}>Log In</a></div>
@@ -4737,9 +4754,30 @@ function DashCredits({ user, formatPrice }) {
   const { updateCredits } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
 
+  const [purchasing, setPurchasing] = React.useState(null);
+
   const handlePurchase = async (pkg) => {
-    await updateCredits(pkg.credits, 'credit_purchase');
-    addToast(`🎉 ${pkg.credits} credits purchased! New balance: ${(user.credits + pkg.credits).toLocaleString()}`);
+    setPurchasing(pkg.id);
+    try {
+      const resp = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          packageId: pkg.id,
+          userId: user.id,
+          userEmail: user.email || undefined,
+        }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.url) {
+        throw new Error(data.error || 'Failed to start checkout');
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      console.error('Purchase error:', err);
+      addToast('Payment could not be started. Please try again.', 'error');
+      setPurchasing(null);
+    }
   };
 
   return (
@@ -4769,7 +4807,9 @@ function DashCredits({ user, formatPrice }) {
             <div className="price">{formatPrice(pkg.price)}</div>
             <div className="per">{Math.round(pkg.perCredit * 100)}p per credit</div>
             {pkg.perCredit < 0.20 && <div style={{fontSize:11,color:'var(--success)',fontWeight:700,marginTop:4}}>Save {Math.round((1 - pkg.perCredit / 0.22) * 100)}%</div>}
-            <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => handlePurchase(pkg)}>Buy Now</button>
+            <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => handlePurchase(pkg)} disabled={!!purchasing}>
+              {purchasing === pkg.id ? 'Redirecting…' : 'Buy Now'}
+            </button>
           </div>
         ))}
       </div>
@@ -9944,6 +9984,40 @@ const RECENT_PURCHASES = [
   { name: 'Luke Anderson', location: 'Plymouth, UK', action: 'bought 5,000 credit package', avatar: '#14B8A6', time: '40 minutes ago' },
 ];
 
+// ── Stripe payment return handler ──
+function PaymentReturnHandler() {
+  const { user, refreshProfile } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
+  const handledRef = useRef(false);
+
+  useEffect(() => {
+    if (handledRef.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get('payment');
+    if (!paymentStatus) return;
+    handledRef.current = true;
+    // Clean URL without reloading
+    const cleanUrl = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, '', cleanUrl);
+    if (paymentStatus === 'success') {
+      const creditsAdded = params.get('credits');
+      addToast(creditsAdded ? `Payment successful! ${parseInt(creditsAdded).toLocaleString()} credits are being added to your account.` : 'Payment successful! Your credits will be updated shortly.');
+      // Poll for updated credits — webhook may take a moment
+      const pollCredits = async () => {
+        for (let i = 0; i < 5; i++) {
+          await new Promise(r => setTimeout(r, 2000));
+          await refreshProfile();
+        }
+      };
+      pollCredits();
+    } else if (paymentStatus === 'cancelled') {
+      addToast('Payment was cancelled. No charges were made.', 'info');
+    }
+  }, [user?.id]);
+
+  return null;
+}
+
 function JustPurchased() {
   const [current, setCurrent] = useState(null);
   const [exiting, setExiting] = useState(false);
@@ -10581,6 +10655,7 @@ function App() {
               <AnnouncementBar />
               <Navbar />
               <Toasts />
+              <PaymentReturnHandler />
               <JustPurchased />
               <main style={{minHeight: isDashboard ? 'auto' : 'calc(100vh - 200px)'}}>
                 {page}
