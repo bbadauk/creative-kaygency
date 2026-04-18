@@ -8130,6 +8130,17 @@ function PricingPage() {
     <div>
       <div className="page-header"><div className="container"><h1>Simple, Transparent Pricing</h1><p>Choose a <strong>monthly subscription</strong> for regular credits, or buy <strong>credit packages</strong> anytime. All services are paid with <strong>credits</strong>.</p></div></div>
 
+      {/* Subscription Plans — moved to top */}
+      <section className="section section-alt"><div className="container">
+        <div className="pricing-section-label"><div className="label-badge">Option 1</div><h2>Subscribe to a Monthly Plan</h2><p>Get credits, priority access, and dedicated support — all in one predictable monthly fee.</p></div>
+        <div className="toggle-wrap">
+          <span className={`toggle-label${!annual ? ' active' : ''}`}>Monthly</span>
+          <div className={`toggle-switch${annual ? ' active' : ''}`} onClick={() => setAnnual(!annual)}><div className="toggle-knob"/></div>
+          <span className={`toggle-label${annual ? ' active' : ''}`}>Annual <span className="annual-save">Save 20%</span></span>
+        </div>
+        <PricingCards annual={annual} />
+      </div></section>
+
       {/* 3 Ways to Pay Section */}
       <section className="section"><div className="container">
         <div className="section-header"><h2>3 Ways to Pay for Your Project</h2><p>We offer flexible payment options so you can choose what works best for your budget and workflow.</p></div>
@@ -8199,20 +8210,9 @@ function PricingPage() {
         </table>
       </div></section>
 
-      {/* Subscription Plans */}
-      <section className="section section-alt"><div className="container">
-        <div className="pricing-section-label"><div className="label-badge">Option 1</div><h2>Subscribe to a Monthly Plan</h2><p>Get credits, priority access, and dedicated support — all in one predictable monthly fee.</p></div>
-        <div className="toggle-wrap">
-          <span className={`toggle-label${!annual ? ' active' : ''}`}>Monthly</span>
-          <div className={`toggle-switch${annual ? ' active' : ''}`} onClick={() => setAnnual(!annual)}><div className="toggle-knob"/></div>
-          <span className={`toggle-label${annual ? ' active' : ''}`}>Annual <span className="annual-save">Save 20%</span></span>
-        </div>
-        <PricingCards annual={annual} />
-      </div></section>
-
       {/* Credit Packages */}
-      <section className="section"><div className="container">
-        <div className="pricing-section-label"><div className="label-badge">Option 3</div><h2>Buy Credit Packages</h2><p>Purchase credits in bulk for even bigger savings. Use anytime — credits never expire.</p></div>
+      <section className="section section-alt"><div className="container">
+        <div className="pricing-section-label"><div className="label-badge">Option 2</div><h2>Buy Credit Packages</h2><p>Purchase credits in bulk for even bigger savings. Use anytime — credits never expire.</p></div>
         <div className="credit-packages" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))',gap:16}}>
           {CREDIT_PACKAGES.map(pkg => (
             <div key={pkg.id} className={`credit-pkg${pkg.popular ? ' popular' : ''}`}>
