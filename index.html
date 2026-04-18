@@ -2360,11 +2360,21 @@ function AuthProvider({ children }) {
     if (password.length < 8) return { success: false, error: 'Password must be at least 8 characters' };
     if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) return { success: false, error: 'Password must include uppercase, lowercase, and a number' };
 
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: sanitisedEmail, password,
-      options: { data: { name: sanitisedName } }
-    });
+    let data, error;
+    try {
+      const result = await supabaseClient.auth.signUp({
+        email: sanitisedEmail, password,
+        options: { data: { name: sanitisedName } }
+      });
+      data = result.data;
+      error = result.error;
+    } catch (signUpErr) {
+      console.error('[REGISTER] signUp threw:', signUpErr);
+      return { success: false, error: signUpErr.message || 'Registration failed. Please try again.' };
+    }
+    console.log('[REGISTER] signUp result:', { data, error, hasUser: !!data?.user, hasSession: !!data?.session });
     if (error) return { success: false, error: error.message };
+    if (!data?.user) return { success: false, error: 'Registration failed — no user returned. Please try again.' };
 
     // Handle referral bonus if valid code
     if (referralCode) {
