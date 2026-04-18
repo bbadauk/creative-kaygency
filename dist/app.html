@@ -2249,7 +2249,7 @@ function AuthProvider({ children }) {
                 credits: 0, streak: 0, is_admin: false,
                 referral_code: session.user.id.substring(0, 8).toUpperCase()
               };
-              await supabaseClient.from('profiles').insert(newProfile).catch(() => {});
+              try { await supabaseClient.from('profiles').insert(newProfile); } catch (e) { /* profile may already exist */ }
               profile = newProfile;
             }
             if (profile) {
@@ -2448,13 +2448,16 @@ function AuthProvider({ children }) {
     const newCredits = Math.max(0, Math.min(currentCredits + safeAmount, 999999));
     const { error } = await supabaseClient.from('profiles').update({ credits: newCredits }).eq('id', user.id);
     if (error) { console.error('Credit update failed:', error.message); return; }
-    // Audit log
-    await supabaseClient.from('credit_audit_log').insert({
-      user_id: user.id, amount: safeAmount, reason, old_balance: currentCredits,
-      new_balance: newCredits, timestamp: new Date().toISOString(),
-      ip_hash: await _secHash(navigator.userAgent + screen.width)
-    }).catch(() => {}); // Don't block on audit log failure
+    // Update UI immediately, then log audit asynchronously
     setUser(u => u ? { ...u, credits: newCredits } : null);
+    // Audit log (non-blocking — don't let this prevent the UI update)
+    try {
+      await supabaseClient.from('credit_audit_log').insert({
+        user_id: user.id, amount: safeAmount, reason, old_balance: currentCredits,
+        new_balance: newCredits, timestamp: new Date().toISOString(),
+        ip_hash: await _secHash(navigator.userAgent + screen.width)
+      });
+    } catch (e) { /* audit log is best-effort */ }
   };
 
   const claimDailyLogin = async () => {
@@ -2491,13 +2494,16 @@ function AuthProvider({ children }) {
     }
     const { error } = await query;
     if (error) { console.error('[CLAIM] Update failed:', error); return false; }
-    // Audit log for daily login
-    await supabaseClient.from('credit_audit_log').insert({
-      user_id: user.id, amount: DAILY_CREDIT, reason: 'daily_login',
-      old_balance: freshProfile.credits, new_balance: newCredits,
-      timestamp: new Date().toISOString()
-    }).catch(() => {});
+    // Update UI immediately
     setUser(u => u ? { ...u, credits: newCredits, streak: newStreak, last_claim_date: today } : null);
+    // Audit log (non-blocking)
+    try {
+      await supabaseClient.from('credit_audit_log').insert({
+        user_id: user.id, amount: DAILY_CREDIT, reason: 'daily_login',
+        old_balance: freshProfile.credits, new_balance: newCredits,
+        timestamp: new Date().toISOString()
+      });
+    } catch (e) { /* audit log is best-effort */ }
     return true;
   };
 
