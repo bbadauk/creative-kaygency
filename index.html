@@ -3851,7 +3851,7 @@ function PricingCards({ annual }) {
             <ul className="pricing-features">
               {plan.features.map((f,i) => <li key={i}><span className="icon">✓</span>{f}</li>)}
             </ul>
-            <a href={routeHref(user ? "/dashboard/credits" : "/register")} className={`btn btn-block ${plan.featured ? 'btn-primary' : 'btn-secondary'}`}>Choose {plan.name}</a>
+            <a href={routeHref(user ? "/dashboard/credits" : "/register")} target="_blank" rel="noopener noreferrer" className={`btn btn-block ${plan.featured ? 'btn-primary' : 'btn-secondary'}`}>Choose {plan.name}</a>
           </div>
         );
       })}
@@ -4812,10 +4812,11 @@ function DashCredits({ user, formatPrice }) {
       if (!resp.ok || !data.url) {
         throw new Error(data.error || 'Failed to start checkout');
       }
-      window.location.href = data.url;
+      window.open(data.url, '_blank');
     } catch (err) {
       console.error('Purchase error:', err);
       addToast('Payment could not be started. Please try again.', 'error');
+    } finally {
       setPurchasing(null);
     }
   };
@@ -8130,7 +8131,7 @@ function PricingPage() {
   const [purchasing, setPurchasing] = useState(null);
 
   const handleBuyCredits = async (pkg) => {
-    if (!user) { navigate('/register'); return; }
+    if (!user) { window.open(routeHref('/register'), '_blank'); return; }
     setPurchasing(pkg.id);
     try {
       const resp = await fetch('/api/create-checkout-session', {
@@ -8140,10 +8141,11 @@ function PricingPage() {
       });
       const data = await resp.json();
       if (!resp.ok || !data.url) throw new Error(data.error || 'Failed to start checkout');
-      window.location.href = data.url;
+      window.open(data.url, '_blank');
     } catch (err) {
       console.error('Purchase error:', err);
       addToast('Payment could not be started. Please try again.', 'error');
+    } finally {
       setPurchasing(null);
     }
   };
