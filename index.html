@@ -2435,9 +2435,10 @@ function AuthProvider({ children }) {
       console.warn('Unauthorized positive credit update blocked:', reason);
       return;
     }
-    // Cap single transaction amounts
+    // Cap single transaction amounts (exempt purchases and admin grants)
     const MAX_SINGLE_CREDIT = 100;
-    if (safeAmount > MAX_SINGLE_CREDIT && reason !== 'admin_grant') {
+    const UNCAPPED_REASONS = ['admin_grant', 'credit_purchase'];
+    if (safeAmount > MAX_SINGLE_CREDIT && !UNCAPPED_REASONS.includes(reason)) {
       console.warn('Credit amount exceeds single transaction limit');
       return;
     }
@@ -2445,7 +2446,7 @@ function AuthProvider({ children }) {
     const { data: freshProfile } = await supabaseClient.from('profiles').select('credits').eq('id', user.id).single();
     const currentCredits = freshProfile ? freshProfile.credits : user.credits;
     const newCredits = Math.max(0, Math.min(currentCredits + safeAmount, 999999));
-    const { error } = await supabaseClient.from('profiles').update({ credits: newCredits, credits_updated_at: new Date().toISOString() }).eq('id', user.id);
+    const { error } = await supabaseClient.from('profiles').update({ credits: newCredits }).eq('id', user.id);
     if (error) { console.error('Credit update failed:', error.message); return; }
     // Audit log
     await supabaseClient.from('credit_audit_log').insert({
