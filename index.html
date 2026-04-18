@@ -2230,6 +2230,14 @@ function AuthProvider({ children }) {
   // ── Supabase Auth state listener ──
   useEffect(() => {
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
+      console.log('[AUTH] onAuthStateChange:', event, session?.user?.email);
+      // Redirect to dashboard on sign-in (covers email confirmation, OAuth, etc.)
+      if (event === 'SIGNED_IN') {
+        const currentPath = window.location.pathname;
+        if (currentPath === '/login' || currentPath === '/register' || currentPath === '/') {
+          setTimeout(() => navigate('/dashboard'), 100);
+        }
+      }
       // Set basic auth state synchronously so UI can render immediately
       if (session?.user) {
         const meta = session.user.user_metadata || {};
@@ -4121,6 +4129,7 @@ function ServiceDetailPage({ serviceId }) {
 // ============================================================================
 
 function LoginPage() {
+  const { user } = useContext(AuthContext);
   const [email, setEmail] = useState(() => {
     try { return localStorage.getItem('ck_remembered_email') || ''; } catch(e) { return ''; }
   });
@@ -4133,6 +4142,11 @@ function LoginPage() {
   const [loginSuccess, setLoginSuccess] = useState('');
   const [oauthError, setOauthError] = useState('');
   useSEO({ title: 'Log In - Creative Kaygency | Access Your Account', description: 'Log in to your Creative Kaygency account to manage projects, earn credits, track orders, and access all 40+ professional digital design services.', keywords: 'login, sign in, Creative Kaygency account', canonical: 'https://www.creativekaygency.com/login', noindex: true });
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (user) navigate('/dashboard', true);
+  }, [user]);
 
   // Direct Supabase login — bypasses AuthContext to avoid stale closure issues
   const handleSubmit = async (e) => {
@@ -4322,10 +4336,15 @@ function ResetPasswordPage() {
 }
 
 function RegisterPage() {
-  const { register: doRegister } = useContext(AuthContext);
+  const { register: doRegister, user } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', referral: '', terms: false });
   useSEO({ title: 'Sign Up - Creative Kaygency | Create Your Free Account', description: 'Create a free Creative Kaygency account to start ordering professional digital design services, earn daily credits, get referral bonuses, and save up to 20%.', keywords: 'sign up, register, create account, free account, Creative Kaygency registration', canonical: 'https://www.creativekaygency.com/register', noindex: true });
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (user) navigate('/dashboard', true);
+  }, [user]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (e) => {
