@@ -3834,6 +3834,7 @@ function HomePage() {
 
 function PricingCards({ annual }) {
   const { formatPrice, symbol } = useContext(CurrencyContext);
+  const { user } = useContext(AuthContext);
   const discount = annual ? 0.8 : 1; // 20% off for annual
   return (
     <div className="pricing-grid">
@@ -3850,7 +3851,7 @@ function PricingCards({ annual }) {
             <ul className="pricing-features">
               {plan.features.map((f,i) => <li key={i}><span className="icon">✓</span>{f}</li>)}
             </ul>
-            <a href={routeHref("/register")} className={`btn btn-block ${plan.featured ? 'btn-primary' : 'btn-secondary'}`}>Choose {plan.name}</a>
+            <a href={routeHref(user ? "/dashboard/credits" : "/register")} className={`btn btn-block ${plan.featured ? 'btn-primary' : 'btn-secondary'}`}>Choose {plan.name}</a>
           </div>
         );
       })}
@@ -8123,7 +8124,29 @@ function TestimonialsPage() {
 
 function PricingPage() {
   const { formatPrice, symbol } = useContext(CurrencyContext);
+  const { user } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
   const [annual, setAnnual] = useState(false);
+  const [purchasing, setPurchasing] = useState(null);
+
+  const handleBuyCredits = async (pkg) => {
+    if (!user) { navigate('/register'); return; }
+    setPurchasing(pkg.id);
+    try {
+      const resp = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packageId: pkg.id, userId: user.id, userEmail: user.email || undefined }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.url) throw new Error(data.error || 'Failed to start checkout');
+      window.location.href = data.url;
+    } catch (err) {
+      console.error('Purchase error:', err);
+      addToast('Payment could not be started. Please try again.', 'error');
+      setPurchasing(null);
+    }
+  };
   useSEO({ title: 'Pricing - Creative Kaygency | Affordable Plans from £99/mo', description: 'Choose from Starter (£99/mo), Professional (£199/mo), or Enterprise (£299/mo) plans. All services paid with credits. Subscribe monthly or buy credit packages.', keywords: 'pricing, subscription plans, affordable web design, credit system, Creative Kaygency pricing', canonical: 'https://www.creativekaygency.com/pricing', jsonLd: { "@context": "https://schema.org", "@type": "Product", "name": "Creative Kaygency Subscription Plans", "description": "Monthly subscription plans for professional digital design services with credit allocations.", "brand": { "@type": "Brand", "name": "Creative Kaygency" }, "offers": PLANS.map(p => ({ "@type": "Offer", "name": p.name + " Plan", "priceCurrency": "GBP", "price": p.price, "priceValidUntil": "2027-12-31", "availability": "https://schema.org/InStock", "url": "https://www.creativekaygency.com/pricing", "description": `${p.credits} credits/month, ${p.turnaround} turnaround` })) } });
 
   return (
@@ -8220,7 +8243,9 @@ function PricingPage() {
               <div className="amount">{pkg.credits.toLocaleString()}</div><div className="label">credits</div>
               <div className="price">{formatPrice(pkg.price)}</div>
               <div className="per">{Math.round(pkg.perCredit * 100)}p per credit</div>
-              <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => navigate('/register')}>Buy Credits</button>
+              <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => handleBuyCredits(pkg)} disabled={!!purchasing}>
+                {purchasing === pkg.id ? 'Redirecting…' : 'Buy Credits'}
+              </button>
             </div>
           ))}
         </div>
