@@ -2114,12 +2114,18 @@ const BADGES = [
 // ============================================================================
 
 const FORUM_CATEGORIES = [
-  { id: 'showcase', name: 'Showcase Your Project', icon: '🖼️', desc: 'Share completed projects and get feedback from the community', color: '#7C3AED' },
-  { id: 'web-design', name: 'Web Design Tips', icon: '🎨', desc: 'Discuss design trends, UX best practices, and creative inspiration', color: '#EC4899' },
-  { id: 'seo-marketing', name: 'SEO & Marketing', icon: '📈', desc: 'Share SEO strategies, marketing wins, and growth hacks', color: '#10B981' },
-  { id: 'branding', name: 'Branding Chat', icon: '✏️', desc: 'Talk logos, colour palettes, typography, and brand identity', color: '#F59E0B' },
-  { id: 'general', name: 'General Discussion', icon: '💬', desc: 'Off-topic chat, introductions, and community hangout', color: '#3B82F6' },
-  { id: 'feature-requests', name: 'Feature Requests', icon: '💡', desc: 'Suggest new features and vote on ideas for the platform', color: '#6366F1' },
+  { id: 'showcase', name: 'Showcase Your Project', icon: '🖼️', desc: 'Share completed projects and get feedback from the community', color: '#7C3AED', threads: 24, posts: 187 },
+  { id: 'web-design', name: 'Web Design Tips', icon: '🎨', desc: 'Discuss design trends, UX best practices, and creative inspiration', color: '#EC4899', threads: 31, posts: 203 },
+  { id: 'seo-marketing', name: 'SEO & Marketing', icon: '📈', desc: 'Share SEO strategies, marketing wins, and growth hacks', color: '#10B981', threads: 28, posts: 176 },
+  { id: 'branding', name: 'Branding Chat', icon: '✏️', desc: 'Talk logos, colour palettes, typography, and brand identity', color: '#F59E0B', threads: 19, posts: 134 },
+  { id: 'ecommerce', name: 'E-Commerce & Stores', icon: '🛒', desc: 'Product pages, checkout flows, Shopify vs WooCommerce, and online sales tips', color: '#F97316', threads: 22, posts: 158 },
+  { id: 'content-copy', name: 'Content & Copywriting', icon: '📝', desc: 'Blog writing, sales copy, email sequences, and content marketing strategies', color: '#0EA5E9', threads: 17, posts: 112 },
+  { id: 'social-media', name: 'Social Media', icon: '📱', desc: 'Instagram, TikTok, LinkedIn — content ideas, algorithms, and growth tactics', color: '#8B5CF6', threads: 26, posts: 195 },
+  { id: 'freelancers', name: 'Freelancers & Agencies', icon: '💼', desc: 'Pricing, client management, scaling your business, and freelance life', color: '#14B8A6', threads: 15, posts: 98 },
+  { id: 'tech-tools', name: 'Tools & Tech', icon: '🔧', desc: 'Favourite tools, plugins, AI workflows, hosting, and productivity setups', color: '#64748B', threads: 21, posts: 145 },
+  { id: 'general', name: 'General Discussion', icon: '💬', desc: 'Off-topic chat, introductions, and community hangout', color: '#3B82F6', threads: 42, posts: 328 },
+  { id: 'wins-milestones', name: 'Wins & Milestones', icon: '🎉', desc: 'Celebrate your business wins, revenue milestones, and personal achievements', color: '#22C55E', threads: 18, posts: 142 },
+  { id: 'feature-requests', name: 'Feature Requests', icon: '💡', desc: 'Suggest new features and vote on ideas for the platform', color: '#6366F1', threads: 14, posts: 89 },
 ];
 
 // Credit rewards for forum activity — kept deliberately small so free credits
@@ -2166,6 +2172,77 @@ const DEMO_FORUM_THREADS = [
   { id: 'thread-6', category: 'feature-requests', title: 'Would love a project collaboration feature', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', replies: 9, likes: 14, views: 78, pinned: false, locked: false, createdAt: '2026-04-05T14:00:00Z', lastReplyAt: '2026-04-16T10:30:00Z',
     posts: [
       { id: 'p9', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', content: 'It would be great to invite team members to view project progress and leave comments. Currently I have to screenshot updates and forward them. A shared project view would save loads of time.', likes: 14, createdAt: '2026-04-05T14:00:00Z' },
+    ]
+  },
+  { id: 'thread-7', category: 'ecommerce', title: 'Shopify vs WooCommerce — which did you choose and why?', author: 'Emma Richardson', authorAvatar: '#F43F5E', replies: 18, likes: 22, views: 245, pinned: false, locked: false, createdAt: '2026-04-14T08:30:00Z', lastReplyAt: '2026-04-18T11:15:00Z',
+    posts: [
+      { id: 'p10', author: 'Emma Richardson', authorAvatar: '#F43F5E', content: 'Starting an online store selling handmade candles and torn between Shopify and WooCommerce. Shopify seems easier but WooCommerce gives more control. What did everyone here go with and would you choose it again?', likes: 22, createdAt: '2026-04-14T08:30:00Z' },
+      { id: 'p11', author: 'Nathan Brooks', authorAvatar: '#22C55E', content: 'Went with Shopify for FitFuel and honestly no regrets. The app ecosystem is massive and checkout conversion is brilliant out of the box. If you\'re not technical, Shopify all the way.', likes: 8, createdAt: '2026-04-14T10:45:00Z' },
+      { id: 'p12', author: 'Daniel Kim', authorAvatar: '#0891B2', content: 'WooCommerce for me — I needed custom product configurators that Shopify apps couldn\'t handle. But I have a dev background so the maintenance doesn\'t bother me.', likes: 6, createdAt: '2026-04-14T14:20:00Z' },
+    ]
+  },
+  { id: 'thread-8', category: 'content-copy', title: 'How I write blog posts that actually rank — my 7-step process', author: 'Sophie Laurent', authorAvatar: '#EC4899', replies: 11, likes: 31, views: 312, pinned: false, locked: false, createdAt: '2026-04-11T09:00:00Z', lastReplyAt: '2026-04-17T16:00:00Z',
+    posts: [
+      { id: 'p13', author: 'Sophie Laurent', authorAvatar: '#EC4899', content: 'After 2 years of blogging for clients, here\'s my process: 1) Keyword research with low-competition long-tails. 2) Study the top 5 results and find gaps. 3) Write a detailed outline. 4) Draft with a conversational tone. 5) Add internal links and schema. 6) Optimise images with alt text. 7) Promote on socials for the first 48 hours. Works every time — had 3 posts hit page 1 this month alone.', likes: 31, createdAt: '2026-04-11T09:00:00Z' },
+      { id: 'p14', author: 'Oliver Reed', authorAvatar: '#14B8A6', content: 'This is gold, Sophie. Step 2 is the game changer — most people just copy what\'s already ranking instead of finding what\'s MISSING. That\'s where you win.', likes: 9, createdAt: '2026-04-11T12:30:00Z' },
+    ]
+  },
+  { id: 'thread-9', category: 'social-media', title: 'Instagram Reels are dead? My reach dropped 80% overnight', author: 'Aisha Mohammed', authorAvatar: '#F59E0B', replies: 14, likes: 17, views: 198, pinned: false, locked: false, createdAt: '2026-04-13T13:00:00Z', lastReplyAt: '2026-04-18T09:30:00Z',
+    posts: [
+      { id: 'p15', author: 'Aisha Mohammed', authorAvatar: '#F59E0B', content: 'Anyone else noticing a massive drop in Reels reach this month? My Bloom Beauty account went from 15K average views to under 3K seemingly overnight. Nothing changed in my content quality or posting schedule. Starting to wonder if Instagram is throttling small businesses.', likes: 17, createdAt: '2026-04-13T13:00:00Z' },
+      { id: 'p16', author: 'Chloe Williams', authorAvatar: '#A855F7', content: 'Same here! I think they\'re pushing carousel posts again. My carousels are getting 3x the reach of Reels right now. Worth testing a pivot.', likes: 11, createdAt: '2026-04-13T15:45:00Z' },
+    ]
+  },
+  { id: 'thread-10', category: 'freelancers', title: 'How do you handle clients who want unlimited revisions?', author: 'James Thornton', authorAvatar: '#8B5CF6', replies: 21, likes: 26, views: 289, pinned: false, locked: false, createdAt: '2026-04-09T10:00:00Z', lastReplyAt: '2026-04-17T18:00:00Z',
+    posts: [
+      { id: 'p17', author: 'James Thornton', authorAvatar: '#8B5CF6', content: 'Had a client last week ask for the 11th round of logo revisions. My contract says 3 rounds included. How does everyone else handle this? I don\'t want to burn the relationship but I also can\'t keep working for free.', likes: 26, createdAt: '2026-04-09T10:00:00Z' },
+      { id: 'p18', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', content: 'Clear scope in the contract + a per-revision fee after the included rounds. I charge £50 per additional round. Once money is attached, clients suddenly get much more decisive!', likes: 15, createdAt: '2026-04-09T11:30:00Z' },
+      { id: 'p19', author: 'Sophie Laurent', authorAvatar: '#EC4899', content: 'I send a "revision consolidation form" before each round starts — forces them to gather all feedback in one go instead of drip-feeding changes. Cuts revision rounds in half.', likes: 12, createdAt: '2026-04-09T14:00:00Z' },
+    ]
+  },
+  { id: 'thread-11', category: 'tech-tools', title: 'Best AI tools for small business owners in 2026?', author: 'Lisa Chen', authorAvatar: '#06B6D4', replies: 16, likes: 20, views: 267, pinned: false, locked: false, createdAt: '2026-04-07T11:00:00Z', lastReplyAt: '2026-04-16T14:45:00Z',
+    posts: [
+      { id: 'p20', author: 'Lisa Chen', authorAvatar: '#06B6D4', content: 'Compiling a list of AI tools that actually save time (not just hype). So far I\'m using Claude for copywriting drafts, Midjourney for social graphics concepts, and Notion AI for meeting notes. What else should I be looking at? Particularly interested in anything that helps with accounting or customer support.', likes: 20, createdAt: '2026-04-07T11:00:00Z' },
+      { id: 'p21', author: 'Daniel Kim', authorAvatar: '#0891B2', content: 'Definitely try Fireflies.ai for call transcription — it\'s been a game changer for client meetings. And Tidio for AI customer chat on your website. Both have generous free tiers.', likes: 8, createdAt: '2026-04-07T13:15:00Z' },
+    ]
+  },
+  { id: 'thread-12', category: 'wins-milestones', title: '🎉 Just hit £100K revenue — started 18 months ago with nothing!', author: 'Nathan Brooks', authorAvatar: '#22C55E', replies: 27, likes: 48, views: 534, pinned: true, locked: false, createdAt: '2026-04-16T07:00:00Z', lastReplyAt: '2026-04-18T12:00:00Z',
+    posts: [
+      { id: 'p22', author: 'Nathan Brooks', authorAvatar: '#22C55E', content: 'Can\'t believe I\'m writing this. FitFuel Nutrition just crossed £100K in total revenue. 18 months ago I was working a warehouse job and knew nothing about e-commerce. Creative Kaygency built my store, I learned SEO from this forum, and the rest was just showing up every single day. If I can do it, anyone here can. Happy to share my exact journey if people are interested.', likes: 48, createdAt: '2026-04-16T07:00:00Z' },
+      { id: 'p23', author: 'Creative Kaygency', authorAvatar: '#7C3AED', content: 'Absolutely incredible, Nathan! We\'re so proud to have been part of your journey. This is exactly why we do what we do. 🙌', likes: 12, createdAt: '2026-04-16T08:30:00Z' },
+      { id: 'p24', author: 'Emma Richardson', authorAvatar: '#F43F5E', content: 'This is SO inspiring. Yes please share more details! What was your first month like?', likes: 7, createdAt: '2026-04-16T09:15:00Z' },
+    ]
+  },
+  { id: 'thread-13', category: 'ecommerce', title: 'Product photography on a budget — my iPhone setup that converts', author: 'Aisha Mohammed', authorAvatar: '#F59E0B', replies: 8, likes: 16, views: 143, pinned: false, locked: false, createdAt: '2026-04-12T15:00:00Z', lastReplyAt: '2026-04-15T11:30:00Z',
+    posts: [
+      { id: 'p25', author: 'Aisha Mohammed', authorAvatar: '#F59E0B', content: 'You don\'t need a £2K camera for great product photos. I shoot all my Bloom Beauty products on an iPhone 15 with a £30 ring light from Amazon and a white foam board from Hobbycraft. The key is consistent lighting, the right angle, and editing in Lightroom Mobile (free). My conversion rate went from 1.8% to 4.2% just by upgrading my product photos with this setup.', likes: 16, createdAt: '2026-04-12T15:00:00Z' },
+    ]
+  },
+  { id: 'thread-14', category: 'social-media', title: 'LinkedIn is crushing it for B2B — here\'s my posting schedule', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', replies: 10, likes: 19, views: 178, pinned: false, locked: false, createdAt: '2026-04-10T08:00:00Z', lastReplyAt: '2026-04-16T17:00:00Z',
+    posts: [
+      { id: 'p26', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', content: 'Been posting consistently on LinkedIn for 6 months and it\'s now my #1 lead source for Celtic Digital. My schedule: Monday — value post (tips/frameworks). Wednesday — case study or client win. Friday — personal story or opinion piece. I post at 7:30am UK time and engage with comments for the first hour. Results: 3-5 inbound leads per week, zero ad spend.', likes: 19, createdAt: '2026-04-10T08:00:00Z' },
+    ]
+  },
+  { id: 'thread-15', category: 'freelancers', title: 'Raising my prices by 40% — here\'s what happened', author: 'Chloe Williams', authorAvatar: '#A855F7', replies: 13, likes: 24, views: 312, pinned: false, locked: false, createdAt: '2026-04-06T12:00:00Z', lastReplyAt: '2026-04-15T09:00:00Z',
+    posts: [
+      { id: 'p27', author: 'Chloe Williams', authorAvatar: '#A855F7', content: 'I was terrified to raise my rates from £50/hr to £70/hr. Thought I\'d lose all my clients. Reality: I lost 2 (who were my most demanding anyway) and gained 4 new ones who didn\'t even blink at the price. Revenue up 60%, stress down massively. Lesson: if no one ever pushes back on your prices, you\'re too cheap.', likes: 24, createdAt: '2026-04-06T12:00:00Z' },
+      { id: 'p28', author: 'James Thornton', authorAvatar: '#8B5CF6', content: 'This is the push I needed. I\'ve been at £35/hr for 2 years and I know it\'s holding me back. Thank you for sharing this.', likes: 8, createdAt: '2026-04-06T14:30:00Z' },
+    ]
+  },
+  { id: 'thread-16', category: 'tech-tools', title: 'Figma vs Canva for non-designers — which should I learn?', author: 'James Thornton', authorAvatar: '#8B5CF6', replies: 7, likes: 9, views: 98, pinned: false, locked: false, createdAt: '2026-04-08T14:00:00Z', lastReplyAt: '2026-04-14T10:00:00Z',
+    posts: [
+      { id: 'p29', author: 'James Thornton', authorAvatar: '#8B5CF6', content: 'I\'m not a designer but need to create basic social media graphics and pitch decks. Is it worth learning Figma or should I just stick with Canva? Figma seems overkill for what I need but everyone keeps recommending it.', likes: 9, createdAt: '2026-04-08T14:00:00Z' },
+      { id: 'p30', author: 'Chloe Williams', authorAvatar: '#A855F7', content: 'Canva for quick social media stuff, Figma if you ever plan to work with developers or want pixel-perfect control. For your use case, Canva Pro is perfect and you\'ll be productive in an hour.', likes: 6, createdAt: '2026-04-08T16:00:00Z' },
+    ]
+  },
+  { id: 'thread-17', category: 'wins-milestones', title: 'First client landed through my new website! 🚀', author: 'Lisa Chen', authorAvatar: '#06B6D4', replies: 8, likes: 15, views: 112, pinned: false, locked: false, createdAt: '2026-04-15T16:00:00Z', lastReplyAt: '2026-04-18T10:00:00Z',
+    posts: [
+      { id: 'p31', author: 'Lisa Chen', authorAvatar: '#06B6D4', content: 'Two weeks after launching my new website (built by CK) I got my first inbound enquiry through the contact form — and they signed a £3K consulting contract! The old site had zero enquiries in 6 months. Good design pays for itself.', likes: 15, createdAt: '2026-04-15T16:00:00Z' },
+    ]
+  },
+  { id: 'thread-18', category: 'content-copy', title: 'Email subject lines that get 40%+ open rates — my swipe file', author: 'Oliver Reed', authorAvatar: '#14B8A6', replies: 12, likes: 23, views: 267, pinned: false, locked: false, createdAt: '2026-04-04T10:00:00Z', lastReplyAt: '2026-04-13T15:30:00Z',
+    posts: [
+      { id: 'p32', author: 'Oliver Reed', authorAvatar: '#14B8A6', content: 'Been A/B testing email subject lines for a year and compiled my top performers. Patterns that consistently get 40%+ open rates: curiosity gap ("The one thing we changed that doubled our traffic"), personal ("Your website might be losing you £5K/month"), numbers + specificity ("7 SEO mistakes costing UK businesses in 2026"). Happy to share my full swipe file if anyone wants it.', likes: 23, createdAt: '2026-04-04T10:00:00Z' },
     ]
   },
 ];
@@ -10343,76 +10420,123 @@ function KBArticlePage({ slug }) {
 // ============================================================================
 function CommunityPage() {
   const { user } = useContext(AuthContext);
+  const [activeCat, setActiveCat] = useState(null);
   useSEO({
     title: 'Community Forum - Connect, Learn & Earn Credits | Creative Kaygency',
-    description: 'Join the Creative Kaygency community forum — discuss web design, SEO, branding, and marketing with fellow UK entrepreneurs. Earn credits for participating. 6 categories, active discussions, and a supportive members-only space.',
-    keywords: 'community forum, web design forum, SEO discussion, branding community, UK business forum, Creative Kaygency community, earn credits forum, digital design community',
+    description: 'Join the Creative Kaygency community forum — discuss web design, SEO, branding, e-commerce, social media, and marketing with fellow UK entrepreneurs. 12 categories, 250+ active discussions, and earn credits for participating.',
+    keywords: 'community forum, web design forum, SEO discussion, branding community, UK business forum, Creative Kaygency community, earn credits forum, digital design community, freelancer forum, e-commerce community',
     canonical: 'https://www.creativekaygency.com/community',
     jsonLd: {
       "@context": "https://schema.org",
-      "@type": "DiscussionForumPosting",
+      "@type": "WebPage",
       "name": "Creative Kaygency Community Forum",
       "url": "https://www.creativekaygency.com/community",
-      "description": "Members-only community forum for UK entrepreneurs — discuss design, SEO, marketing, and branding. Earn credits for participating.",
-      "publisher": { "@type": "Organization", "name": "Creative Kaygency", "url": "https://www.creativekaygency.com" }
+      "description": "Members-only community forum for UK entrepreneurs — 12 categories covering design, SEO, marketing, e-commerce, freelancing, and more. Earn credits for participating.",
+      "publisher": { "@type": "Organization", "name": "Creative Kaygency", "url": "https://www.creativekaygency.com" },
+      "mainEntity": {
+        "@type": "DiscussionForumPosting",
+        "about": FORUM_CATEGORIES.map(c => c.name)
+      }
     }
   });
 
-  const totalThreads = DEMO_FORUM_THREADS.length;
-  const totalReplies = DEMO_FORUM_THREADS.reduce((sum, t) => sum + t.replies, 0);
-  const totalMembers = DEMO_LEADERBOARD.length;
+  const totalThreads = FORUM_CATEGORIES.reduce((sum, c) => sum + (c.threads || 0), 0);
+  const totalPosts = FORUM_CATEGORIES.reduce((sum, c) => sum + (c.posts || 0), 0);
+  const filteredThreads = activeCat ? DEMO_FORUM_THREADS.filter(t => t.category === activeCat) : DEMO_FORUM_THREADS;
 
   return (
     <div className="page-section" style={{paddingTop:48}}>
       <div className="container">
+        {/* Hero */}
         <div style={{textAlign:'center',marginBottom:48}}>
           <span className="section-badge">💬 Our Community</span>
           <h1 style={{fontSize:'clamp(28px,5vw,42px)',fontWeight:800,marginBottom:16}}>Creative Kaygency <span className="gradient-text">Community Forum</span></h1>
-          <p style={{fontSize:18,color:'var(--gray-500)',maxWidth:640,margin:'0 auto 24px'}}>A members-only space where UK entrepreneurs, designers, and marketers connect, share knowledge, and help each other grow. Plus, earn credits just for participating.</p>
+          <p style={{fontSize:18,color:'var(--gray-500)',maxWidth:680,margin:'0 auto 24px'}}>A members-only space where UK entrepreneurs, designers, freelancers, and marketers connect, share real-world knowledge, and help each other grow. Plus, earn credits just for participating.</p>
           <div style={{display:'flex',gap:32,justifyContent:'center',flexWrap:'wrap',marginBottom:32}}>
-            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{totalMembers}+</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Active Members</div></div>
-            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{totalThreads * 8}+</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Discussions</div></div>
-            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{totalReplies * 5}+</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Replies</div></div>
-            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>6</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Categories</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>500+</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Active Members</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{totalThreads}+</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Discussions</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{totalPosts.toLocaleString()}+</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Posts & Replies</div></div>
+            <div style={{textAlign:'center'}}><div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{FORUM_CATEGORIES.length}</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Categories</div></div>
           </div>
+          {!user && <a href={routeHref('/register')} className="btn btn-primary" style={{textDecoration:'none',marginRight:12}}>Join the Community Free →</a>}
+          {user && <a href={routeHref('/dashboard/community')} className="btn btn-primary" style={{textDecoration:'none',marginRight:12}}>Open Forum in Dashboard →</a>}
+          <a href="#categories" className="btn btn-secondary" style={{textDecoration:'none'}} onClick={e => { e.preventDefault(); document.getElementById('categories')?.scrollIntoView({behavior:'smooth'}); }}>Browse Categories ↓</a>
         </div>
 
-        <h2 style={{fontSize:22,fontWeight:700,marginBottom:20,textAlign:'center'}}>Forum Categories</h2>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:16,marginBottom:48}}>
-          {FORUM_CATEGORIES.map(cat => (
-            <div key={cat.id} className="card" style={{borderLeft:`4px solid ${cat.color}`,padding:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
-                <span style={{fontSize:24}}>{cat.icon}</span>
-                <h3 style={{fontSize:16,fontWeight:700,margin:0}}>{cat.name}</h3>
+        {/* Categories Grid */}
+        <div id="categories">
+          <h2 style={{fontSize:22,fontWeight:700,marginBottom:6,textAlign:'center'}}>Browse by Category</h2>
+          <p style={{textAlign:'center',color:'var(--gray-500)',fontSize:14,marginBottom:24}}>Click a category to filter discussions, or browse them all below</p>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:14,marginBottom:40}}>
+          {FORUM_CATEGORIES.map(cat => {
+            const isActive = activeCat === cat.id;
+            const catThreads = DEMO_FORUM_THREADS.filter(t => t.category === cat.id);
+            return (
+              <a key={cat.id} href={'#cat-' + cat.id} onClick={e => { e.preventDefault(); setActiveCat(isActive ? null : cat.id); }} style={{textDecoration:'none',color:'inherit',display:'block',cursor:'pointer'}}>
+                <div className="card" style={{borderLeft:`4px solid ${cat.color}`,padding:'16px 18px',transition:'all .2s',transform:isActive?'scale(1.02)':'none',boxShadow:isActive?`0 4px 20px ${cat.color}33`:'none',background:isActive?`${cat.color}08`:'var(--card)'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:6}}>
+                    <span style={{fontSize:22}}>{cat.icon}</span>
+                    <h3 style={{fontSize:15,fontWeight:700,margin:0,color:isActive?cat.color:'inherit'}}>{cat.name}</h3>
+                  </div>
+                  <p style={{fontSize:13,color:'var(--gray-500)',margin:'0 0 8px'}}>{cat.desc}</p>
+                  <div style={{display:'flex',gap:16,fontSize:12,color:'var(--gray-400)'}}>
+                    <span>{cat.threads || catThreads.length} threads</span>
+                    <span>{cat.posts || catThreads.reduce((s,t)=>s+t.replies+1,0)} posts</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+
+        {/* Active filter pill */}
+        {activeCat && (
+          <div style={{textAlign:'center',marginBottom:20}}>
+            <span style={{display:'inline-flex',alignItems:'center',gap:8,background:'var(--primary)',color:'#fff',padding:'6px 16px',borderRadius:20,fontSize:13,fontWeight:600}}>
+              {FORUM_CATEGORIES.find(c=>c.id===activeCat)?.icon} Showing: {FORUM_CATEGORIES.find(c=>c.id===activeCat)?.name}
+              <button onClick={() => setActiveCat(null)} style={{background:'rgba(255,255,255,0.25)',border:'none',color:'#fff',borderRadius:'50%',width:20,height:20,cursor:'pointer',fontSize:12,display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+            </span>
+          </div>
+        )}
+
+        {/* Threads List */}
+        <h2 style={{fontSize:22,fontWeight:700,marginBottom:20,textAlign:'center'}}>{activeCat ? `${FORUM_CATEGORIES.find(c=>c.id===activeCat)?.name} Discussions` : 'Latest Discussions'}</h2>
+        <div style={{maxWidth:840,margin:'0 auto 48px'}}>
+          {filteredThreads.length === 0 && <div style={{textAlign:'center',padding:32,color:'var(--gray-400)'}}>No threads in this category yet — be the first to post!</div>}
+          {filteredThreads.map(thread => {
+            const cat = FORUM_CATEGORIES.find(c => c.id === thread.category);
+            return (
+              <div key={thread.id} className="card" style={{padding:'14px 18px',marginBottom:10,display:'flex',alignItems:'flex-start',gap:14,transition:'all .15s',cursor:'default'}}>
+                <div style={{width:42,height:42,borderRadius:'50%',background:thread.posts[0].authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:15,flexShrink:0,marginTop:2}}>{thread.author.charAt(0)}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontWeight:600,fontSize:15,marginBottom:4,lineHeight:1.35}}>{thread.pinned && <span style={{color:'var(--primary)',marginRight:6}}>📌</span>}{thread.title}</div>
+                  {thread.posts[0] && <div style={{fontSize:13,color:'var(--gray-500)',marginBottom:6,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{thread.posts[0].content.slice(0, 160)}...</div>}
+                  <div style={{display:'flex',alignItems:'center',gap:12,fontSize:12,color:'var(--gray-400)',flexWrap:'wrap'}}>
+                    <span style={{fontWeight:600,color:'var(--gray-600)'}}>{thread.author}</span>
+                    <span>💬 {thread.replies} replies</span>
+                    <span>❤️ {thread.likes}</span>
+                    <span>👁 {thread.views}</span>
+                    <a href={'#'} onClick={e => { e.preventDefault(); setActiveCat(thread.category); }} style={{background:`${cat?.color || '#7C3AED'}15`,color:cat?.color || '#7C3AED',fontSize:11,padding:'2px 10px',borderRadius:20,textDecoration:'none',fontWeight:600}}>{cat?.icon} {cat?.name || thread.category}</a>
+                  </div>
+                </div>
               </div>
-              <p style={{fontSize:14,color:'var(--gray-500)',margin:0}}>{cat.desc}</p>
-            </div>
-          ))}
+            );
+          })}
+          {!activeCat && <div style={{textAlign:'center',marginTop:20,color:'var(--gray-400)',fontSize:14}}>Showing the latest {filteredThreads.length} threads — {user ? <a href={routeHref('/dashboard/community')} style={{color:'var(--primary)',fontWeight:600}}>open your dashboard</a> : <a href={routeHref('/register')} style={{color:'var(--primary)',fontWeight:600}}>join free</a>} to see all discussions and post your own.</div>}
         </div>
 
-        <h2 style={{fontSize:22,fontWeight:700,marginBottom:20,textAlign:'center'}}>Latest Discussions</h2>
-        <div style={{maxWidth:800,margin:'0 auto 48px'}}>
-          {DEMO_FORUM_THREADS.map(thread => (
-            <div key={thread.id} className="card" style={{padding:16,marginBottom:12,display:'flex',alignItems:'center',gap:16}}>
-              <div style={{width:40,height:40,borderRadius:'50%',background:thread.posts[0].authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:14,flexShrink:0}}>{thread.author.charAt(0)}</div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:600,fontSize:15,marginBottom:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{thread.pinned && <span style={{color:'var(--primary)',marginRight:6}}>📌</span>}{thread.title}</div>
-                <div style={{fontSize:12,color:'var(--gray-500)'}}>by {thread.author} · {thread.replies} replies · {thread.likes} likes · {thread.views} views</div>
-              </div>
-              <span className="badge" style={{background:`${FORUM_CATEGORIES.find(c => c.id === thread.category)?.color || '#7C3AED'}22`,color:FORUM_CATEGORIES.find(c => c.id === thread.category)?.color || '#7C3AED',fontSize:11,padding:'4px 10px',borderRadius:20,whiteSpace:'nowrap'}}>{FORUM_CATEGORIES.find(c => c.id === thread.category)?.name || thread.category}</span>
-            </div>
-          ))}
-        </div>
-
+        {/* Earn Credits Section */}
         <div className="card" style={{background:'linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.06))',border:'1px solid rgba(124,58,237,0.15)',padding:32,textAlign:'center',marginBottom:48,borderRadius:16}}>
           <h2 style={{fontSize:22,fontWeight:700,marginBottom:8}}>Earn Credits by Participating</h2>
-          <p style={{fontSize:15,color:'var(--gray-500)',maxWidth:560,margin:'0 auto 20px'}}>Get rewarded for being an active community member. Start threads, reply to discussions, and receive likes — all while earning credits toward your next project.</p>
-          <div style={{display:'flex',gap:24,justifyContent:'center',flexWrap:'wrap',marginBottom:24}}>
-            <div className="card" style={{padding:'12px 20px',textAlign:'center'}}><div style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>+0.5</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Per New Thread</div></div>
-            <div className="card" style={{padding:'12px 20px',textAlign:'center'}}><div style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>+0.25</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Per Reply</div></div>
-            <div className="card" style={{padding:'12px 20px',textAlign:'center'}}><div style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>+0.1</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Per Like Received</div></div>
-            <div className="card" style={{padding:'12px 20px',textAlign:'center'}}><div style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>+2</div><div style={{fontSize:12,color:'var(--gray-500)'}}>First Post Bonus</div></div>
+          <p style={{fontSize:15,color:'var(--gray-500)',maxWidth:560,margin:'0 auto 20px'}}>Get rewarded for being an active community member. Every thread, reply, and like earns you credits toward your next project.</p>
+          <div style={{display:'flex',gap:20,justifyContent:'center',flexWrap:'wrap',marginBottom:24}}>
+            <div className="card" style={{padding:'14px 22px',textAlign:'center',minWidth:120}}><div style={{fontSize:20,fontWeight:800,color:'var(--primary)'}}>+0.5</div><div style={{fontSize:12,color:'var(--gray-500)'}}>New Thread</div></div>
+            <div className="card" style={{padding:'14px 22px',textAlign:'center',minWidth:120}}><div style={{fontSize:20,fontWeight:800,color:'var(--primary)'}}>+0.25</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Reply</div></div>
+            <div className="card" style={{padding:'14px 22px',textAlign:'center',minWidth:120}}><div style={{fontSize:20,fontWeight:800,color:'var(--primary)'}}>+0.1</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Like Received</div></div>
+            <div className="card" style={{padding:'14px 22px',textAlign:'center',minWidth:120}}><div style={{fontSize:20,fontWeight:800,color:'var(--primary)'}}>+2</div><div style={{fontSize:12,color:'var(--gray-500)'}}>First Post Bonus</div></div>
           </div>
+          <p style={{fontSize:13,color:'var(--gray-400)',marginBottom:16}}>Daily cap of 2 credits from forum activity — designed as a loyalty perk to supplement your credit purchases.</p>
           {user ? (
             <a href={routeHref('/dashboard/community')} className="btn btn-primary" style={{textDecoration:'none'}}>Open Forum in Dashboard →</a>
           ) : (
@@ -10420,15 +10544,45 @@ function CommunityPage() {
           )}
         </div>
 
+        {/* What Members Are Saying */}
+        <h2 style={{fontSize:22,fontWeight:700,marginBottom:20,textAlign:'center'}}>What Members Are Saying</h2>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:16,marginBottom:48}}>
+          {[
+            { quote: 'The forum is where I learned everything about SEO for my business. The advice here is better than most paid courses.', name: 'Oliver Reed', company: 'DataPulse', avatar: '#14B8A6' },
+            { quote: 'I landed my first client through a connection I made in the General Discussion channel. This community is genuinely supportive.', name: 'Lisa Chen', company: 'Chen Consulting', avatar: '#06B6D4' },
+            { quote: 'Love that I earn credits just for helping other members. It\'s a win-win — I share knowledge and get rewarded for it.', name: 'Sophie Laurent', company: 'Brand Strategist', avatar: '#EC4899' },
+          ].map((t, i) => (
+            <div key={i} className="card" style={{padding:20}}>
+              <div style={{fontSize:14,color:'var(--gray-500)',marginBottom:12,fontStyle:'italic',lineHeight:1.5}}>"{t.quote}"</div>
+              <div style={{display:'flex',alignItems:'center',gap:10}}>
+                <div style={{width:32,height:32,borderRadius:'50%',background:t.avatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:12}}>{t.name.charAt(0)}</div>
+                <div><div style={{fontWeight:600,fontSize:13}}>{t.name}</div><div style={{fontSize:12,color:'var(--gray-400)'}}>{t.company}</div></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Guidelines */}
+        <h2 style={{fontSize:22,fontWeight:700,marginBottom:8,textAlign:'center'}}>Community Guidelines</h2>
+        <p style={{textAlign:'center',fontSize:15,color:'var(--gray-500)',maxWidth:600,margin:'0 auto 20px'}}>We keep things constructive, supportive, and spam-free so every member gets value from every visit.</p>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(230px,1fr))',gap:14,maxWidth:820,margin:'0 auto 48px'}}>
+          <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>✅ Be Respectful</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Constructive feedback and civil discussion always welcome.</div></div>
+          <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>✅ Share Knowledge</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Tips, case studies, and real-world experience help everyone grow.</div></div>
+          <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>✅ Stay On Topic</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Post in the right category — it helps others find useful discussions.</div></div>
+          <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>🚫 No Spam</div><div style={{fontSize:13,color:'var(--gray-500)'}}>No excessive self-promotion, irrelevant links, or off-topic posts.</div></div>
+          <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>🚫 No Poaching</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Don't DM members to sell services or recruit away from the platform.</div></div>
+          <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>🛡️ Keep It Safe</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Don't share confidential project details or client information.</div></div>
+        </div>
+
+        {/* Final CTA */}
         <div style={{textAlign:'center',marginBottom:48}}>
-          <h2 style={{fontSize:22,fontWeight:700,marginBottom:8}}>Community Guidelines</h2>
-          <p style={{fontSize:15,color:'var(--gray-500)',maxWidth:600,margin:'0 auto 20px'}}>We keep things constructive, supportive, and spam-free so every member gets value from every visit.</p>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(250px,1fr))',gap:16,maxWidth:800,margin:'0 auto'}}>
-            <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>✅ Be Respectful</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Constructive feedback and civil discussion always welcome.</div></div>
-            <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>✅ Share Knowledge</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Tips, tutorials, and real-world experience help everyone grow.</div></div>
-            <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>🚫 No Spam</div><div style={{fontSize:13,color:'var(--gray-500)'}}>No excessive self-promotion, irrelevant links, or off-topic posts.</div></div>
-            <div className="card" style={{padding:16,textAlign:'left'}}><div style={{fontWeight:700,marginBottom:4}}>🛡️ Keep It Safe</div><div style={{fontSize:13,color:'var(--gray-500)'}}>Don't share confidential project details without permission.</div></div>
-          </div>
+          <h2 style={{fontSize:24,fontWeight:700,marginBottom:12}}>Ready to Join the Conversation?</h2>
+          <p style={{fontSize:15,color:'var(--gray-500)',maxWidth:500,margin:'0 auto 20px'}}>Create your free account in under 60 seconds. No credit card required. Start posting, earning credits, and connecting with fellow entrepreneurs today.</p>
+          {user ? (
+            <a href={routeHref('/dashboard/community')} className="btn btn-primary btn-lg" style={{textDecoration:'none'}}>Go to Forum →</a>
+          ) : (
+            <a href={routeHref('/register')} className="btn btn-primary btn-lg" style={{textDecoration:'none'}}>Create Free Account →</a>
+          )}
         </div>
       </div>
     </div>
