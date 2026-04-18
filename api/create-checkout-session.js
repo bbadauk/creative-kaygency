@@ -38,9 +38,11 @@ module.exports = async (req, res) => {
     const host = req.headers['x-forwarded-host'] || req.headers.host;
     const baseUrl = `${protocol}://${host}`;
 
+    // NOTE: payment_method_types MUST NOT be set with ui_mode 'embedded'
+    // Stripe determines available payment methods automatically in embedded mode
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
       mode: 'payment',
+      ui_mode: 'embedded',
       customer_email: userEmail || undefined,
       line_items: [
         {
@@ -60,13 +62,12 @@ module.exports = async (req, res) => {
         packageId,
         credits: String(pkg.credits),
       },
-      success_url: `${baseUrl}/?payment=success&credits=${pkg.credits}`,
-      cancel_url: `${baseUrl}/?payment=cancelled`,
+      return_url: `${baseUrl}/?payment=success&credits=${pkg.credits}&session_id={CHECKOUT_SESSION_ID}`,
     });
 
-    return res.status(200).json({ url: session.url });
+    return res.status(200).json({ clientSecret: session.client_secret });
   } catch (err) {
-    console.error('Checkout session error:', err.message);
-    return res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('Checkout session error:', err.message, err.type || '', err.code || '');
+    return res.status(500).json({ error: err.message || 'Failed to create checkout session' });
   }
 };
