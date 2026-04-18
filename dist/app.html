@@ -2437,7 +2437,7 @@ function AuthProvider({ children }) {
       if (session?.user) {
         const meta = session.user.user_metadata || {};
         // Set minimal user SYNCHRONOUSLY so dashboard can render immediately
-        setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], credits: 0, streak: 0, is_admin: false });
+        setUser(prev => prev || { id: session.user.id, email: session.user.email, name: meta.name || meta.full_name || session.user.email.split('@')[0], first_name: meta.first_name || '', last_name: meta.last_name || '', username: meta.username || '', display_name_preference: 'username', username_history: [], username_changed_at: null, credits: 0, streak: 0, is_admin: false });
         setAuthLoading(false);
         // IMPORTANT: Use setTimeout to escape onAuthStateChange callback context.
         // Supabase queries deadlock if called inside this callback due to internal auth lock.
@@ -2449,6 +2449,10 @@ function AuthProvider({ children }) {
               const newProfile = {
                 id: session.user.id, email: session.user.email,
                 name: meta.name || meta.full_name || session.user.email.split('@')[0],
+                first_name: meta.first_name || '', last_name: meta.last_name || '',
+                username: meta.username || session.user.email.split('@')[0].replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 24).toLowerCase(),
+                display_name_preference: 'username',
+                username_history: [], username_changed_at: null,
                 credits: 0, streak: 0, is_admin: false,
                 referral_code: session.user.id.substring(0, 8).toUpperCase()
               };
@@ -2543,10 +2547,15 @@ function AuthProvider({ children }) {
         userIsAdmin = profile.is_admin === true;
       } else if (profErr) {
         // Profile doesn't exist — create one
+        const loginMeta = authData.user.user_metadata || {};
         await supabaseClient.from('profiles').insert({
           id: authData.user.id,
           email: authData.user.email,
-          name: authData.user.user_metadata?.name || userName,
+          name: loginMeta.name || userName,
+          first_name: loginMeta.first_name || '', last_name: loginMeta.last_name || '',
+          username: loginMeta.username || authData.user.email.split('@')[0].replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 24).toLowerCase(),
+          display_name_preference: 'username',
+          username_history: [], username_changed_at: null,
           credits: 0, streak: 0, is_admin: false,
           referral_code: authData.user.id.substring(0, 8).toUpperCase()
         }).catch(() => {});
@@ -2555,11 +2564,15 @@ function AuthProvider({ children }) {
     return { success: true, user: { name: userName, isAdmin: userIsAdmin } };
   };
 
-  const register = async (name, email, password, referralCode) => {
+  const register = async (name, email, password, referralCode, firstName, lastName, username) => {
     const sanitisedName = name.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').trim().slice(0, 100);
+    const sanitisedFirst = (firstName || '').replace(/[<>&"']/g, '').trim().slice(0, 50);
+    const sanitisedLast = (lastName || '').replace(/[<>&"']/g, '').trim().slice(0, 50);
+    const sanitisedUsername = (username || '').replace(/[^a-zA-Z0-9_-]/g, '').trim().slice(0, 24).toLowerCase();
     const sanitisedEmail = email.toLowerCase().trim().slice(0, 254);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitisedEmail)) return { success: false, error: 'Invalid email address' };
-    if (sanitisedName.length < 2) return { success: false, error: 'Name must be at least 2 characters' };
+    if (sanitisedFirst.length < 1 || sanitisedLast.length < 1) return { success: false, error: 'First and last name are required' };
+    if (sanitisedUsername.length < 3) return { success: false, error: 'Username must be at least 3 characters' };
     if (password.length < 8) return { success: false, error: 'Password must be at least 8 characters' };
     if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) return { success: false, error: 'Password must include uppercase, lowercase, and a number' };
 
@@ -2567,7 +2580,7 @@ function AuthProvider({ children }) {
     try {
       const result = await supabaseClient.auth.signUp({
         email: sanitisedEmail, password,
-        options: { data: { name: sanitisedName } }
+        options: { data: { name: sanitisedName, first_name: sanitisedFirst, last_name: sanitisedLast, username: sanitisedUsername } }
       });
       data = result.data;
       error = result.error;
@@ -2725,7 +2738,7 @@ function AuthProvider({ children }) {
       id: project.id, service: project.service, status: project.status || 'pending',
       date: project.date || new Date().toISOString().split('T')[0], paid: project.paid || 'credits',
       amount: project.amount || 0, progress: project.progress || 0, assigned_to: project.assignedTo || null,
-      user_id: user.id, user_name: user.name, user_email: user.email, brief: project.brief || '',
+      user_id: user.id, user_name: user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name, user_email: user.email, brief: project.brief || '',
       deliverables: project.deliverables || [], timeline: project.timeline || []
     };
     const { data } = await supabaseClient.from('projects').insert(dbProject).select().single();
@@ -3010,7 +3023,70 @@ function AuthProvider({ children }) {
     } catch (e) { console.warn('Profile refresh failed:', e); }
   };
 
-  return React.createElement(AuthContext.Provider, { value: { user, authLoading, profileLoaded, login, register, logout, updateCredits, claimDailyLogin, refreshProfile, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
+  // Display name helper — respects user preference for showing real name or username
+  const getDisplayName = (u) => {
+    if (!u) return 'Guest';
+    if (u.display_name_preference === 'real_name') {
+      const full = [u.first_name, u.last_name].filter(Boolean).join(' ');
+      return full || u.name || u.username || u.email?.split('@')[0] || 'Member';
+    }
+    return u.username || u.name || u.email?.split('@')[0] || 'Member';
+  };
+
+  // Update username with 30-day cooldown and history tracking
+  const updateUsername = async (newUsername) => {
+    if (!user) return { success: false, error: 'Not logged in' };
+    const clean = newUsername.replace(/[^a-zA-Z0-9_-]/g, '').trim().slice(0, 24).toLowerCase();
+    if (clean.length < 3) return { success: false, error: 'Username must be at least 3 characters' };
+    if (clean === user.username) return { success: false, error: 'That is already your username' };
+    // Check 30-day cooldown
+    if (user.username_changed_at) {
+      const lastChanged = new Date(user.username_changed_at);
+      const daysSince = (Date.now() - lastChanged.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysSince < 30) {
+        const daysLeft = Math.ceil(30 - daysSince);
+        return { success: false, error: `You can change your username again in ${daysLeft} day${daysLeft > 1 ? 's' : ''}` };
+      }
+    }
+    // Check availability
+    try {
+      const { data: existing } = await supabaseClient.from('profiles').select('id').eq('username', clean).maybeSingle();
+      if (existing && existing.id !== user.id) return { success: false, error: 'Username already taken' };
+    } catch { /* continue */ }
+    // Update with history
+    const history = [...(user.username_history || []), { username: user.username, changed_at: new Date().toISOString() }];
+    try {
+      await supabaseClient.from('profiles').update({
+        username: clean, username_changed_at: new Date().toISOString(), username_history: history
+      }).eq('id', user.id);
+      setUser(u => u ? { ...u, username: clean, username_changed_at: new Date().toISOString(), username_history: history } : null);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'Failed to update username' };
+    }
+  };
+
+  // Update display name preference
+  const updateDisplayPreference = async (preference) => {
+    if (!user) return;
+    try {
+      await supabaseClient.from('profiles').update({ display_name_preference: preference }).eq('id', user.id);
+      setUser(u => u ? { ...u, display_name_preference: preference } : null);
+    } catch { /* continue */ }
+  };
+
+  // Update first/last name
+  const updateName = async (firstName, lastName) => {
+    if (!user) return;
+    const f = firstName.replace(/[<>&"']/g, '').trim().slice(0, 50);
+    const l = lastName.replace(/[<>&"']/g, '').trim().slice(0, 50);
+    try {
+      await supabaseClient.from('profiles').update({ first_name: f, last_name: l, name: `${f} ${l}` }).eq('id', user.id);
+      setUser(u => u ? { ...u, first_name: f, last_name: l, name: `${f} ${l}` } : null);
+    } catch { /* continue */ }
+  };
+
+  return React.createElement(AuthContext.Provider, { value: { user, authLoading, profileLoaded, login, register, logout, updateCredits, claimDailyLogin, refreshProfile, getDisplayName, updateUsername, updateDisplayPreference, updateName, projects, addProject, updateProject, addProjectUpdate, isAdmin, portfolioItems, addPortfolioItem, updatePortfolioItem, deletePortfolioItem, reorderPortfolio, services, addService, updateService, deleteService, reorderServices, resetServices, ads, activeAds, addAd, updateAd, deleteAd, blogPosts, addBlogPost, updateBlogPost, deleteBlogPost, resetBlog, announcementText, updateAnnouncement, referralData, setReferralData, addShareCredit, verifyShareCredit, rejectShareCredit, verifyReferral, SHARE_CREDIT_AMOUNT, SHARE_DAILY_CAP, REFERRAL_CREDIT_AMOUNT, REFERRAL_MONTHLY_CAP } }, children);
 }
 
 function CurrencyProvider({ children }) {
@@ -3358,8 +3434,8 @@ function Navbar() {
           {user ? (
             <div className="nav-dropdown" style={{position:'relative'}}>
               <button className="btn btn-sm btn-ghost nav-dropdown-trigger" style={{display:'flex',alignItems:'center',gap:'6px'}} aria-label="User menu" aria-haspopup="true">
-                <div style={{width:30,height:30,borderRadius:'50%',background:'var(--gradient)',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:13,fontWeight:700}} aria-hidden="true">{user.name[0]}</div>
-                {user.name.split(' ')[0]}
+                <div style={{width:30,height:30,borderRadius:'50%',background:'var(--gradient)',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:13,fontWeight:700}} aria-hidden="true">{(user.first_name || user.name || '?')[0]}</div>
+                {user.first_name || user.name?.split(' ')[0] || 'Account'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width:14,height:14}} aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div className="mega-menu" style={{minWidth:260,right:0,left:'auto',transform:'none'}}>
@@ -4636,7 +4712,9 @@ function ResetPasswordPage() {
 function RegisterPage() {
   const { register: doRegister, user } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', referral: '', terms: false });
+  const [form, setForm] = useState({ firstName: '', lastName: '', username: '', email: '', password: '', confirm: '', referral: '', terms: false });
+  const [usernameStatus, setUsernameStatus] = useState(null); // null | 'checking' | 'available' | 'taken' | 'invalid'
+  const usernameTimer = useRef(null);
   useSEO({ title: 'Sign Up - Creative Kaygency | Create Your Free Account', description: 'Create a free Creative Kaygency account to start ordering professional digital design services, earn daily credits, get referral bonuses, and save up to 20%.', keywords: 'sign up, register, create account, free account, Creative Kaygency registration', canonical: 'https://www.creativekaygency.com/register', noindex: true });
 
   // Redirect to dashboard if already logged in
@@ -4644,15 +4722,48 @@ function RegisterPage() {
     if (user) navigate('/dashboard', true);
   }, [user]);
 
+  const RESERVED_USERNAMES = ['admin','moderator','mod','staff','support','help','system','creative','kaygency','creativekaygency','null','undefined','root','superuser','test','bot'];
+  const validateUsername = (uname) => {
+    if (!uname || uname.length < 3) return 'too-short';
+    if (uname.length > 24) return 'too-long';
+    if (!/^[a-zA-Z0-9_-]+$/.test(uname)) return 'invalid-chars';
+    if (RESERVED_USERNAMES.includes(uname.toLowerCase())) return 'reserved';
+    return 'valid';
+  };
+
+  const checkUsernameAvailability = (uname) => {
+    clearTimeout(usernameTimer.current);
+    const validation = validateUsername(uname);
+    if (validation !== 'valid') {
+      setUsernameStatus(validation);
+      return;
+    }
+    setUsernameStatus('checking');
+    usernameTimer.current = setTimeout(async () => {
+      try {
+        const { data } = await supabaseClient.from('profiles').select('id').eq('username', uname.toLowerCase()).maybeSingle();
+        setUsernameStatus(data ? 'taken' : 'available');
+      } catch {
+        // If DB query fails (e.g. column doesn't exist yet), assume available for demo
+        setUsernameStatus('available');
+      }
+    }, 500);
+  };
+
+  const usernameMsg = { 'checking': { text: 'Checking availability...', color: 'var(--gray-400)', icon: '⏳' }, 'available': { text: 'Username available!', color: 'var(--success)', icon: '✓' }, 'taken': { text: 'Username already taken', color: 'var(--error)', icon: '✗' }, 'too-short': { text: 'Min 3 characters', color: 'var(--warning)', icon: '⚠️' }, 'too-long': { text: 'Max 24 characters', color: 'var(--warning)', icon: '⚠️' }, 'invalid-chars': { text: 'Only letters, numbers, _ and -', color: 'var(--warning)', icon: '⚠️' }, 'reserved': { text: 'This username is reserved', color: 'var(--error)', icon: '✗' } };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!form.firstName.trim() || !form.lastName.trim()) return addToast('Please enter your first and last name', 'error');
+    if (usernameStatus !== 'available') return addToast('Please choose an available username', 'error');
     if (form.password !== form.confirm) return addToast('Passwords do not match', 'error');
     if (!form.terms) return addToast('Please accept the terms', 'error');
     setIsSubmitting(true);
+    const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
     try {
-      const result = await doRegister(form.name, form.email, form.password, form.referral);
-      if (result.success) { try { sessionStorage.setItem('ck_just_registered', '1'); } catch(e){} addToast(`Welcome to Creative Kaygency, ${form.name}! 🎉`); navigate('/dashboard'); }
+      const result = await doRegister(fullName, form.email, form.password, form.referral, form.firstName.trim(), form.lastName.trim(), form.username.trim());
+      if (result.success) { try { sessionStorage.setItem('ck_just_registered', '1'); } catch(e){} addToast(`Welcome to Creative Kaygency, ${form.firstName}! 🎉`); navigate('/dashboard'); }
       else addToast(result.error || 'Registration failed. Please try again.', 'error');
     } catch (err) {
       addToast('Something went wrong. Please try again.', 'error');
@@ -4667,7 +4778,15 @@ function RegisterPage() {
       <h2>Create Your Account</h2>
       <p className="subtitle">Join 500+ businesses growing with Creative Kaygency</p>
       <form onSubmit={handleSubmit}>
-        <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" value={form.name} onChange={e => u('name',e.target.value)} placeholder="John Smith" required /></div>
+        <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+          <div className="form-group"><label className="form-label">First Name</label><input className="form-input" value={form.firstName} onChange={e => u('firstName',e.target.value)} placeholder="John" required /></div>
+          <div className="form-group"><label className="form-label">Last Name</label><input className="form-input" value={form.lastName} onChange={e => u('lastName',e.target.value)} placeholder="Smith" required /></div>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Username</label>
+          <input className="form-input" value={form.username} onChange={e => { u('username', e.target.value); checkUsernameAvailability(e.target.value); }} placeholder="Choose a unique username" required style={{borderColor: usernameStatus === 'available' ? 'var(--success)' : usernameStatus === 'taken' || usernameStatus === 'reserved' ? 'var(--error)' : undefined}} />
+          {form.username && usernameStatus && usernameMsg[usernameStatus] && <div style={{fontSize:12,marginTop:4,color:usernameMsg[usernameStatus].color,display:'flex',alignItems:'center',gap:4}}><span>{usernameMsg[usernameStatus].icon}</span> {usernameMsg[usernameStatus].text}</div>}
+        </div>
         <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" value={form.email} onChange={e => u('email',e.target.value)} placeholder="you@example.com" required /></div>
         <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={form.password} onChange={e => u('password',e.target.value)} placeholder="Min 8 chars, upper+lower+number" required minLength="8" autoComplete="new-password" />{form.password && form.password.length >= 1 && <div style={{fontSize:12,marginTop:4,color: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(form.password) && form.password.length >= 8 ? 'var(--success)' : 'var(--warning)'}}>{/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(form.password) && form.password.length >= 8 ? '✓ Strong password' : 'Needs uppercase, lowercase, and a number'}</div>}</div>
         <div className="form-group"><label className="form-label">Confirm Password</label><input className="form-input" type="password" value={form.confirm} onChange={e => u('confirm',e.target.value)} placeholder="••••••••" required /></div>
@@ -4775,7 +4894,7 @@ function DashboardPage() {
   return (
     <div className="dashboard-layout">
       <aside className="dashboard-sidebar">
-        <div style={{marginBottom:16,padding:'0 14px'}}><div style={{fontSize:13,color:'var(--gray-400)'}}>Welcome back,</div><div style={{fontSize:16,fontWeight:700}}>{user.name}</div></div>
+        <div style={{marginBottom:16,padding:'0 14px'}}><div style={{fontSize:13,color:'var(--gray-400)'}}>Welcome back,</div><div style={{fontSize:16,fontWeight:700}}>{user.first_name || user.name?.split(' ')[0] || 'Member'}</div>{user.username && <div style={{fontSize:12,color:'var(--primary)'}}>@{user.username}</div>}</div>
         <nav className="sidebar-nav">
           {sideItems.map(item => <button key={item.id} className={`sidebar-link${tab === item.id ? ' active' : ''}`} onClick={() => { setTab(item.id); navigate(`/dashboard/${item.id === 'overview' ? '' : item.id}`); }} style={item.highlight ? {fontWeight:800,background:tab===item.id?'linear-gradient(135deg,rgba(124,58,237,0.14),rgba(236,72,153,0.14))':'rgba(124,58,237,0.06)',border:'1.5px solid var(--primary)',color:'var(--primary)',letterSpacing:'-.2px'} : undefined}><span className="icon">{item.icon}</span>{item.label}</button>)}
           <div className="sidebar-section-title">Earn & Save</div>
@@ -4818,7 +4937,7 @@ function DashOverview({ user, projects, formatPrice, onClaim, onNavigate, credit
   const { services } = useContext(AuthContext);
   return (
     <div>
-      <div className="dash-header"><h1>Dashboard</h1><p>Welcome back, {user.name}. Here's your account overview.</p></div>
+      <div className="dash-header"><h1>Dashboard</h1><p>Welcome back, {user.first_name || user.name?.split(' ')[0] || 'Member'}. Here's your account overview.</p></div>
       <div className="dash-stats">
         <div className={`dash-stat-card${creditFlash ? ' credit-flash' : ''}`} style={creditFlash ? {boxShadow:'0 0 20px rgba(124,58,237,0.3)',transition:'all .3s ease'} : {transition:'all .3s ease'}}><div className="label">Credit Balance</div><div className="value" style={{color:'var(--primary)'}}>{user.credits.toLocaleString()}</div><div className="change up">🪙 Credits available</div></div>
         <div className="dash-stat-card"><div className="label">Active Projects</div><div className="value" style={{color:'var(--info)'}}>{projects.filter(p => p.status === 'in-progress').length}</div><div className="change">In progress</div></div>
@@ -5842,16 +5961,114 @@ function DashMyAds({ userAds }) {
 
 function DashSettings({ user }) {
   const { addToast } = useContext(NotificationContext);
+  const { updateUsername, updateDisplayPreference, updateName, getDisplayName } = useContext(AuthContext);
+  const [firstName, setFirstName] = useState(user.first_name || user.name?.split(' ')[0] || '');
+  const [lastName, setLastName] = useState(user.last_name || user.name?.split(' ').slice(1).join(' ') || '');
+  const [newUsername, setNewUsername] = useState('');
+  const [usernameMsg, setUsernameMsg] = useState(null);
+  const [changingUsername, setChangingUsername] = useState(false);
+  const [displayPref, setDisplayPref] = useState(user.display_name_preference || 'username');
+
+  const canChangeUsername = !user.username_changed_at || (Date.now() - new Date(user.username_changed_at).getTime()) / (1000 * 60 * 60 * 24) >= 30;
+  const daysUntilChange = user.username_changed_at ? Math.max(0, Math.ceil(30 - (Date.now() - new Date(user.username_changed_at).getTime()) / (1000 * 60 * 60 * 24))) : 0;
+
+  const handleSaveName = async () => {
+    if (!firstName.trim() || !lastName.trim()) return addToast('Please enter both first and last name', 'error');
+    await updateName(firstName.trim(), lastName.trim());
+    addToast('Name updated!');
+  };
+
+  const handleChangeUsername = async () => {
+    if (!newUsername.trim()) return;
+    setChangingUsername(true);
+    const result = await updateUsername(newUsername.trim());
+    if (result.success) {
+      addToast('Username changed to @' + newUsername.trim().toLowerCase());
+      setNewUsername('');
+      setUsernameMsg(null);
+    } else {
+      addToast(result.error, 'error');
+    }
+    setChangingUsername(false);
+  };
+
+  const handleDisplayPref = async (pref) => {
+    setDisplayPref(pref);
+    await updateDisplayPreference(pref);
+    addToast(`Display name set to ${pref === 'real_name' ? 'your real name' : 'your username'}`);
+  };
+
   return (
     <div>
       <div className="dash-header"><h1>Settings</h1><p>Manage your account settings and preferences.</p></div>
       <div className="card" style={{marginBottom:24}}>
         <h3 style={{fontSize:16,marginBottom:16}}>Profile Information</h3>
         <div className="resp-grid-2col" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
-          <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" defaultValue={user.name} /></div>
-          <div className="form-group"><label className="form-label">Email</label><input className="form-input" defaultValue={user.email} type="email" /></div>
+          <div className="form-group"><label className="form-label">First Name</label><input className="form-input" value={firstName} onChange={e => setFirstName(e.target.value)} /></div>
+          <div className="form-group"><label className="form-label">Last Name</label><input className="form-input" value={lastName} onChange={e => setLastName(e.target.value)} /></div>
         </div>
-        <button className="btn btn-primary" onClick={() => addToast('Profile updated!')}>Save Changes</button>
+        <div className="form-group"><label className="form-label">Email</label><input className="form-input" defaultValue={user.email} type="email" disabled style={{opacity:0.6}} /><div style={{fontSize:11,color:'var(--gray-400)',marginTop:4}}>Contact support to change your email</div></div>
+        <button className="btn btn-primary" onClick={handleSaveName}>Save Name</button>
+      </div>
+
+      {/* Username Management */}
+      <div className="card" style={{marginBottom:24}}>
+        <h3 style={{fontSize:16,marginBottom:16}}>Username</h3>
+        <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16,padding:'12px 16px',background:'rgba(124,58,237,0.06)',borderRadius:'var(--radius)',border:'1px solid rgba(124,58,237,0.15)'}}>
+          <span style={{fontSize:24}}>@</span>
+          <div>
+            <div style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>{user.username || 'Not set'}</div>
+            <div style={{fontSize:12,color:'var(--gray-400)'}}>Your current username</div>
+          </div>
+        </div>
+        {canChangeUsername ? (
+          <div>
+            <div className="form-group">
+              <label className="form-label">Change Username</label>
+              <div style={{display:'flex',gap:8}}>
+                <input className="form-input" value={newUsername} onChange={e => setNewUsername(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ''))} placeholder="New username" maxLength={24} style={{flex:1}} />
+                <button className="btn btn-primary btn-sm" onClick={handleChangeUsername} disabled={changingUsername || !newUsername.trim()}>{changingUsername ? 'Changing...' : 'Change'}</button>
+              </div>
+              <div style={{fontSize:11,color:'var(--gray-400)',marginTop:4}}>Letters, numbers, underscores and hyphens only. 3-24 characters. You can only change your username once every 30 days.</div>
+            </div>
+          </div>
+        ) : (
+          <div style={{padding:'12px 16px',background:'rgba(249,115,22,0.06)',borderRadius:'var(--radius)',border:'1px solid rgba(249,115,22,0.15)',fontSize:13,color:'var(--warning)'}}>
+            ⏳ You can change your username again in <strong>{daysUntilChange} day{daysUntilChange !== 1 ? 's' : ''}</strong>
+          </div>
+        )}
+        {/* Username History */}
+        {user.username_history && user.username_history.length > 0 && (
+          <div style={{marginTop:16}}>
+            <div style={{fontSize:13,fontWeight:600,marginBottom:8,color:'var(--gray-400)'}}>Previous Usernames</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+              {user.username_history.map((h, i) => (
+                <span key={i} style={{fontSize:12,padding:'4px 10px',background:'var(--bg-alt)',borderRadius:4,color:'var(--gray-500)'}}>@{h.username} <span style={{color:'var(--gray-400)'}}>({new Date(h.changed_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })})</span></span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Display Name Preference */}
+      <div className="card" style={{marginBottom:24}}>
+        <h3 style={{fontSize:16,marginBottom:8}}>Public Display Name</h3>
+        <p style={{fontSize:13,color:'var(--gray-500)',marginBottom:16}}>Choose what other members see in the forum, leaderboard, and community areas.</p>
+        <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+          <button onClick={() => handleDisplayPref('username')} style={{flex:1,minWidth:180,padding:'16px 20px',borderRadius:'var(--radius)',border: displayPref === 'username' ? '2px solid var(--primary)' : '2px solid var(--border)',background: displayPref === 'username' ? 'rgba(124,58,237,0.06)' : 'var(--card)',cursor:'pointer',textAlign:'left',transition:'all .2s'}}>
+            <div style={{fontWeight:700,fontSize:15,marginBottom:4}}>@{user.username || 'username'}</div>
+            <div style={{fontSize:12,color:'var(--gray-400)'}}>Show my username publicly</div>
+            {displayPref === 'username' && <div style={{fontSize:11,color:'var(--primary)',fontWeight:700,marginTop:6}}>✓ Currently active</div>}
+          </button>
+          <button onClick={() => handleDisplayPref('real_name')} style={{flex:1,minWidth:180,padding:'16px 20px',borderRadius:'var(--radius)',border: displayPref === 'real_name' ? '2px solid var(--primary)' : '2px solid var(--border)',background: displayPref === 'real_name' ? 'rgba(124,58,237,0.06)' : 'var(--card)',cursor:'pointer',textAlign:'left',transition:'all .2s'}}>
+            <div style={{fontWeight:700,fontSize:15,marginBottom:4}}>{firstName} {lastName}</div>
+            <div style={{fontSize:12,color:'var(--gray-400)'}}>Show my real name publicly</div>
+            {displayPref === 'real_name' && <div style={{fontSize:11,color:'var(--primary)',fontWeight:700,marginTop:6}}>✓ Currently active</div>}
+          </button>
+        </div>
+        <div style={{marginTop:12,padding:'10px 14px',background:'var(--bg-alt)',borderRadius:'var(--radius)',fontSize:12,color:'var(--gray-500)'}}>
+          Preview: Other members will see you as <strong style={{color:'var(--text)'}}>{displayPref === 'real_name' ? `${firstName} ${lastName}` : `@${user.username || 'username'}`}</strong> in the forum and leaderboard.
+        </div>
       </div>
       <div className="card" style={{marginBottom:24}}>
         <h3 style={{fontSize:16,marginBottom:16}}>Change Password</h3>
@@ -5899,7 +6116,7 @@ function BookingWizard({ service }) {
       if (typeof v === 'string') sanitisedFormData[k] = v.replace(/[<>&"']/g, '').replace(/&#\d+;/g, '').replace(/&#x[\da-fA-F]+;/g, '').slice(0, 2000);
       else sanitisedFormData[k] = v;
     });
-    addProject({ id: 'prj_' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36), service: service.id, status: 'pending', date: new Date().toISOString().split('T')[0], paid: 'credits', amount: creditPrice, formData: sanitisedFormData, progress: 0, assignedTo: null, userId: user.id, userName: user.name, userEmail: user.email, brief: sanitisedFormData?.details || '', deliverables: [], timeline: [{ date: new Date().toISOString().split('T')[0], event: 'Order placed — awaiting brief review', type: 'system' }] });
+    addProject({ id: 'prj_' + crypto.getRandomValues(new Uint32Array(1))[0].toString(36), service: service.id, status: 'pending', date: new Date().toISOString().split('T')[0], paid: 'credits', amount: creditPrice, formData: sanitisedFormData, progress: 0, assignedTo: null, userId: user.id, userName: user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name, userEmail: user.email, brief: sanitisedFormData?.details || '', deliverables: [], timeline: [{ date: new Date().toISOString().split('T')[0], event: 'Order placed — awaiting brief review', type: 'system' }] });
     addToast(`🎉 ${service.name} booked successfully!`);
     setStep(4);
   };
@@ -6022,8 +6239,9 @@ function BookingWizard({ service }) {
 // ============================================================================
 
 function DashCommunity() {
-  const { user } = useContext(AuthContext);
+  const { user, getDisplayName } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
+  const displayName = getDisplayName(user);
   const [view, setView] = useState('categories'); // categories | category | thread | new-thread
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeThread, setActiveThread] = useState(null);
@@ -6078,13 +6296,13 @@ function DashCommunity() {
   const handleNewThread = () => {
     if (!newTitle.trim() || !newContent.trim()) { addToast('Please fill in both title and content', 'error'); return; }
     const thread = {
-      id: 'thread-' + Date.now(), category: activeCategory, title: newTitle, author: user.name, authorAvatar: '#7C3AED',
+      id: 'thread-' + Date.now(), category: activeCategory, title: newTitle, author: displayName, authorAvatar: '#7C3AED',
       replies: 0, likes: 0, views: 0, pinned: false, locked: false,
       createdAt: new Date().toISOString(), lastReplyAt: new Date().toISOString(),
-      posts: [{ id: 'p-' + Date.now(), author: user.name, authorAvatar: '#7C3AED', content: newContent, likes: 0, createdAt: new Date().toISOString() }]
+      posts: [{ id: 'p-' + Date.now(), author: displayName, authorAvatar: '#7C3AED', content: newContent, likes: 0, createdAt: new Date().toISOString() }]
     };
     setThreads(prev => [thread, ...prev]);
-    const isFirstPost = threads.filter(t => t.author === user.name).length === 0;
+    const isFirstPost = threads.filter(t => t.author === displayName).length === 0;
     earnForumCredits(FORUM_CREDIT_RULES.newThread, 'New thread created');
     if (isFirstPost) earnForumCredits(FORUM_CREDIT_RULES.firstPostBonus, 'First forum post bonus!');
     setNewTitle(''); setNewContent('');
@@ -6098,7 +6316,7 @@ function DashCommunity() {
     if (thread?.locked) { addToast('This thread is locked', 'error'); return; }
     setThreads(prev => prev.map(t => t.id === threadId ? {
       ...t, replies: t.replies + 1, lastReplyAt: new Date().toISOString(),
-      posts: [...(t.posts || []), { id: 'p-' + Date.now(), author: user.name, authorAvatar: '#7C3AED', content: replyContent, likes: 0, createdAt: new Date().toISOString() }]
+      posts: [...(t.posts || []), { id: 'p-' + Date.now(), author: displayName, authorAvatar: '#7C3AED', content: replyContent, likes: 0, createdAt: new Date().toISOString() }]
     } : t));
     earnForumCredits(FORUM_CREDIT_RULES.reply, 'Forum reply');
     setReplyContent('');
@@ -6326,8 +6544,9 @@ function DashCommunity() {
 // ============================================================================
 
 function DashLeaderboard() {
-  const { user } = useContext(AuthContext);
+  const { user, getDisplayName } = useContext(AuthContext);
   const [showBreakdown, setShowBreakdown] = useState(null);
+  const displayName = getDisplayName(user);
 
   const getTier = (score) => {
     for (const tier of LEADERBOARD_TIERS) {
@@ -6355,7 +6574,7 @@ function DashLeaderboard() {
       <div className="card" style={{background:'linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.06))',border:'1.5px solid rgba(124,58,237,0.15)',marginBottom:24,padding:24}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:16}}>
           <div style={{display:'flex',alignItems:'center',gap:16}}>
-            <div style={{width:56,height:56,borderRadius:'50%',background:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:800,fontSize:22}}>{user?.name?.charAt(0) || '?'}</div>
+            <div style={{width:56,height:56,borderRadius:'50%',background:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:800,fontSize:22}}>{(displayName || '?')[0]}</div>
             <div>
               <div style={{fontSize:18,fontWeight:800}}>Your Position: #{userRank}</div>
               <div style={{display:'flex',alignItems:'center',gap:8,marginTop:4}}>
@@ -6589,7 +6808,7 @@ function SupportPage() {
 
   const handleReply = () => {
     if (!replyText.trim() || replyText.trim().length < 5) { addToast('Please enter a reply (min 5 characters)', 'error'); return; }
-    addReply(activeTicketId, replyText.trim(), 'user', user.name, '#3B82F6');
+    addReply(activeTicketId, replyText.trim(), 'user', user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name, '#3B82F6');
     addToast('Reply sent! Email notification sent to the support team.');
     setReplyText('');
   };
@@ -6956,7 +7175,7 @@ function AdminPage() {
       <aside className="dashboard-sidebar">
         <div style={{marginBottom:20,padding:'12px 14px',background:'linear-gradient(135deg,rgba(124,58,237,0.25),rgba(236,72,153,0.15))',borderRadius:'var(--radius)',border:'1px solid rgba(124,58,237,0.3)'}}>
           <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}><span style={{background:'var(--gradient)',color:'#fff',padding:'2px 10px',borderRadius:20,fontSize:11,fontWeight:800,letterSpacing:'.5px'}}>SUPER ADMIN</span><span style={{width:8,height:8,borderRadius:'50%',background:'#4ade80',display:'inline-block'}}></span></div>
-          <div style={{fontSize:15,fontWeight:700,color:'#fff'}}>{user.name}</div>
+          <div style={{fontSize:15,fontWeight:700,color:'#fff'}}>{user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name}</div>{user.username && <div style={{fontSize:12,color:'rgba(255,255,255,0.7)'}}>@{user.username}</div>}
           <div style={{fontSize:11,color:'rgba(255,255,255,0.5)',marginTop:2}}>{user.email || 'Admin'}</div>
         </div>
         <nav className="sidebar-nav">
@@ -11854,7 +12073,7 @@ function ChatWidget() {
   // Initialise with welcome message
   useEffect(() => {
     if (open && messages.length === 0) {
-      setMessages([{ id: 1, type: 'bot', text: `Hi${user ? ' ' + user.name.split(' ')[0] : ' there'}! 👋 I'm Kay, your Creative Kaygency assistant. How can I help you today?` }]);
+      setMessages([{ id: 1, type: 'bot', text: `Hi${user ? ' ' + (user.first_name || user.name?.split(' ')[0] || '') : ' there'}! 👋 I'm Kay, your Creative Kaygency assistant. How can I help you today?` }]);
     }
   }, [open]);
 
@@ -11866,7 +12085,7 @@ function ChatWidget() {
     'refund': `We offer a satisfaction guarantee on all services! If you're not happy:\n\n• You can request revisions (2-unlimited depending on your plan)\n• Refunds are available if work hasn't started\n• Partial refunds for scope changes\n\nFull details on our refund policy page at /refund.`,
     'contact': `You can reach us several ways:\n\n📧 Email: hello@creativekaygency.com\n💬 This chat (we'll get back to you)\n🎫 Support tickets: /support\n📞 Response within 24 hours\n\nWant me to open the contact page for you?`,
     'hosting': `We offer managed web hosting:\n\n🟢 Starter — 200 credits/mo (5GB, free SSL)\n🔵 Business — 400 credits/mo (20GB, priority)\n🟣 Professional — 700 credits/mo (50GB, staging)\n⚫ Enterprise — 1,200 credits/mo (unlimited, dedicated)\n\nAll plans include daily backups, 99.9% uptime, and free SSL!`,
-    'account': user ? `You're logged in as **${user.name}**!\n\n🪙 Credit balance: ${user.credits.toLocaleString()} credits\n📊 Dashboard: /dashboard\n⚙️ Settings: /dashboard/settings\n\nAnything specific you need help with?` : `You can create a free account in seconds — no credit card required!\n\n✅ Browse all 40+ services\n✅ Earn daily login credits\n✅ Track projects in your dashboard\n✅ Get referral bonuses\n\nSign up at /register!`,
+    'account': user ? `You're logged in as **${user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name}**${user.username ? ` (@${user.username})` : ''}!\n\n🪙 Credit balance: ${user.credits.toLocaleString()} credits\n📊 Dashboard: /dashboard\n⚙️ Settings: /dashboard/settings\n\nAnything specific you need help with?` : `You can create a free account in seconds — no credit card required!\n\n✅ Browse all 40+ services\n✅ Earn daily login credits\n✅ Track projects in your dashboard\n✅ Get referral bonuses\n\nSign up at /register!`,
   };
 
   const QUICK_ACTIONS = [
