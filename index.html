@@ -7,11 +7,11 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), accelerometer=(), gyroscope=(), autoplay=(), fullscreen=(self)">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(self 'https://js.stripe.com'), usb=(), bluetooth=(), magnetometer=(), accelerometer=(), gyroscope=(), autoplay=(), fullscreen=(self)">
   <!--
     CSP PRODUCTION NOTE: Deploy the following as a server-side HTTP header (not a meta tag)
     to avoid conflicts with Babel standalone's dynamic script compilation:
-    Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';
+    Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://unpkg.com https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.stripe.com; connect-src 'self' https://api.stripe.com; frame-src https://js.stripe.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';
   -->
   <meta name="description" content="Creative Kaygency — Access professional digital design services in a fun, gamified way. Websites, e-commerce, branding, SEO, content, email marketing & more. Save up to 20% with credits.">
   <meta name="keywords" content="digital design services, web design agency, e-commerce development, logo design, SEO services, branding agency, content writing, email marketing, landing page design, affordable web design, UK design agency, gamified services platform, creative agency">
@@ -195,6 +195,7 @@
   <script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://js.stripe.com/v3/"></script>
   <!-- Fallback: verify DOMPurify loaded (critical security dependency) -->
   <script>if(typeof DOMPurify==='undefined'){document.write('<div style="background:#ff0000;color:#fff;padding:20px;text-align:center;font-size:18px;font-weight:bold">Security Error: DOMPurify failed to load. Please refresh the page.</div>');throw new Error('DOMPurify not loaded — aborting for security');}</script>
 <style>
@@ -236,6 +237,8 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 @keyframes ck-spin{to{transform:rotate(360deg)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes ck-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 /* Utilities */
 .container{max-width:1280px;margin:0 auto;padding:0 24px}
@@ -4795,6 +4798,7 @@ function DashCredits({ user, formatPrice }) {
   const { addToast } = useContext(NotificationContext);
 
   const [purchasing, setPurchasing] = React.useState(null);
+  const [checkoutSecret, setCheckoutSecret] = React.useState(null);
 
   const handlePurchase = async (pkg) => {
     setPurchasing(pkg.id);
@@ -4809,16 +4813,20 @@ function DashCredits({ user, formatPrice }) {
         }),
       });
       const data = await resp.json();
-      if (!resp.ok || !data.url) {
+      if (!resp.ok || !data.clientSecret) {
         throw new Error(data.error || 'Failed to start checkout');
       }
-      window.open(data.url, '_blank');
+      setCheckoutSecret(data.clientSecret);
     } catch (err) {
       console.error('Purchase error:', err);
       addToast('Payment could not be started. Please try again.', 'error');
     } finally {
       setPurchasing(null);
     }
+  };
+
+  const handleCheckoutClose = () => {
+    setCheckoutSecret(null);
   };
 
   return (
@@ -4849,7 +4857,7 @@ function DashCredits({ user, formatPrice }) {
             <div className="per">{Math.round(pkg.perCredit * 100)}p per credit</div>
             {pkg.perCredit < 0.20 && <div style={{fontSize:11,color:'var(--success)',fontWeight:700,marginTop:4}}>Save {Math.round((1 - pkg.perCredit / 0.22) * 100)}%</div>}
             <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => handlePurchase(pkg)} disabled={!!purchasing}>
-              {purchasing === pkg.id ? 'Redirecting…' : 'Buy Now'}
+              {purchasing === pkg.id ? 'Loading…' : 'Buy Now'}
             </button>
           </div>
         ))}
@@ -4864,6 +4872,7 @@ function DashCredits({ user, formatPrice }) {
           <tr><td>3 days ago</td><td><span className="badge badge-primary">Referral</span></td><td style={{color:'var(--success)'}}>+50</td><td>{(user.credits + 295).toLocaleString()}</td></tr>
         </tbody>
       </table></div></div>
+      {checkoutSecret && React.createElement(CheckoutModal, { clientSecret: checkoutSecret, onClose: handleCheckoutClose })}
     </div>
   );
 }
@@ -8129,9 +8138,10 @@ function PricingPage() {
   const { addToast } = useContext(NotificationContext);
   const [annual, setAnnual] = useState(false);
   const [purchasing, setPurchasing] = useState(null);
+  const [checkoutSecret, setCheckoutSecret] = useState(null);
 
   const handleBuyCredits = async (pkg) => {
-    if (!user) { window.open(routeHref('/register'), '_blank'); return; }
+    if (!user) { navigate('/register'); return; }
     setPurchasing(pkg.id);
     try {
       const resp = await fetch('/api/create-checkout-session', {
@@ -8140,14 +8150,18 @@ function PricingPage() {
         body: JSON.stringify({ packageId: pkg.id, userId: user.id, userEmail: user.email || undefined }),
       });
       const data = await resp.json();
-      if (!resp.ok || !data.url) throw new Error(data.error || 'Failed to start checkout');
-      window.open(data.url, '_blank');
+      if (!resp.ok || !data.clientSecret) throw new Error(data.error || 'Failed to start checkout');
+      setCheckoutSecret(data.clientSecret);
     } catch (err) {
       console.error('Purchase error:', err);
       addToast('Payment could not be started. Please try again.', 'error');
     } finally {
       setPurchasing(null);
     }
+  };
+
+  const handleCheckoutClose = () => {
+    setCheckoutSecret(null);
   };
   useSEO({ title: 'Pricing - Creative Kaygency | Affordable Plans from £99/mo', description: 'Choose from Starter (£99/mo), Professional (£199/mo), or Enterprise (£299/mo) plans. All services paid with credits. Subscribe monthly or buy credit packages.', keywords: 'pricing, subscription plans, affordable web design, credit system, Creative Kaygency pricing', canonical: 'https://www.creativekaygency.com/pricing', jsonLd: { "@context": "https://schema.org", "@type": "Product", "name": "Creative Kaygency Subscription Plans", "description": "Monthly subscription plans for professional digital design services with credit allocations.", "brand": { "@type": "Brand", "name": "Creative Kaygency" }, "offers": PLANS.map(p => ({ "@type": "Offer", "name": p.name + " Plan", "priceCurrency": "GBP", "price": p.price, "priceValidUntil": "2027-12-31", "availability": "https://schema.org/InStock", "url": "https://www.creativekaygency.com/pricing", "description": `${p.credits} credits/month, ${p.turnaround} turnaround` })) } });
 
@@ -8246,7 +8260,7 @@ function PricingPage() {
               <div className="price">{formatPrice(pkg.price)}</div>
               <div className="per">{Math.round(pkg.perCredit * 100)}p per credit</div>
               <button className="btn btn-sm btn-primary btn-block" style={{marginTop:10}} onClick={() => handleBuyCredits(pkg)} disabled={!!purchasing}>
-                {purchasing === pkg.id ? 'Redirecting…' : 'Buy Credits'}
+                {purchasing === pkg.id ? 'Loading…' : 'Buy Credits'}
               </button>
             </div>
           ))}
@@ -8272,6 +8286,7 @@ function PricingPage() {
 
       {/* CTA */}
       <section className="cta-section"><div className="container" style={{position:'relative'}}><h2>Ready to Get Started?</h2><p>Choose the payment option that works best for you and start your first project today.</p><div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}><a href={routeHref("/register")} className="btn btn-lg btn-dark">Sign Up Free →</a><a href={routeHref("/services")} className="btn btn-lg btn-ghost" style={{color:'#fff',borderColor:'rgba(255,255,255,0.3)'}}>Browse Services</a></div></div></section>
+      {checkoutSecret && React.createElement(CheckoutModal, { clientSecret: checkoutSecret, onClose: handleCheckoutClose })}
     </div>
   );
 }
@@ -10051,6 +10066,136 @@ const RECENT_PURCHASES = [
 ];
 
 // ── Stripe payment return handler ──
+/* ==================== STRIPE CHECKOUT MODAL ==================== */
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_51PNH19JH73auW9hrd5uxBezCbeq9boV2EHrsncdo1UQC042c0tQjUJJ8B49ME5aaCr46vzi4sr6ePn7wX7yeixyg00twwlrixC';
+
+function CheckoutModal({ clientSecret, onClose, onComplete }) {
+  const checkoutContainerRef = useRef(null);
+  const checkoutRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!clientSecret) return;
+    let mounted = true;
+    let checkout = null;
+
+    const initCheckout = async () => {
+      try {
+        if (typeof Stripe === 'undefined') {
+          throw new Error('Stripe.js failed to load. Please refresh and try again.');
+        }
+        const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        checkout = await stripe.initEmbeddedCheckout({ clientSecret });
+        if (!mounted) { checkout.destroy(); return; }
+        checkoutRef.current = checkout;
+        checkout.mount(checkoutContainerRef.current);
+        if (mounted) setLoading(false);
+      } catch (err) {
+        console.error('Stripe Embedded Checkout error:', err);
+        if (mounted) { setError(err.message || 'Failed to load checkout'); setLoading(false); }
+      }
+    };
+
+    initCheckout();
+
+    return () => {
+      mounted = false;
+      if (checkoutRef.current) {
+        try { checkoutRef.current.destroy(); } catch (e) { /* already destroyed */ }
+        checkoutRef.current = null;
+      }
+    };
+  }, [clientSecret]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    const orig = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = orig; };
+  }, []);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  return ReactDOM.createPortal(
+    React.createElement('div', {
+      className: 'checkout-modal-overlay',
+      onClick: handleOverlayClick,
+      style: {
+        position: 'fixed', inset: 0, zIndex: 99999,
+        background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '16px', animation: 'fadeIn 0.2s ease-out',
+      }
+    },
+      React.createElement('div', {
+        className: 'checkout-modal-container',
+        style: {
+          position: 'relative', width: '100%', maxWidth: 500,
+          maxHeight: '90vh', overflowY: 'auto',
+          background: '#fff', borderRadius: 16,
+          boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
+          animation: 'slideUp 0.3s ease-out',
+        }
+      },
+        /* Close button */
+        React.createElement('button', {
+          onClick: onClose,
+          'aria-label': 'Close checkout',
+          style: {
+            position: 'sticky', top: 8, float: 'right', marginRight: 8, marginTop: 8,
+            zIndex: 10, width: 36, height: 36, borderRadius: '50%',
+            border: 'none', background: 'rgba(0,0,0,0.08)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 18, color: '#666', transition: 'background 0.2s',
+          },
+          onMouseEnter: (e) => { e.target.style.background = 'rgba(0,0,0,0.15)'; },
+          onMouseLeave: (e) => { e.target.style.background = 'rgba(0,0,0,0.08)'; },
+        }, '✕'),
+        /* Loading state */
+        loading && !error && React.createElement('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            justifyContent: 'center', padding: '60px 20px', gap: 16,
+          }
+        },
+          React.createElement('div', { className: 'spinner', style: { width: 40, height: 40 } }),
+          React.createElement('p', { style: { color: '#666', fontSize: 14 } }, 'Loading secure checkout…')
+        ),
+        /* Error state */
+        error && React.createElement('div', {
+          style: {
+            padding: '40px 20px', textAlign: 'center',
+          }
+        },
+          React.createElement('div', { style: { fontSize: 40, marginBottom: 12 } }, '⚠️'),
+          React.createElement('p', { style: { color: '#e53e3e', fontWeight: 600, marginBottom: 8 } }, 'Checkout Error'),
+          React.createElement('p', { style: { color: '#666', fontSize: 14, marginBottom: 16 } }, error),
+          React.createElement('button', {
+            onClick: onClose, className: 'btn btn-sm btn-primary',
+          }, 'Close')
+        ),
+        /* Stripe mount point */
+        React.createElement('div', {
+          ref: checkoutContainerRef,
+          id: 'stripe-checkout-mount',
+          style: { minHeight: loading ? 0 : 300 },
+        })
+      )
+    ),
+    document.body
+  );
+}
+
 function PaymentReturnHandler() {
   const { user, refreshProfile } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
