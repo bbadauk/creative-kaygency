@@ -292,8 +292,12 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 @media(max-width:768px){.mega-menu-grid{grid-template-columns:1fr}}
 
 /* Credit Pill & Currency */
-.credit-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(236,72,153,0.08));padding:6px 14px;border-radius:var(--radius-full);font-size:13px;font-weight:600;color:var(--primary);border:1px solid rgba(124,58,237,0.15);text-decoration:none}
+.credit-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(236,72,153,0.08));padding:6px 14px;border-radius:var(--radius-full);font-size:13px;font-weight:600;color:var(--primary);border:1px solid rgba(124,58,237,0.15);text-decoration:none;transition:all .3s ease}
 .credit-pill .coin{font-size:15px}
+.credit-pill.credit-flash{animation:creditPulse .8s ease;background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(236,72,153,0.25));border-color:rgba(124,58,237,0.4);-webkit-transform:scale(1.1);transform:scale(1.1)}
+@keyframes creditPulse{0%{-webkit-transform:scale(1);transform:scale(1);box-shadow:none}30%{-webkit-transform:scale(1.15);transform:scale(1.15);box-shadow:0 0 16px rgba(124,58,237,0.4)}100%{-webkit-transform:scale(1);transform:scale(1);box-shadow:none}}
+.credit-balance-card.credit-flash{animation:balancePulse 1s ease}
+@keyframes balancePulse{0%{-webkit-transform:scale(1);transform:scale(1)}30%{-webkit-transform:scale(1.03);transform:scale(1.03);box-shadow:0 8px 30px rgba(124,58,237,0.4)}100%{-webkit-transform:scale(1);transform:scale(1)}}
 .currency-dropdown{position:relative}
 .currency-dropdown-trigger{display:flex;align-items:center;gap:5px;padding:6px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-size:13px;font-weight:600;color:var(--gray-700);cursor:pointer;background:#fff;transition:all .2s}
 .currency-dropdown-trigger:hover{border-color:var(--primary);color:var(--primary)}
@@ -2453,25 +2457,20 @@ function AuthProvider({ children }) {
   };
 
   const claimDailyLogin = async () => {
-    if (!user) { console.log('[CLAIM] No user'); return false; }
+    if (!user) return false;
     // Fetch fresh profile from server to prevent date manipulation
-    console.log('[CLAIM] Step 1: Fetching profile for', user.id);
     const { data: freshProfile, error: profileError } = await supabaseClient.from('profiles').select('credits, streak, last_claim_date').eq('id', user.id).single();
-    console.log('[CLAIM] Step 1 result:', { freshProfile, profileError });
     if (profileError || !freshProfile) { console.error('[CLAIM] Profile fetch failed:', profileError); return false; }
     // Use server time via Supabase (not local clock) to prevent timezone manipulation
-    console.log('[CLAIM] Step 2: Getting server date');
     let serverTime = null;
     try {
       const rpcResult = await supabaseClient.rpc('get_server_date');
       serverTime = rpcResult.data;
-      console.log('[CLAIM] Step 2 result:', { serverTime, error: rpcResult.error });
     } catch (rpcErr) {
-      console.warn('[CLAIM] RPC fallback to client date:', rpcErr);
+      console.warn('[CLAIM] Server date unavailable, using client date');
     }
     const today = serverTime || new Date().toISOString().split('T')[0];
-    console.log('[CLAIM] Today:', today, 'Last claim:', freshProfile.last_claim_date);
-    if (freshProfile.last_claim_date === today) { console.log('[CLAIM] Already claimed today'); return false; }
+    if (freshProfile.last_claim_date === today) return false;
     // Check if streak is valid (last claim was yesterday)
     const lastClaim = freshProfile.last_claim_date ? new Date(freshProfile.last_claim_date) : null;
     const todayDate = new Date(today);
@@ -2479,7 +2478,6 @@ function AuthProvider({ children }) {
     const newStreak = dayDiff === 1 ? (freshProfile.streak || 0) + 1 : 1;
     const DAILY_CREDIT = 2;
     const newCredits = Math.max(0, Math.min(freshProfile.credits + DAILY_CREDIT, 999999));
-    console.log('[CLAIM] Step 3: Updating profile. New credits:', newCredits, 'New streak:', newStreak);
     // Optimistic lock: only update if date hasn't changed
     // IMPORTANT: .eq() doesn't work with NULL in PostgREST — must use .is() for NULL values
     let query = supabaseClient.from('profiles').update({
@@ -2491,16 +2489,14 @@ function AuthProvider({ children }) {
       query = query.eq('last_claim_date', freshProfile.last_claim_date);
     }
     const { error } = await query;
-    console.log('[CLAIM] Step 3 result:', { error });
     if (error) { console.error('[CLAIM] Update failed:', error); return false; }
     // Audit log for daily login
     await supabaseClient.from('credit_audit_log').insert({
       user_id: user.id, amount: DAILY_CREDIT, reason: 'daily_login',
       old_balance: freshProfile.credits, new_balance: newCredits,
       timestamp: new Date().toISOString()
-    }).catch(e => console.warn('[CLAIM] Audit log failed:', e));
+    }).catch(() => {});
     setUser(u => u ? { ...u, credits: newCredits, streak: newStreak, last_claim_date: today } : null);
-    console.log('[CLAIM] SUCCESS! Credits updated to', newCredits);
     return true;
   };
 
@@ -3026,7 +3022,19 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currOpen, setCurrOpen] = useState(false);
+  const [creditFlash, setCreditFlash] = useState(false);
+  const prevCredits = useRef(null);
   const currRef = useRef(null);
+
+  // Flash the credit pill whenever credits change
+  useEffect(() => {
+    if (user && prevCredits.current !== null && prevCredits.current !== user.credits) {
+      setCreditFlash(true);
+      const t = setTimeout(() => setCreditFlash(false), 900);
+      return () => clearTimeout(t);
+    }
+    if (user) prevCredits.current = user.credits;
+  }, [user?.credits]);
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 10);
@@ -3090,7 +3098,7 @@ function Navbar() {
               ))}
             </div>
           </div>
-          {user && <a href={routeHref("/dashboard/credits")} className="credit-pill"><span className="coin">🪙</span>{user.credits.toLocaleString()}</a>}
+          {user && <a href={routeHref("/dashboard/credits")} className={`credit-pill${creditFlash ? ' credit-flash' : ''}`}><span className="coin">🪙</span>{user.credits.toLocaleString()}</a>}
           {user ? (
             <div className="nav-dropdown" style={{position:'relative'}}>
               <button className="btn btn-sm btn-ghost nav-dropdown-trigger" style={{display:'flex',alignItems:'center',gap:'6px'}} aria-label="User menu" aria-haspopup="true">
@@ -4328,6 +4336,18 @@ function DashboardPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { addToast } = useContext(NotificationContext);
   const [tab, setTab] = useState('overview');
+  const [dashCreditFlash, setDashCreditFlash] = useState(false);
+  const prevDashCredits = useRef(null);
+
+  // Flash dashboard credit elements when credits change
+  useEffect(() => {
+    if (user && prevDashCredits.current !== null && prevDashCredits.current !== user.credits) {
+      setDashCreditFlash(true);
+      const t = setTimeout(() => setDashCreditFlash(false), 1100);
+      return () => clearTimeout(t);
+    }
+    if (user) prevDashCredits.current = user.credits;
+  }, [user?.credits]);
 
   useSEO({
     title: 'Dashboard | Creative Kaygency',
@@ -4414,7 +4434,7 @@ function DashboardPage() {
       </aside>
       <main className="dashboard-content">
         {!isAdmin && <DashAdBanner />}
-        {tab === 'overview' && <DashOverview user={user} projects={projects} formatPrice={formatPrice} onClaim={handleDailyClaim} onNavigate={(t) => { setTab(t); navigate('/dashboard/' + t); }} />}
+        {tab === 'overview' && <DashOverview user={user} projects={projects} formatPrice={formatPrice} onClaim={handleDailyClaim} onNavigate={(t) => { setTab(t); navigate('/dashboard/' + t); }} creditFlash={dashCreditFlash} />}
         {tab === 'projects' && <DashProjects projects={projects} />}
         {tab === 'book' && <DashBookService />}
         {tab === 'credits' && <DashCredits user={user} formatPrice={formatPrice} />}
@@ -4427,13 +4447,13 @@ function DashboardPage() {
   );
 }
 
-function DashOverview({ user, projects, formatPrice, onClaim, onNavigate }) {
+function DashOverview({ user, projects, formatPrice, onClaim, onNavigate, creditFlash }) {
   const { services } = useContext(AuthContext);
   return (
     <div>
       <div className="dash-header"><h1>Dashboard</h1><p>Welcome back, {user.name}. Here's your account overview.</p></div>
       <div className="dash-stats">
-        <div className="dash-stat-card"><div className="label">Credit Balance</div><div className="value" style={{color:'var(--primary)'}}>{user.credits.toLocaleString()}</div><div className="change up">🪙 Credits available</div></div>
+        <div className={`dash-stat-card${creditFlash ? ' credit-flash' : ''}`} style={creditFlash ? {boxShadow:'0 0 20px rgba(124,58,237,0.3)',transition:'all .3s ease'} : {transition:'all .3s ease'}}><div className="label">Credit Balance</div><div className="value" style={{color:'var(--primary)'}}>{user.credits.toLocaleString()}</div><div className="change up">🪙 Credits available</div></div>
         <div className="dash-stat-card"><div className="label">Active Projects</div><div className="value" style={{color:'var(--info)'}}>{projects.filter(p => p.status === 'in-progress').length}</div><div className="change">In progress</div></div>
         <div className="dash-stat-card"><div className="label">Completed</div><div className="value" style={{color:'var(--success)'}}>{projects.filter(p => p.status === 'completed').length}</div><div className="change up">All time</div></div>
         <div className="dash-stat-card"><div className="label">Current Streak</div><div className="value" style={{color:'var(--warning)'}}>{user.streak} 🔥</div><div className="change up">Days</div></div>
