@@ -2099,6 +2099,108 @@ const BADGES = [
   { id: 'subscriber', name: 'Subscriber', icon: '💎', desc: 'Subscribe to a plan' },
   { id: 'social-share', name: 'Social Star', icon: '📢', desc: 'Share on social media' },
   { id: 'review', name: 'Reviewer', icon: '✨', desc: 'Leave your first review' },
+  { id: 'first-post', name: 'First Post', icon: '💬', desc: 'Create your first forum post' },
+  { id: 'forum-10', name: 'Conversationalist', icon: '🗣️', desc: 'Make 10 forum posts or replies' },
+  { id: 'forum-50', name: 'Community Regular', icon: '🏠', desc: 'Make 50 forum posts or replies' },
+  { id: 'helpful-10', name: 'Helpful Member', icon: '🤲', desc: 'Receive 10 likes on your posts' },
+  { id: 'helpful-50', name: 'Community Hero', icon: '🦸', desc: 'Receive 50 likes on your posts' },
+  { id: 'thread-starter', name: 'Thread Starter', icon: '🧵', desc: 'Start 5 discussion threads' },
+];
+
+// ============================================================================
+// COMMUNITY FORUM DATA
+// ============================================================================
+
+const FORUM_CATEGORIES = [
+  { id: 'showcase', name: 'Showcase Your Project', icon: '🖼️', desc: 'Share completed projects and get feedback from the community', color: '#7C3AED' },
+  { id: 'web-design', name: 'Web Design Tips', icon: '🎨', desc: 'Discuss design trends, UX best practices, and creative inspiration', color: '#EC4899' },
+  { id: 'seo-marketing', name: 'SEO & Marketing', icon: '📈', desc: 'Share SEO strategies, marketing wins, and growth hacks', color: '#10B981' },
+  { id: 'branding', name: 'Branding Chat', icon: '✏️', desc: 'Talk logos, colour palettes, typography, and brand identity', color: '#F59E0B' },
+  { id: 'general', name: 'General Discussion', icon: '💬', desc: 'Off-topic chat, introductions, and community hangout', color: '#3B82F6' },
+  { id: 'feature-requests', name: 'Feature Requests', icon: '💡', desc: 'Suggest new features and vote on ideas for the platform', color: '#6366F1' },
+];
+
+// Credit rewards for forum activity — kept deliberately small so free credits
+// remain a loyalty perk, not a substitute for purchasing credits.
+// Max earnable per day capped at ~2 credits from forum activity.
+const FORUM_CREDIT_RULES = {
+  newThread: 0.5,        // 0.5 credits for starting a new thread
+  reply: 0.25,           // 0.25 credits per reply
+  receiveLike: 0.1,      // 0.1 credits when someone likes your post
+  dailyCap: 2,           // Max 2 credits earnable per day from forum activity
+  firstPostBonus: 2,     // One-time bonus for very first forum post
+};
+
+// Demo forum threads for initial launch display
+const DEMO_FORUM_THREADS = [
+  { id: 'thread-1', category: 'showcase', title: 'Just launched my new e-commerce store — built by Creative Kaygency!', author: 'Nathan Brooks', authorAvatar: '#22C55E', replies: 12, likes: 28, views: 156, pinned: true, locked: false, createdAt: '2026-04-15T10:30:00Z', lastReplyAt: '2026-04-17T14:22:00Z',
+    posts: [
+      { id: 'p1', author: 'Nathan Brooks', authorAvatar: '#22C55E', content: 'Just wanted to share my new FitFuel Nutrition store that the CK team built for me. Already doing £12K/month in sales! The e-commerce package was incredible value — 2,000 credits well spent. Happy to answer any questions about the process.', likes: 28, createdAt: '2026-04-15T10:30:00Z' },
+      { id: 'p2', author: 'Sophie Laurent', authorAvatar: '#EC4899', content: 'This looks amazing! The product photography layout is really clean. How long did the whole build take?', likes: 5, createdAt: '2026-04-15T11:45:00Z' },
+      { id: 'p3', author: 'Nathan Brooks', authorAvatar: '#22C55E', content: 'Thanks Sophie! About 3 weeks from brief to launch. The team was super responsive and the revision rounds were quick.', likes: 3, createdAt: '2026-04-15T12:10:00Z' },
+    ]
+  },
+  { id: 'thread-2', category: 'seo-marketing', title: 'How I got 12 page-one rankings in 3 months with CK\'s SEO package', author: 'Oliver Reed', authorAvatar: '#14B8A6', replies: 8, likes: 19, views: 203, pinned: false, locked: false, createdAt: '2026-04-12T09:15:00Z', lastReplyAt: '2026-04-16T16:30:00Z',
+    posts: [
+      { id: 'p4', author: 'Oliver Reed', authorAvatar: '#14B8A6', content: 'Sharing my SEO results after using CK\'s technical SEO + blog SEO combo. We went from 0 to 12 page-one keywords in under 3 months. Our landing page conversion rate jumped to 8.2%. Here\'s what worked for us...', likes: 19, createdAt: '2026-04-12T09:15:00Z' },
+      { id: 'p5', author: 'Daniel Kim', authorAvatar: '#0891B2', content: 'Those numbers are impressive! Did you supplement with any paid ads or was this purely organic?', likes: 4, createdAt: '2026-04-12T14:20:00Z' },
+    ]
+  },
+  { id: 'thread-3', category: 'web-design', title: 'Dark mode vs light mode — what converts better?', author: 'Chloe Williams', authorAvatar: '#A855F7', replies: 15, likes: 11, views: 89, pinned: false, locked: false, createdAt: '2026-04-10T16:00:00Z', lastReplyAt: '2026-04-17T09:45:00Z',
+    posts: [
+      { id: 'p6', author: 'Chloe Williams', authorAvatar: '#A855F7', content: 'I\'ve been debating whether to offer dark mode toggle on client sites. Anyone have data on which converts better for e-commerce? I\'ve seen mixed results in my own A/B tests.', likes: 11, createdAt: '2026-04-10T16:00:00Z' },
+    ]
+  },
+  { id: 'thread-4', category: 'branding', title: 'Best free font pairings for SaaS landing pages?', author: 'Aisha Mohammed', authorAvatar: '#F59E0B', replies: 6, likes: 8, views: 67, pinned: false, locked: false, createdAt: '2026-04-08T11:30:00Z', lastReplyAt: '2026-04-14T13:15:00Z',
+    posts: [
+      { id: 'p7', author: 'Aisha Mohammed', authorAvatar: '#F59E0B', content: 'Looking for modern, clean font pairings for a SaaS product page. Currently using Inter + Space Grotesk but open to suggestions. What combos have worked well for your projects?', likes: 8, createdAt: '2026-04-08T11:30:00Z' },
+    ]
+  },
+  { id: 'thread-5', category: 'general', title: 'Introduce yourself! What does your business do?', author: 'Creative Kaygency', authorAvatar: '#7C3AED', replies: 24, likes: 35, views: 412, pinned: true, locked: false, createdAt: '2026-03-01T09:00:00Z', lastReplyAt: '2026-04-18T08:00:00Z',
+    posts: [
+      { id: 'p8', author: 'Creative Kaygency', authorAvatar: '#7C3AED', content: 'Welcome to the Creative Kaygency community! We\'d love to hear about you and your business. Drop a quick intro — what you do, what brought you here, and what you\'re working on. Let\'s connect!', likes: 35, createdAt: '2026-03-01T09:00:00Z' },
+    ]
+  },
+  { id: 'thread-6', category: 'feature-requests', title: 'Would love a project collaboration feature', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', replies: 9, likes: 14, views: 78, pinned: false, locked: false, createdAt: '2026-04-05T14:00:00Z', lastReplyAt: '2026-04-16T10:30:00Z',
+    posts: [
+      { id: 'p9', author: 'Ryan O\'Connor', authorAvatar: '#6366F1', content: 'It would be great to invite team members to view project progress and leave comments. Currently I have to screenshot updates and forward them. A shared project view would save loads of time.', likes: 14, createdAt: '2026-04-05T14:00:00Z' },
+    ]
+  },
+];
+
+// ============================================================================
+// LEADERBOARD DATA
+// ============================================================================
+
+// Scoring weights — credit purchases are weighted HEAVIEST because they
+// directly support the business. Forum posts are weighted lightest.
+const LEADERBOARD_WEIGHTS = {
+  creditsPurchased: 10,   // £ spent on credits (heaviest — supports the business)
+  ordersPlaced: 50,       // Per order placed
+  dailyLogins: 1,         // Per login day
+  streakDays: 2,          // Per streak day achieved
+  forumPosts: 5,          // Per forum post/reply
+  referrals: 30,          // Per successful referral
+};
+
+const LEADERBOARD_TIERS = [
+  { id: 'gold', name: 'Gold', icon: '🥇', color: '#F59E0B', minScore: 5000, perks: 'Priority support, exclusive badge, 5% credit bonus on purchases' },
+  { id: 'silver', name: 'Silver', icon: '🥈', color: '#94A3B8', minScore: 1500, perks: 'Community badge, 2% credit bonus on purchases' },
+  { id: 'bronze', name: 'Bronze', icon: '🥉', color: '#CD7F32', minScore: 300, perks: 'Community badge, early access to new features' },
+];
+
+// Demo leaderboard entries for display
+const DEMO_LEADERBOARD = [
+  { rank: 1, name: 'Ryan O\'Connor', avatar: '#6366F1', company: 'Celtic Digital', tier: 'gold', score: 12450, creditsPurchased: 8500, orders: 15, logins: 120, streakBest: 45, forumPosts: 38, referrals: 15 },
+  { rank: 2, name: 'Daniel Kim', avatar: '#0891B2', company: 'NexGen Apps', tier: 'gold', score: 9820, creditsPurchased: 6200, orders: 12, logins: 95, streakBest: 30, forumPosts: 22, referrals: 8 },
+  { rank: 3, name: 'Oliver Reed', avatar: '#14B8A6', company: 'DataPulse', tier: 'gold', score: 7650, creditsPurchased: 5000, orders: 9, logins: 88, streakBest: 28, forumPosts: 31, referrals: 5 },
+  { rank: 4, name: 'Chloe Williams', avatar: '#A855F7', company: 'Freelance Designer', tier: 'silver', score: 4200, creditsPurchased: 2800, orders: 8, logins: 76, streakBest: 21, forumPosts: 45, referrals: 3 },
+  { rank: 5, name: 'Nathan Brooks', avatar: '#22C55E', company: 'FitFuel Nutrition', tier: 'silver', score: 3800, creditsPurchased: 2400, orders: 6, logins: 65, streakBest: 18, forumPosts: 12, referrals: 4 },
+  { rank: 6, name: 'Sophie Laurent', avatar: '#EC4899', company: 'Brand Strategist', tier: 'silver', score: 2900, creditsPurchased: 1800, orders: 5, logins: 54, streakBest: 14, forumPosts: 28, referrals: 2 },
+  { rank: 7, name: 'Aisha Mohammed', avatar: '#F59E0B', company: 'Bloom Beauty', tier: 'silver', score: 2100, creditsPurchased: 1200, orders: 4, logins: 48, streakBest: 12, forumPosts: 15, referrals: 2 },
+  { rank: 8, name: 'Emma Richardson', avatar: '#F43F5E', company: 'Spark Studios', tier: 'bronze', score: 1200, creditsPurchased: 600, orders: 3, logins: 42, streakBest: 10, forumPosts: 20, referrals: 1 },
+  { rank: 9, name: 'James Thornton', avatar: '#8B5CF6', company: 'Thornton & Co', tier: 'bronze', score: 850, creditsPurchased: 400, orders: 2, logins: 35, streakBest: 7, forumPosts: 8, referrals: 1 },
+  { rank: 10, name: 'Lisa Chen', avatar: '#06B6D4', company: 'Chen Consulting', tier: 'bronze', score: 450, creditsPurchased: 200, orders: 2, logins: 22, streakBest: 5, forumPosts: 6, referrals: 0 },
 ];
 
 const KB_ARTICLES = [
@@ -2177,6 +2279,12 @@ const KB_ARTICLES = [
   { slug: 'advertising-packages-overview', title: 'Advertising Packages Overview', category: 'advertising', readTime: '4 min', content: 'Creative Kaygency offers three advertising packages to promote your business to our engaged community of entrepreneurs. Basic (£29, 7 days): Sidebar ad placement with up to 500 impressions per day — great for testing the waters. Pro (£79, 30 days): Sidebar plus banner placement with up to 2,000 impressions per day and click-through analytics — ideal for sustained visibility. Premium (£149, 30 days): Featured placement with highlighted styling, up to 5,000 impressions per day, full analytics dashboard, and priority support — maximum exposure for your brand. All ads appear within user dashboards where our most active members manage their projects. Payment is processed securely via Stripe checkout.' },
   { slug: 'submitting-your-ad', title: 'How to Submit an Ad', category: 'advertising', readTime: '3 min', content: 'To advertise on Creative Kaygency: 1) Visit the Advertise With Us page from the main navigation. 2) Choose your preferred package (Basic, Pro, or Premium). 3) Fill in your ad details — headline (up to 60 characters), description (up to 120 characters), image URL, and destination link. 4) Complete payment via Stripe checkout. 5) Your ad enters the review queue. Our team reviews all submissions within 24–48 hours to ensure they meet our quality and relevance standards. 6) Once approved, your ad goes live immediately and runs for the full duration of your package. If your ad is rejected, you will receive feedback on what to change and can resubmit.' },
   { slug: 'ad-performance-analytics', title: 'Understanding Ad Performance Analytics', category: 'advertising', readTime: '3 min', content: 'Track your advertising performance from your ad dashboard. All packages include basic impression and click counts. Pro packages add click-through rate (CTR) calculations and daily breakdowns. Premium packages include a full analytics dashboard with trends over time, peak performance hours, and comparative metrics. To access your analytics, go to your advertiser dashboard or contact our team for a detailed performance report. We recommend running campaigns for at least 14 days to gather meaningful data before optimising your creative or targeting approach.' },
+
+  // Community & Forum
+  { slug: 'community-forum-guide', title: 'Community Forum Guide', category: 'community', readTime: '4 min', content: 'The Creative Kaygency Community Forum is a members-only space where you can connect with fellow entrepreneurs, share your work, ask questions, and learn from each other. Access it from your Dashboard > Community tab. The forum has six categories: Showcase Your Project (share completed work), Web Design Tips, SEO and Marketing, Branding Chat, General Discussion, and Feature Requests. You can start new threads, reply to existing ones, like helpful posts, and search across all content. The forum is moderated to keep discussions productive and on-topic.' },
+  { slug: 'earning-credits-forum', title: 'Earning Credits from Forum Activity', category: 'community', readTime: '3 min', content: 'You can earn small credit rewards for participating in the community forum. Starting a new thread earns 0.5 credits. Posting a reply earns 0.25 credits. Receiving a like on your post earns 0.1 credits. Your very first forum post earns a one-time bonus of 2 credits. There is a daily cap of 2 credits from forum activity to keep the system fair. Forum credits are a loyalty perk — they supplement your credit purchases and subscriptions but are not designed to replace them. Consistent, helpful participation will earn you badges and a steady trickle of bonus credits over time.' },
+  { slug: 'community-guidelines', title: 'Community Guidelines', category: 'community', readTime: '3 min', content: 'To keep the Creative Kaygency forum welcoming and useful for everyone, please follow these guidelines: Be respectful and constructive in all interactions. Share genuinely helpful advice and feedback. Do not spam, self-promote excessively, or post irrelevant content. Do not share confidential project details without permission. Report any inappropriate content using the flag option. Our moderation team reviews reported content and may pin, lock, or remove threads that violate guidelines. Repeat offenders may have their forum privileges suspended. The forum is designed to be a supportive space where members help each other grow.' },
+  { slug: 'leaderboard-explained', title: 'Leaderboard and Tier System', category: 'community', readTime: '4 min', content: 'The Creative Kaygency Leaderboard ranks members by their all-time contribution score. Scores are calculated from six activities, weighted by their value to the community: Credit purchases carry the heaviest weight (10 points per credit), followed by orders placed (50 points each), referrals (30 points each), forum posts (5 points each), streak days (2 points each), and daily logins (1 point each). Members are placed into tiers based on their score: Bronze (300+ points) earns a community badge and early feature access, Silver (1,500+ points) earns a badge and 2 percent credit bonus on purchases, and Gold (5,000+ points) earns priority support, an exclusive badge, and a 5 percent credit bonus. View the leaderboard from Dashboard > Leaderboard to see the top 3 podium, full rankings, and your own position and progress.' },
 ];
 
 const KB_CATEGORIES = [
@@ -2188,6 +2296,7 @@ const KB_CATEGORIES = [
   { id: 'referrals', name: 'Referral Program', icon: '🤝', desc: 'How to refer friends, earn credits, and track your referral performance.' },
   { id: 'hosting', name: 'Website Hosting', icon: '☁️', desc: 'Hosting plans, migrations, backups, SSL, DNS, and server management.' },
   { id: 'advertising', name: 'Advertising', icon: '📢', desc: 'Promote your business to our community — ad packages, approval process, and analytics.' },
+  { id: 'community', name: 'Community & Leaderboard', icon: '💬', desc: 'Forum guidelines, earning credits from participation, and the tier-based leaderboard system.' },
 ];
 
 const FAQ_DATA = [
@@ -2213,6 +2322,8 @@ const FAQ_DATA = [
   { q: 'How does the referral program save me money?', a: 'Share your unique referral link from Dashboard > Referrals. When someone signs up and makes their first purchase, you both earn bonus credits. There is no cap — refer as many people as you like. Top referrers unlock Ambassador badges with additional rewards.' },
   { q: 'Can I earn enough credits for free to cover a full project?', a: 'Free credits from daily logins, streaks, and referrals are designed as loyalty bonuses to supplement your purchases and subscriptions. While they add up over time and reduce your costs, they are not intended to fully fund services on their own. The best value comes from combining a subscription or credit package with the free loyalty rewards you accumulate.' },
   { q: 'How much can I save with annual billing?', a: 'Annual billing saves you 20% compared to monthly. Starter drops to effectively £79/mo, Professional to £159/mo, and Enterprise to £239/mo. That is up to £720 per year in savings on the Enterprise plan. You receive the full year of monthly credit allocations and all plan benefits.' },
+  { q: 'What is the Community Forum?', a: 'The Community Forum is a members-only space in your dashboard where you can connect with other Creative Kaygency members. Share your projects, ask design questions, discuss SEO strategies, and get feedback. You earn small credit rewards for participating — 0.5 for new threads, 0.25 for replies — with a daily cap of 2 credits to keep things fair.' },
+  { q: 'How does the Leaderboard work?', a: 'The Leaderboard ranks members by their all-time contribution score. Points are earned through credit purchases (heaviest weight), orders placed, referrals, forum activity, streaks, and daily logins. Members earn Bronze, Silver, or Gold tier status with increasing perks like credit bonuses on purchases and priority support.' },
 ];
 
 // Security utilities
@@ -4645,6 +4756,8 @@ function DashboardPage() {
     { id: 'credits', icon: '💰', label: 'Credits' },
     { id: 'rewards', icon: '🎮', label: 'Rewards' },
     { id: 'referrals', icon: '🤝', label: 'Referrals' },
+    { id: 'community', icon: '💬', label: 'Community' },
+    { id: 'leaderboard', icon: '🏆', label: 'Leaderboard' },
     ...(userAds.length > 0 ? [{ id: 'my-ads', icon: '📢', label: 'My Ads' }] : []),
     { id: 'settings', icon: '⚙️', label: 'Settings' },
   ];
@@ -4692,6 +4805,8 @@ function DashboardPage() {
         {tab === 'credits' && <DashCredits user={user} formatPrice={formatPrice} />}
         {tab === 'rewards' && <DashRewards user={user} onClaim={handleDailyClaim} />}
         {tab === 'referrals' && <DashReferrals user={user} />}
+        {tab === 'community' && <DashCommunity />}
+        {tab === 'leaderboard' && <DashLeaderboard />}
         {tab === 'my-ads' && <DashMyAds userAds={userAds} />}
         {tab === 'settings' && <DashSettings user={user} />}
       </main>
@@ -5898,6 +6013,511 @@ function BookingWizard({ service }) {
         </div>
         <a href={routeHref("/dashboard/projects")} className="btn btn-primary">View My Projects →</a>
       </div>}
+    </div>
+  );
+}
+
+// ============================================================================
+// COMMUNITY FORUM COMPONENT
+// ============================================================================
+
+function DashCommunity() {
+  const { user } = useContext(AuthContext);
+  const { addToast } = useContext(NotificationContext);
+  const [view, setView] = useState('categories'); // categories | category | thread | new-thread
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeThread, setActiveThread] = useState(null);
+  const [threads, setThreads] = useState(DEMO_FORUM_THREADS);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [replyContent, setReplyContent] = useState('');
+  const [sortBy, setSortBy] = useState('latest'); // latest | popular | unanswered
+  const [forumCreditsToday, setForumCreditsToday] = useState(0);
+
+  const getThreadsForCategory = (catId) => {
+    let filtered = threads.filter(t => t.category === catId);
+    if (sortBy === 'popular') filtered.sort((a, b) => b.likes - a.likes);
+    else if (sortBy === 'unanswered') filtered = filtered.filter(t => t.replies === 0);
+    else filtered.sort((a, b) => new Date(b.lastReplyAt || b.createdAt) - new Date(a.lastReplyAt || a.createdAt));
+    // Pinned threads always on top
+    const pinned = filtered.filter(t => t.pinned);
+    const rest = filtered.filter(t => !t.pinned);
+    return [...pinned, ...rest];
+  };
+
+  const getSearchResults = () => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return threads.filter(t => t.title.toLowerCase().includes(q) || t.posts?.some(p => p.content.toLowerCase().includes(q)));
+  };
+
+  const timeAgo = (dateStr) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    if (days < 7) return `${days}d ago`;
+    return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  };
+
+  const earnForumCredits = (amount, reason) => {
+    if (forumCreditsToday >= FORUM_CREDIT_RULES.dailyCap) {
+      return false;
+    }
+    const actual = Math.min(amount, FORUM_CREDIT_RULES.dailyCap - forumCreditsToday);
+    if (actual > 0) {
+      setForumCreditsToday(prev => prev + actual);
+      addToast(`+${actual} credits earned: ${reason}`, 'success');
+    }
+    return actual > 0;
+  };
+
+  const handleNewThread = () => {
+    if (!newTitle.trim() || !newContent.trim()) { addToast('Please fill in both title and content', 'error'); return; }
+    const thread = {
+      id: 'thread-' + Date.now(), category: activeCategory, title: newTitle, author: user.name, authorAvatar: '#7C3AED',
+      replies: 0, likes: 0, views: 0, pinned: false, locked: false,
+      createdAt: new Date().toISOString(), lastReplyAt: new Date().toISOString(),
+      posts: [{ id: 'p-' + Date.now(), author: user.name, authorAvatar: '#7C3AED', content: newContent, likes: 0, createdAt: new Date().toISOString() }]
+    };
+    setThreads(prev => [thread, ...prev]);
+    const isFirstPost = threads.filter(t => t.author === user.name).length === 0;
+    earnForumCredits(FORUM_CREDIT_RULES.newThread, 'New thread created');
+    if (isFirstPost) earnForumCredits(FORUM_CREDIT_RULES.firstPostBonus, 'First forum post bonus!');
+    setNewTitle(''); setNewContent('');
+    setActiveThread(thread.id); setView('thread');
+    addToast('Thread created!', 'success');
+  };
+
+  const handleReply = (threadId) => {
+    if (!replyContent.trim()) { addToast('Please write a reply', 'error'); return; }
+    const thread = threads.find(t => t.id === threadId);
+    if (thread?.locked) { addToast('This thread is locked', 'error'); return; }
+    setThreads(prev => prev.map(t => t.id === threadId ? {
+      ...t, replies: t.replies + 1, lastReplyAt: new Date().toISOString(),
+      posts: [...(t.posts || []), { id: 'p-' + Date.now(), author: user.name, authorAvatar: '#7C3AED', content: replyContent, likes: 0, createdAt: new Date().toISOString() }]
+    } : t));
+    earnForumCredits(FORUM_CREDIT_RULES.reply, 'Forum reply');
+    setReplyContent('');
+    addToast('Reply posted!', 'success');
+  };
+
+  const handleLike = (threadId, postId) => {
+    setThreads(prev => prev.map(t => {
+      if (t.id === threadId) {
+        const updatedPosts = t.posts.map(p => p.id === postId ? { ...p, likes: p.likes + 1 } : p);
+        const totalLikes = updatedPosts.reduce((sum, p) => sum + p.likes, 0);
+        return { ...t, likes: totalLikes, posts: updatedPosts };
+      }
+      return t;
+    }));
+  };
+
+  const currentThread = threads.find(t => t.id === activeThread);
+  const currentCategory = FORUM_CATEGORIES.find(c => c.id === activeCategory);
+  const searchResults = getSearchResults();
+  const totalThreads = threads.length;
+  const totalPosts = threads.reduce((sum, t) => sum + (t.posts?.length || 0), 0);
+
+  return (
+    <div>
+      <div className="dash-header">
+        <h1>Community Forum</h1>
+        <p>Connect with fellow members, share your work, and earn credits for participating.</p>
+        <div style={{display:'flex',gap:16,marginTop:12,flexWrap:'wrap'}}>
+          <div style={{background:'rgba(124,58,237,0.08)',padding:'8px 16px',borderRadius:'var(--radius)',fontSize:13}}>
+            <strong style={{color:'var(--primary)'}}>{totalThreads}</strong> threads
+          </div>
+          <div style={{background:'rgba(16,185,129,0.08)',padding:'8px 16px',borderRadius:'var(--radius)',fontSize:13}}>
+            <strong style={{color:'var(--success)'}}>{totalPosts}</strong> posts
+          </div>
+          <div style={{background:'rgba(249,115,22,0.08)',padding:'8px 16px',borderRadius:'var(--radius)',fontSize:13}}>
+            🪙 <strong>{forumCreditsToday.toFixed(1)}</strong>/{FORUM_CREDIT_RULES.dailyCap} daily forum credits used
+          </div>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div style={{marginBottom:20}}>
+        <input type="text" placeholder="Search threads and posts..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} style={{width:'100%',padding:'12px 16px',borderRadius:'var(--radius)',border:'1.5px solid var(--border)',background:'var(--card)',fontSize:14}} />
+        {searchQuery && searchResults.length > 0 && (
+          <div style={{marginTop:8,background:'var(--card)',borderRadius:'var(--radius)',border:'1px solid var(--border)',padding:12}}>
+            <div style={{fontSize:12,color:'var(--gray-400)',marginBottom:8}}>{searchResults.length} result(s) found</div>
+            {searchResults.slice(0, 5).map(t => (
+              <div key={t.id} style={{padding:'8px 0',borderBottom:'1px solid var(--border)',cursor:'pointer'}} onClick={() => { setActiveThread(t.id); setActiveCategory(t.category); setView('thread'); setSearchQuery(''); }}>
+                <div style={{fontWeight:600,fontSize:14}}>{t.title}</div>
+                <div style={{fontSize:12,color:'var(--gray-400)'}}>{FORUM_CATEGORIES.find(c => c.id === t.category)?.name} · {t.replies} replies · {timeAgo(t.createdAt)}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Breadcrumb Navigation */}
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:20,fontSize:13,color:'var(--gray-400)',flexWrap:'wrap'}}>
+        <span style={{cursor:'pointer',color: view === 'categories' ? 'var(--text)' : 'var(--primary)',fontWeight: view === 'categories' ? 700 : 400}} onClick={() => { setView('categories'); setActiveCategory(null); setActiveThread(null); }}>Forum</span>
+        {activeCategory && <><span>›</span><span style={{cursor:'pointer',color: view === 'category' ? 'var(--text)' : 'var(--primary)',fontWeight: view === 'category' ? 700 : 400}} onClick={() => { setView('category'); setActiveThread(null); }}>{currentCategory?.name}</span></>}
+        {activeThread && currentThread && <><span>›</span><span style={{fontWeight:700,color:'var(--text)'}}>{currentThread.title.substring(0, 40)}...</span></>}
+      </div>
+
+      {/* Categories View */}
+      {view === 'categories' && (
+        <div style={{display:'grid',gap:12}}>
+          {FORUM_CATEGORIES.map(cat => {
+            const catThreads = threads.filter(t => t.category === cat.id);
+            const latestThread = catThreads.sort((a, b) => new Date(b.lastReplyAt || b.createdAt) - new Date(a.lastReplyAt || a.createdAt))[0];
+            return (
+              <div key={cat.id} className="card" style={{cursor:'pointer',border:'1px solid var(--border)',transition:'all .2s'}} onClick={() => { setActiveCategory(cat.id); setView('category'); }}
+                onMouseOver={e => e.currentTarget.style.borderColor = cat.color} onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border)'}>
+                <div style={{display:'flex',alignItems:'center',gap:16}}>
+                  <div style={{width:48,height:48,borderRadius:12,background:`${cat.color}18`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,flexShrink:0}}>{cat.icon}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:700,fontSize:16,marginBottom:2}}>{cat.name}</div>
+                    <div style={{fontSize:13,color:'var(--gray-400)'}}>{cat.desc}</div>
+                  </div>
+                  <div style={{textAlign:'right',flexShrink:0}}>
+                    <div style={{fontSize:20,fontWeight:800,color:cat.color}}>{catThreads.length}</div>
+                    <div style={{fontSize:11,color:'var(--gray-400)'}}>threads</div>
+                  </div>
+                  {latestThread && <div style={{textAlign:'right',flexShrink:0,minWidth:100}}>
+                    <div style={{fontSize:12,fontWeight:600}}>{latestThread.author}</div>
+                    <div style={{fontSize:11,color:'var(--gray-400)'}}>{timeAgo(latestThread.lastReplyAt || latestThread.createdAt)}</div>
+                  </div>}
+                </div>
+              </div>
+            );
+          })}
+          <div className="card" style={{background:'linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.06))',border:'1px solid rgba(124,58,237,0.15)',padding:20,marginTop:8}}>
+            <div style={{fontSize:14,fontWeight:700,marginBottom:6}}>🪙 Earn Credits by Participating</div>
+            <div style={{fontSize:13,color:'var(--gray-500)',lineHeight:1.6}}>
+              New thread: <strong>+{FORUM_CREDIT_RULES.newThread}</strong> credits · Reply: <strong>+{FORUM_CREDIT_RULES.reply}</strong> credits · Receive a like: <strong>+{FORUM_CREDIT_RULES.receiveLike}</strong> credits · First post bonus: <strong>+{FORUM_CREDIT_RULES.firstPostBonus}</strong> credits · Daily cap: <strong>{FORUM_CREDIT_RULES.dailyCap}</strong> credits
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Thread List */}
+      {view === 'category' && currentCategory && (
+        <div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,flexWrap:'wrap',gap:12}}>
+            <div style={{display:'flex',alignItems:'center',gap:12}}>
+              <div style={{width:40,height:40,borderRadius:10,background:`${currentCategory.color}18`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20}}>{currentCategory.icon}</div>
+              <div><div style={{fontWeight:700,fontSize:18}}>{currentCategory.name}</div><div style={{fontSize:13,color:'var(--gray-400)'}}>{currentCategory.desc}</div></div>
+            </div>
+            <div style={{display:'flex',gap:8}}>
+              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{padding:'8px 12px',borderRadius:'var(--radius)',border:'1px solid var(--border)',background:'var(--card)',fontSize:13}}>
+                <option value="latest">Latest</option>
+                <option value="popular">Most Popular</option>
+                <option value="unanswered">Unanswered</option>
+              </select>
+              <button className="btn btn-primary btn-sm" onClick={() => setView('new-thread')}>+ New Thread</button>
+            </div>
+          </div>
+          <div style={{display:'grid',gap:8}}>
+            {getThreadsForCategory(activeCategory).map(thread => (
+              <div key={thread.id} className="card" style={{cursor:'pointer',padding:'16px 20px',border:'1px solid var(--border)',transition:'all .15s'}}
+                onClick={() => { setActiveThread(thread.id); setView('thread'); }}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(124,58,237,0.03)'} onMouseOut={e => e.currentTarget.style.background = ''}>
+                <div style={{display:'flex',alignItems:'center',gap:12}}>
+                  {thread.pinned && <span style={{fontSize:11,background:'rgba(249,115,22,0.1)',color:'var(--warning)',padding:'2px 8px',borderRadius:4,fontWeight:700}}>📌 Pinned</span>}
+                  {thread.locked && <span style={{fontSize:11,background:'rgba(239,68,68,0.1)',color:'var(--error)',padding:'2px 8px',borderRadius:4,fontWeight:700}}>🔒 Locked</span>}
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:14,marginTop:thread.pinned || thread.locked ? 8 : 0}}>
+                  <div style={{width:36,height:36,borderRadius:'50%',background:thread.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:14,flexShrink:0}}>{thread.author.charAt(0)}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:700,fontSize:15,marginBottom:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{thread.title}</div>
+                    <div style={{fontSize:12,color:'var(--gray-400)'}}>by <strong>{thread.author}</strong> · {timeAgo(thread.createdAt)}</div>
+                  </div>
+                  <div style={{display:'flex',gap:16,alignItems:'center',flexShrink:0,fontSize:13,color:'var(--gray-400)'}}>
+                    <span title="Replies">💬 {thread.replies}</span>
+                    <span title="Likes">❤️ {thread.likes}</span>
+                    <span title="Views">👁️ {thread.views}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {getThreadsForCategory(activeCategory).length === 0 && (
+              <div className="card" style={{textAlign:'center',padding:40,color:'var(--gray-400)'}}>
+                <div style={{fontSize:32,marginBottom:8}}>💬</div>
+                <p>No threads yet in this category. Be the first to start a discussion!</p>
+                <button className="btn btn-primary btn-sm" style={{marginTop:12}} onClick={() => setView('new-thread')}>Create Thread</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* New Thread Form */}
+      {view === 'new-thread' && (
+        <div className="card" style={{maxWidth:700}}>
+          <h3 style={{marginBottom:16}}>New Thread in {currentCategory?.name}</h3>
+          <div style={{marginBottom:12}}>
+            <label style={{display:'block',fontSize:13,fontWeight:600,marginBottom:4}}>Thread Title</label>
+            <input type="text" value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="What's your topic?" style={{width:'100%',padding:'10px 14px',borderRadius:'var(--radius)',border:'1.5px solid var(--border)',background:'var(--card)',fontSize:14}} maxLength={120} />
+          </div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:'block',fontSize:13,fontWeight:600,marginBottom:4}}>Your Post</label>
+            <textarea value={newContent} onChange={e => setNewContent(e.target.value)} placeholder="Share your thoughts, questions, or work..." rows={6} style={{width:'100%',padding:'10px 14px',borderRadius:'var(--radius)',border:'1.5px solid var(--border)',background:'var(--card)',fontSize:14,resize:'vertical'}} />
+          </div>
+          <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+            <button className="btn btn-secondary btn-sm" onClick={() => setView('category')}>Cancel</button>
+            <button className="btn btn-primary btn-sm" onClick={handleNewThread}>Post Thread (+{FORUM_CREDIT_RULES.newThread} credits)</button>
+          </div>
+        </div>
+      )}
+
+      {/* Thread Detail View */}
+      {view === 'thread' && currentThread && (
+        <div>
+          <div style={{marginBottom:20}}>
+            <h2 style={{fontSize:20,fontWeight:800,marginBottom:4}}>{currentThread.title}</h2>
+            <div style={{display:'flex',gap:12,fontSize:13,color:'var(--gray-400)',flexWrap:'wrap'}}>
+              <span>by <strong style={{color:'var(--text)'}}>{currentThread.author}</strong></span>
+              <span>{timeAgo(currentThread.createdAt)}</span>
+              <span>💬 {currentThread.replies} replies</span>
+              <span>👁️ {currentThread.views} views</span>
+              {currentThread.locked && <span style={{color:'var(--error)',fontWeight:700}}>🔒 Locked</span>}
+            </div>
+          </div>
+          <div style={{display:'grid',gap:12}}>
+            {currentThread.posts?.map((post, idx) => (
+              <div key={post.id} className="card" style={{border: idx === 0 ? '2px solid rgba(124,58,237,0.2)' : '1px solid var(--border)',padding:20}}>
+                <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
+                  <div style={{width:40,height:40,borderRadius:'50%',background:post.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:16}}>{post.author.charAt(0)}</div>
+                  <div>
+                    <div style={{fontWeight:700,fontSize:14}}>{post.author} {idx === 0 && <span style={{fontSize:11,background:'rgba(124,58,237,0.1)',color:'var(--primary)',padding:'2px 8px',borderRadius:4,marginLeft:6}}>OP</span>}</div>
+                    <div style={{fontSize:12,color:'var(--gray-400)'}}>{timeAgo(post.createdAt)}</div>
+                  </div>
+                </div>
+                <div style={{fontSize:14,lineHeight:1.7,color:'var(--text)',whiteSpace:'pre-wrap'}}>{post.content}</div>
+                <div style={{display:'flex',gap:12,marginTop:12,paddingTop:12,borderTop:'1px solid var(--border)'}}>
+                  <button style={{background:'none',border:'none',cursor:'pointer',fontSize:13,color:'var(--gray-400)',display:'flex',alignItems:'center',gap:4}} onClick={(e) => { e.stopPropagation(); handleLike(currentThread.id, post.id); }}>
+                    ❤️ {post.likes}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Reply Box */}
+          {!currentThread.locked ? (
+            <div className="card" style={{marginTop:16,border:'1px solid var(--border)'}}>
+              <h4 style={{marginBottom:8}}>Reply to this thread</h4>
+              <textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder="Write your reply..." rows={4} style={{width:'100%',padding:'10px 14px',borderRadius:'var(--radius)',border:'1.5px solid var(--border)',background:'var(--card)',fontSize:14,resize:'vertical',marginBottom:12}} />
+              <div style={{display:'flex',justifyContent:'flex-end'}}>
+                <button className="btn btn-primary btn-sm" onClick={() => handleReply(currentThread.id)}>Post Reply (+{FORUM_CREDIT_RULES.reply} credits)</button>
+              </div>
+            </div>
+          ) : (
+            <div style={{marginTop:16,padding:16,background:'rgba(239,68,68,0.06)',borderRadius:'var(--radius)',border:'1px solid rgba(239,68,68,0.15)',textAlign:'center',color:'var(--error)',fontSize:14}}>
+              🔒 This thread has been locked by a moderator and is no longer accepting replies.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// LEADERBOARD COMPONENT
+// ============================================================================
+
+function DashLeaderboard() {
+  const { user } = useContext(AuthContext);
+  const [showBreakdown, setShowBreakdown] = useState(null);
+
+  const getTier = (score) => {
+    for (const tier of LEADERBOARD_TIERS) {
+      if (score >= tier.minScore) return tier;
+    }
+    return { id: 'member', name: 'Member', icon: '👤', color: '#64748B', minScore: 0, perks: 'Keep engaging to unlock Bronze tier!' };
+  };
+
+  // Simulate user's score
+  const userScore = (user?.credits || 0) * 0.5 + 150;
+  const userTier = getTier(userScore);
+  const userRank = DEMO_LEADERBOARD.filter(e => e.score > userScore).length + 1;
+  const nextTier = LEADERBOARD_TIERS.slice().reverse().find(t => t.minScore > userScore);
+
+  const podiumOrder = [1, 0, 2]; // silver, gold, bronze visual order
+
+  return (
+    <div>
+      <div className="dash-header">
+        <h1>Leaderboard</h1>
+        <p>Our most active and supportive members ranked by their contribution to the community.</p>
+      </div>
+
+      {/* User's Position Card */}
+      <div className="card" style={{background:'linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.06))',border:'1.5px solid rgba(124,58,237,0.15)',marginBottom:24,padding:24}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:16}}>
+          <div style={{display:'flex',alignItems:'center',gap:16}}>
+            <div style={{width:56,height:56,borderRadius:'50%',background:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:800,fontSize:22}}>{user?.name?.charAt(0) || '?'}</div>
+            <div>
+              <div style={{fontSize:18,fontWeight:800}}>Your Position: #{userRank}</div>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:4}}>
+                <span style={{fontSize:20}}>{userTier.icon}</span>
+                <span style={{fontWeight:700,color:userTier.color}}>{userTier.name} Tier</span>
+              </div>
+            </div>
+          </div>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontSize:28,fontWeight:800,color:'var(--primary)'}}>{Math.round(userScore).toLocaleString()}</div>
+            <div style={{fontSize:13,color:'var(--gray-400)'}}>total points</div>
+            {nextTier && <div style={{fontSize:12,color:'var(--gray-500)',marginTop:4}}>{(nextTier.minScore - userScore).toLocaleString()} points to {nextTier.name}</div>}
+          </div>
+        </div>
+        {nextTier && (
+          <div style={{marginTop:16}}>
+            <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--gray-400)',marginBottom:4}}>
+              <span>{userTier.name}</span><span>{nextTier.name}</span>
+            </div>
+            <div style={{height:8,background:'var(--border)',borderRadius:4,overflow:'hidden'}}>
+              <div style={{height:'100%',background:`linear-gradient(90deg,${userTier.color},${nextTier.color})`,borderRadius:4,width:`${Math.min(100, (userScore / nextTier.minScore) * 100)}%`,transition:'width .5s'}} />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Top 3 Podium */}
+      <div style={{display:'flex',justifyContent:'center',alignItems:'flex-end',gap:12,marginBottom:32,flexWrap:'wrap'}}>
+        {podiumOrder.map(idx => {
+          const entry = DEMO_LEADERBOARD[idx];
+          if (!entry) return null;
+          const isFirst = idx === 0;
+          const tier = getTier(entry.score);
+          return (
+            <div key={entry.rank} style={{textAlign:'center',width: isFirst ? 160 : 140,transform: isFirst ? 'translateY(-12px)' : 'none'}}>
+              <div style={{position:'relative',margin:'0 auto',width: isFirst ? 80 : 64,height: isFirst ? 80 : 64,borderRadius:'50%',background:entry.avatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:800,fontSize: isFirst ? 28 : 22,border: isFirst ? '4px solid #F59E0B' : '3px solid var(--border)',boxShadow: isFirst ? '0 0 20px rgba(245,158,11,0.3)' : 'none'}}>
+                {entry.name.charAt(0)}
+                <div style={{position:'absolute',top:-8,right:-8,width:28,height:28,borderRadius:'50%',background: idx === 0 ? '#F59E0B' : idx === 1 ? '#94A3B8' : '#CD7F32',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,boxShadow:'0 2px 6px rgba(0,0,0,0.2)'}}>
+                  {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
+                </div>
+              </div>
+              <div style={{fontWeight:800,fontSize: isFirst ? 16 : 14,marginTop:10}}>{entry.name}</div>
+              <div style={{fontSize:12,color:'var(--gray-400)',marginBottom:4}}>{entry.company}</div>
+              <div style={{fontSize: isFirst ? 20 : 16,fontWeight:800,color:tier.color}}>{entry.score.toLocaleString()}</div>
+              <div style={{fontSize:11,color:'var(--gray-400)'}}>points</div>
+              <div style={{marginTop:6,height: isFirst ? 80 : idx === 1 ? 56 : 40,background:`linear-gradient(180deg,${tier.color}22,${tier.color}08)`,borderRadius:'8px 8px 0 0',border:`1px solid ${tier.color}30`,borderBottom:'none',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize: isFirst ? 28 : 22,color:tier.color}}>
+                #{entry.rank}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Full Ranking Table */}
+      <div className="card" style={{border:'1px solid var(--border)',overflow:'hidden'}}>
+        <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <h3 style={{margin:0,fontSize:16}}>All-Time Rankings</h3>
+          <div style={{fontSize:12,color:'var(--gray-400)'}}>Top members by total contribution score</div>
+        </div>
+        <div style={{overflowX:'auto'}}>
+          <table style={{width:'100%',borderCollapse:'collapse',fontSize:14}}>
+            <thead>
+              <tr style={{background:'rgba(124,58,237,0.04)'}}>
+                <th style={{padding:'12px 16px',textAlign:'left',fontWeight:700,fontSize:12,color:'var(--gray-400)',textTransform:'uppercase',letterSpacing:'.5px'}}>Rank</th>
+                <th style={{padding:'12px 16px',textAlign:'left',fontWeight:700,fontSize:12,color:'var(--gray-400)',textTransform:'uppercase',letterSpacing:'.5px'}}>Member</th>
+                <th style={{padding:'12px 16px',textAlign:'center',fontWeight:700,fontSize:12,color:'var(--gray-400)',textTransform:'uppercase',letterSpacing:'.5px'}}>Tier</th>
+                <th style={{padding:'12px 16px',textAlign:'right',fontWeight:700,fontSize:12,color:'var(--gray-400)',textTransform:'uppercase',letterSpacing:'.5px'}}>Score</th>
+                <th style={{padding:'12px 16px',textAlign:'center',fontWeight:700,fontSize:12,color:'var(--gray-400)',textTransform:'uppercase',letterSpacing:'.5px'}}>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {DEMO_LEADERBOARD.map(entry => {
+                const tier = getTier(entry.score);
+                return (
+                  <React.Fragment key={entry.rank}>
+                    <tr style={{borderBottom:'1px solid var(--border)',transition:'background .15s',cursor:'pointer'}}
+                      onMouseOver={e => e.currentTarget.style.background = 'rgba(124,58,237,0.03)'} onMouseOut={e => e.currentTarget.style.background = ''}>
+                      <td style={{padding:'14px 16px',fontWeight:800,fontSize:16,color: entry.rank <= 3 ? tier.color : 'var(--text)'}}>#{entry.rank}</td>
+                      <td style={{padding:'14px 16px'}}>
+                        <div style={{display:'flex',alignItems:'center',gap:10}}>
+                          <div style={{width:32,height:32,borderRadius:'50%',background:entry.avatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:13,flexShrink:0}}>{entry.name.charAt(0)}</div>
+                          <div><div style={{fontWeight:700}}>{entry.name}</div><div style={{fontSize:12,color:'var(--gray-400)'}}>{entry.company}</div></div>
+                        </div>
+                      </td>
+                      <td style={{padding:'14px 16px',textAlign:'center'}}>
+                        <span style={{fontSize:16}}>{tier.icon}</span>
+                        <span style={{fontSize:12,fontWeight:700,color:tier.color,marginLeft:4}}>{tier.name}</span>
+                      </td>
+                      <td style={{padding:'14px 16px',textAlign:'right',fontWeight:800,fontSize:16,color:tier.color}}>{entry.score.toLocaleString()}</td>
+                      <td style={{padding:'14px 16px',textAlign:'center'}}>
+                        <button style={{background:'none',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'4px 12px',fontSize:12,cursor:'pointer',color:'var(--primary)'}} onClick={() => setShowBreakdown(showBreakdown === entry.rank ? null : entry.rank)}>
+                          {showBreakdown === entry.rank ? 'Hide' : 'View'}
+                        </button>
+                      </td>
+                    </tr>
+                    {showBreakdown === entry.rank && (
+                      <tr><td colSpan={5} style={{padding:'0 16px 16px',background:'rgba(124,58,237,0.02)'}}>
+                        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:8,padding:'12px 0'}}>
+                          <div style={{background:'var(--card)',borderRadius:'var(--radius)',padding:'10px 14px',border:'1px solid var(--border)'}}>
+                            <div style={{fontSize:11,color:'var(--gray-400)'}}>Credits Purchased</div>
+                            <div style={{fontWeight:800,color:'var(--primary)'}}>{entry.creditsPurchased.toLocaleString()}</div>
+                            <div style={{fontSize:10,color:'var(--gray-400)'}}>×{LEADERBOARD_WEIGHTS.creditsPurchased} = {(entry.creditsPurchased * LEADERBOARD_WEIGHTS.creditsPurchased).toLocaleString()} pts</div>
+                          </div>
+                          <div style={{background:'var(--card)',borderRadius:'var(--radius)',padding:'10px 14px',border:'1px solid var(--border)'}}>
+                            <div style={{fontSize:11,color:'var(--gray-400)'}}>Orders Placed</div>
+                            <div style={{fontWeight:800,color:'var(--success)'}}>{entry.orders}</div>
+                            <div style={{fontSize:10,color:'var(--gray-400)'}}>×{LEADERBOARD_WEIGHTS.ordersPlaced} = {entry.orders * LEADERBOARD_WEIGHTS.ordersPlaced} pts</div>
+                          </div>
+                          <div style={{background:'var(--card)',borderRadius:'var(--radius)',padding:'10px 14px',border:'1px solid var(--border)'}}>
+                            <div style={{fontSize:11,color:'var(--gray-400)'}}>Daily Logins</div>
+                            <div style={{fontWeight:800,color:'var(--warning)'}}>{entry.logins}</div>
+                            <div style={{fontSize:10,color:'var(--gray-400)'}}>×{LEADERBOARD_WEIGHTS.dailyLogins} = {entry.logins * LEADERBOARD_WEIGHTS.dailyLogins} pts</div>
+                          </div>
+                          <div style={{background:'var(--card)',borderRadius:'var(--radius)',padding:'10px 14px',border:'1px solid var(--border)'}}>
+                            <div style={{fontSize:11,color:'var(--gray-400)'}}>Best Streak</div>
+                            <div style={{fontWeight:800,color:'#F59E0B'}}>{entry.streakBest} days</div>
+                            <div style={{fontSize:10,color:'var(--gray-400)'}}>×{LEADERBOARD_WEIGHTS.streakDays} = {entry.streakBest * LEADERBOARD_WEIGHTS.streakDays} pts</div>
+                          </div>
+                          <div style={{background:'var(--card)',borderRadius:'var(--radius)',padding:'10px 14px',border:'1px solid var(--border)'}}>
+                            <div style={{fontSize:11,color:'var(--gray-400)'}}>Forum Posts</div>
+                            <div style={{fontWeight:800,color:'#A855F7'}}>{entry.forumPosts}</div>
+                            <div style={{fontSize:10,color:'var(--gray-400)'}}>×{LEADERBOARD_WEIGHTS.forumPosts} = {entry.forumPosts * LEADERBOARD_WEIGHTS.forumPosts} pts</div>
+                          </div>
+                          <div style={{background:'var(--card)',borderRadius:'var(--radius)',padding:'10px 14px',border:'1px solid var(--border)'}}>
+                            <div style={{fontSize:11,color:'var(--gray-400)'}}>Referrals</div>
+                            <div style={{fontWeight:800,color:'#06B6D4'}}>{entry.referrals}</div>
+                            <div style={{fontSize:10,color:'var(--gray-400)'}}>×{LEADERBOARD_WEIGHTS.referrals} = {entry.referrals * LEADERBOARD_WEIGHTS.referrals} pts</div>
+                          </div>
+                        </div>
+                      </td></tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Scoring Explanation */}
+      <div className="card" style={{marginTop:20,background:'linear-gradient(135deg,rgba(124,58,237,0.04),rgba(236,72,153,0.04))',border:'1px solid rgba(124,58,237,0.1)'}}>
+        <h3 style={{fontSize:16,marginBottom:12}}>How Scoring Works</h3>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:12,fontSize:13}}>
+          <div><strong style={{color:'var(--primary)'}}>Credit Purchases</strong> — {LEADERBOARD_WEIGHTS.creditsPurchased} pts per credit bought<br/><span style={{color:'var(--gray-400)'}}>Biggest weight — supports the platform</span></div>
+          <div><strong style={{color:'var(--success)'}}>Orders Placed</strong> — {LEADERBOARD_WEIGHTS.ordersPlaced} pts per order<br/><span style={{color:'var(--gray-400)'}}>Rewards active customers</span></div>
+          <div><strong style={{color:'#06B6D4'}}>Referrals</strong> — {LEADERBOARD_WEIGHTS.referrals} pts per referral<br/><span style={{color:'var(--gray-400)'}}>Helping the community grow</span></div>
+          <div><strong style={{color:'#A855F7'}}>Forum Posts</strong> — {LEADERBOARD_WEIGHTS.forumPosts} pts per post<br/><span style={{color:'var(--gray-400)'}}>Community engagement</span></div>
+          <div><strong style={{color:'#F59E0B'}}>Streaks</strong> — {LEADERBOARD_WEIGHTS.streakDays} pts per day<br/><span style={{color:'var(--gray-400)'}}>Consistent engagement</span></div>
+          <div><strong style={{color:'var(--warning)'}}>Daily Logins</strong> — {LEADERBOARD_WEIGHTS.dailyLogins} pt per login<br/><span style={{color:'var(--gray-400)'}}>Staying connected</span></div>
+        </div>
+        <div style={{marginTop:16,paddingTop:16,borderTop:'1px solid var(--border)'}}>
+          <h4 style={{fontSize:14,marginBottom:8}}>Tier Thresholds</h4>
+          <div style={{display:'flex',gap:16,flexWrap:'wrap'}}>
+            {LEADERBOARD_TIERS.map(tier => (
+              <div key={tier.id} style={{display:'flex',alignItems:'center',gap:8,fontSize:13}}>
+                <span style={{fontSize:18}}>{tier.icon}</span>
+                <div><strong style={{color:tier.color}}>{tier.name}</strong>: {tier.minScore.toLocaleString()}+ pts<br/><span style={{fontSize:11,color:'var(--gray-400)'}}>{tier.perks}</span></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
