@@ -1336,8 +1336,8 @@ const CONFIG = {
   CURRENCIES: { GBP: { symbol: '£', rate: 1 }, USD: { symbol: '$', rate: 1.27 }, EUR: { symbol: '€', rate: 1.17 } },
   CREDIT_RATIO: 1.25, // 1 credit ≈ £1.25 value when buying, services priced to give ~20% discount
 };
-// Format credits: show decimals only when fractional (e.g. 102.3 → "102.3", 500 → "500")
-const fmtCredits = (n) => { const v = typeof n === 'number' ? n : parseFloat(n) || 0; return v % 1 === 0 ? v.toLocaleString() : v.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:2}); };
+// Format credits: always show 1 decimal place so users can track fractional progress (e.g. 5 → "5.0", 5.1 → "5.1", 102.35 → "102.35")
+const fmtCredits = (n) => { const v = typeof n === 'number' ? n : parseFloat(n) || 0; return v.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:2}); };
 
 /* ==================== SECURITY UTILITIES ==================== */
 const sanitiseHTML = (dirty) => {
@@ -2783,7 +2783,7 @@ function AuthProvider({ children }) {
     // Re-fetch current credits from server to prevent stale-state exploits
     const { data: freshProfile } = await supabaseClient.from('profiles').select('credits').eq('id', user.id).single();
     const currentCredits = freshProfile ? freshProfile.credits : user.credits;
-    const newCredits = Math.max(0, Math.min(currentCredits + safeAmount, 999999));
+    const newCredits = Math.round(Math.max(0, Math.min(currentCredits + safeAmount, 999999)) * 100) / 100;
     const { error } = await supabaseClient.from('profiles').update({ credits: newCredits }).eq('id', user.id);
     if (error) { console.error('Credit update failed:', error.message); return; }
     // Update UI immediately, then log audit asynchronously
@@ -2819,7 +2819,7 @@ function AuthProvider({ children }) {
     const dayDiff = lastClaim ? Math.floor((todayDate - lastClaim) / 86400000) : 999;
     const newStreak = dayDiff === 1 ? (freshProfile.streak || 0) + 1 : 1;
     const DAILY_CREDIT = 1;
-    const newCredits = Math.max(0, Math.min(freshProfile.credits + DAILY_CREDIT, 999999));
+    const newCredits = Math.round(Math.max(0, Math.min(freshProfile.credits + DAILY_CREDIT, 999999)) * 100) / 100;
     // Optimistic lock: only update if date hasn't changed
     // IMPORTANT: .eq() doesn't work with NULL in PostgREST — must use .is() for NULL values
     let query = supabaseClient.from('profiles').update({
