@@ -1336,6 +1336,8 @@ const CONFIG = {
   CURRENCIES: { GBP: { symbol: '£', rate: 1 }, USD: { symbol: '$', rate: 1.27 }, EUR: { symbol: '€', rate: 1.17 } },
   CREDIT_RATIO: 1.25, // 1 credit ≈ £1.25 value when buying, services priced to give ~20% discount
 };
+// Format credits: show decimals only when fractional (e.g. 102.3 → "102.3", 500 → "500")
+const fmtCredits = (n) => { const v = typeof n === 'number' ? n : parseFloat(n) || 0; return v % 1 === 0 ? v.toLocaleString() : v.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:2}); };
 
 /* ==================== SECURITY UTILITIES ==================== */
 const sanitiseHTML = (dirty) => {
@@ -3540,7 +3542,7 @@ function Navbar() {
               ))}
             </div>
           </div>
-          {user && <a href={routeHref("/dashboard/credits")} className={`credit-pill${creditFlash ? ' credit-flash' : ''}`}><span className="coin">🪙</span>{user.credits.toLocaleString()}</a>}
+          {user && <a href={routeHref("/dashboard/credits")} className={`credit-pill${creditFlash ? ' credit-flash' : ''}`}><span className="coin">🪙</span>{fmtCredits(user.credits)}</a>}
           {user ? (
             <div className="nav-dropdown" style={{position:'relative'}}>
               <button className="btn btn-sm btn-ghost nav-dropdown-trigger" style={{display:'flex',alignItems:'center',gap:'6px'}} aria-label="User menu" aria-haspopup="true">
@@ -5008,7 +5010,7 @@ function DashboardPage() {
         {!isAdmin && <div style={{padding:'0 4px',marginBottom:16}}>
           <div style={{background:'linear-gradient(135deg,rgba(124,58,237,0.08),rgba(236,72,153,0.08))',borderRadius:'var(--radius)',padding:16,marginBottom:10,border:'1px solid rgba(124,58,237,0.15)'}}>
             <div style={{fontSize:12,fontWeight:700,color:'var(--primary)',marginBottom:6}}>🪙 Credit Balance</div>
-            <div style={{fontSize:22,fontWeight:800,color:'var(--primary)',marginBottom:4}}>{user.credits.toLocaleString()}</div>
+            <div style={{fontSize:22,fontWeight:800,color:'var(--primary)',marginBottom:4}}>{fmtCredits(user.credits)}</div>
             <div style={{fontSize:11,color:'var(--gray-500)',marginBottom:12}}>credits available</div>
             <button className="btn btn-sm btn-primary btn-block" style={{marginBottom:6}} onClick={() => { setTab('credits'); navigate('/dashboard/credits'); }}>Top Up Credits 💰</button>
             <a href={routeHref('/pricing')} className="btn btn-sm btn-secondary btn-block" style={{textDecoration:'none',display:'block',textAlign:'center'}}>Subscribe & Save ⚡</a>
@@ -5049,7 +5051,7 @@ function DashOverview({ user, projects, formatPrice, onClaim, onNavigate, credit
     <div>
       <div className="dash-header"><h1>Dashboard</h1><p>Welcome back, {user.first_name || user.name?.split(' ')[0] || 'Member'}. Here's your account overview.</p></div>
       <div className="dash-stats">
-        <div className={`dash-stat-card${creditFlash ? ' credit-flash' : ''}`} style={creditFlash ? {boxShadow:'0 0 20px rgba(124,58,237,0.3)',transition:'all .3s ease'} : {transition:'all .3s ease'}}><div className="label">Credit Balance</div><div className="value" style={{color:'var(--primary)'}}>{user.credits.toLocaleString()}</div><div className="change up">🪙 Credits available</div></div>
+        <div className={`dash-stat-card${creditFlash ? ' credit-flash' : ''}`} style={creditFlash ? {boxShadow:'0 0 20px rgba(124,58,237,0.3)',transition:'all .3s ease'} : {transition:'all .3s ease'}}><div className="label">Credit Balance</div><div className="value" style={{color:'var(--primary)'}}>{fmtCredits(user.credits)}</div><div className="change up">🪙 Credits available</div></div>
         <div className="dash-stat-card"><div className="label">Active Projects</div><div className="value" style={{color:'var(--info)'}}>{projects.filter(p => p.status === 'in-progress').length}</div><div className="change">In progress</div></div>
         <div className="dash-stat-card"><div className="label">Completed</div><div className="value" style={{color:'var(--success)'}}>{projects.filter(p => p.status === 'completed').length}</div><div className="change up">All time</div></div>
         <div className="dash-stat-card"><div className="label">Current Streak</div><div className="value" style={{color:'var(--warning)'}}>{user.streak} 🔥</div><div className="change up">Days</div></div>
@@ -5304,7 +5306,7 @@ function DashBookService() {
       {user && <div style={{background:'var(--gradient-subtle)',borderRadius:'var(--radius)',padding:'12px 16px',marginBottom:20,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <span style={{fontSize:13,color:'var(--gray-600)'}}>Your balance:</span>
-          <span style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>{user.credits.toLocaleString()} credits</span>
+          <span style={{fontSize:18,fontWeight:800,color:'var(--primary)'}}>{fmtCredits(user.credits)} credits</span>
         </div>
         <div style={{display:'flex',gap:12,alignItems:'center'}}>
           <a href={routeHref('/dashboard/credits')} style={{fontSize:13,fontWeight:600,color:'var(--primary)'}}>Top up credits →</a>
@@ -5448,7 +5450,7 @@ function DashCredits({ user, formatPrice }) {
       <div className="dash-header"><h1>Credits & Subscription</h1><p>Manage your plan, buy credits, and view your history.</p></div>
       <div className="credit-balance-card">
         <div className="balance-label">Available Credits</div>
-        <div className="balance-value">{user.credits.toLocaleString()}</div>
+        <div className="balance-value">{fmtCredits(user.credits)}</div>
         <div className="balance-sub">≈ {formatPrice(Math.round(user.credits * 0.22))} value • Credits never expire</div>
       </div>
 
@@ -5534,10 +5536,10 @@ function DashCredits({ user, formatPrice }) {
       <div className="card"><div className="table-wrap"><table>
         <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance</th></tr></thead>
         <tbody>
-          <tr><td>Today</td><td><span className="badge badge-success">Daily Login</span></td><td style={{color:'var(--success)'}}>+5</td><td>{user.credits.toLocaleString()}</td></tr>
-          <tr><td>Yesterday</td><td><span className="badge badge-info">Purchase</span></td><td style={{color:'var(--success)'}}>+200</td><td>{(user.credits - 5).toLocaleString()}</td></tr>
-          <tr><td>2 days ago</td><td><span className="badge badge-warning">Service</span></td><td style={{color:'var(--error)'}}>-500</td><td>{(user.credits - 205).toLocaleString()}</td></tr>
-          <tr><td>3 days ago</td><td><span className="badge badge-primary">Referral</span></td><td style={{color:'var(--success)'}}>+50</td><td>{(user.credits + 295).toLocaleString()}</td></tr>
+          <tr><td>Today</td><td><span className="badge badge-success">Daily Login</span></td><td style={{color:'var(--success)'}}>+5</td><td>{fmtCredits(user.credits)}</td></tr>
+          <tr><td>Yesterday</td><td><span className="badge badge-info">Purchase</span></td><td style={{color:'var(--success)'}}>+200</td><td>{fmtCredits(user.credits - 5)}</td></tr>
+          <tr><td>2 days ago</td><td><span className="badge badge-warning">Service</span></td><td style={{color:'var(--error)'}}>-500</td><td>{fmtCredits(user.credits - 205)}</td></tr>
+          <tr><td>3 days ago</td><td><span className="badge badge-primary">Referral</span></td><td style={{color:'var(--success)'}}>+50</td><td>{fmtCredits(user.credits + 295)}</td></tr>
         </tbody>
       </table></div></div>
       {checkoutSecret && React.createElement(CheckoutModal, { clientSecret: checkoutSecret, onClose: handleCheckoutClose })}
@@ -5569,7 +5571,7 @@ function DashRewards({ user, onClaim }) {
         <div className="card">
           <h3 style={{fontSize:16,marginBottom:12}}>📊 Your Stats</h3>
           <div style={{display:'flex',flexDirection:'column',gap:10}}>
-            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Total credits earned</span><strong>{(user.credits + 500).toLocaleString()}</strong></div>
+            <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Total credits earned</span><strong>{fmtCredits(user.credits + 500)}</strong></div>
             <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Projects completed</span><strong>{user.projectsCompleted}</strong></div>
             <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Referrals converted</span><strong>{user.referrals}</strong></div>
             <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-500)'}}>Badges unlocked</span><strong>{user.badges?.length || 0}/{BADGES.length}</strong></div>
@@ -6310,7 +6312,7 @@ function BookingWizard({ service }) {
         <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:16,marginBottom:20}}>
           <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}><span style={{color:'var(--gray-600)'}}>Service</span><strong>{service.name}</strong></div>
           <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}><span style={{color:'var(--gray-600)'}}>Cost</span><strong>{creditPrice} credits</strong></div>
-          <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-600)'}}>Your Balance</span><strong style={{color: user.credits >= creditPrice ? 'var(--success)' : 'var(--error)'}}>{user.credits.toLocaleString()} credits</strong></div>
+          <div style={{display:'flex',justifyContent:'space-between'}}><span style={{color:'var(--gray-600)'}}>Your Balance</span><strong style={{color: user.credits >= creditPrice ? 'var(--success)' : 'var(--error)'}}>{fmtCredits(user.credits)} credits</strong></div>
         </div>
         {formData.details && <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:16,marginBottom:20}}>
           <div style={{fontSize:13,fontWeight:700,color:'var(--gray-700)',marginBottom:6}}>Your Project Brief</div>
@@ -7990,7 +7992,7 @@ function AdminPage() {
                 }).map(u => <tr key={u.id} style={{cursor:'pointer'}} onClick={() => { setActiveUserId(u.id); setUserView('detail'); }}>
                   <td style={{fontWeight:600}}>{u.name}</td>
                   <td style={{fontSize:13}}>{u.email}</td>
-                  <td style={{fontWeight:600}}>{u.credits.toLocaleString()}</td>
+                  <td style={{fontWeight:600}}>{fmtCredits(u.credits)}</td>
                   <td>{u.plan ? <span className="badge badge-primary">{u.plan}</span> : <span className="badge badge-warning">Free</span>}</td>
                   <td style={{fontSize:13}}>{u.totalOrders || 0}</td>
                   <td style={{fontSize:13}}>{formatPrice(u.totalSpend || 0)}</td>
@@ -8029,7 +8031,7 @@ function AdminPage() {
               </div>
 
               <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:20}} className="resp-grid-4">
-                <div className="card" style={{padding:16,textAlign:'center'}}><div style={{fontSize:24,fontWeight:800,color:'var(--primary)'}}>{u.credits.toLocaleString()}</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Credits Balance</div></div>
+                <div className="card" style={{padding:16,textAlign:'center'}}><div style={{fontSize:24,fontWeight:800,color:'var(--primary)'}}>{fmtCredits(u.credits)}</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Credits Balance</div></div>
                 <div className="card" style={{padding:16,textAlign:'center'}}><div style={{fontSize:24,fontWeight:800}}>{u.totalOrders || 0}</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Total Orders</div></div>
                 <div className="card" style={{padding:16,textAlign:'center'}}><div style={{fontSize:24,fontWeight:800,color:'var(--success)'}}>{formatPrice(u.totalSpend || 0)}</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Total Spend</div></div>
                 <div className="card" style={{padding:16,textAlign:'center'}}><div style={{fontSize:24,fontWeight:800}}>{u.plan || 'Free'}</div><div style={{fontSize:12,color:'var(--gray-500)'}}>Current Plan</div></div>
@@ -12843,7 +12845,7 @@ function ChatWidget() {
     'refund': `We offer a satisfaction guarantee on all services! If you're not happy:\n\n• You can request revisions (2-unlimited depending on your plan)\n• Refunds are available if work hasn't started\n• Partial refunds for scope changes\n\nFull details on our refund policy page at /refund.`,
     'contact': `You can reach us several ways:\n\n📧 Email: hello@creativekaygency.com\n💬 This chat (we'll get back to you)\n🎫 Support tickets: /support\n📞 Response within 24 hours\n\nWant me to open the contact page for you?`,
     'hosting': `We offer managed web hosting:\n\n🟢 Starter — 200 credits/mo (5GB, free SSL)\n🔵 Business — 400 credits/mo (20GB, priority)\n🟣 Professional — 700 credits/mo (50GB, staging)\n⚫ Enterprise — 1,200 credits/mo (unlimited, dedicated)\n\nAll plans include daily backups, 99.9% uptime, and free SSL!`,
-    'account': user ? `You're logged in as **${user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name}**${user.username ? ` (@${user.username})` : ''}!\n\n🪙 Credit balance: ${user.credits.toLocaleString()} credits\n📊 Dashboard: /dashboard\n⚙️ Settings: /dashboard/settings\n\nAnything specific you need help with?` : `You can create a free account in seconds — no credit card required!\n\n✅ Browse all 40+ services\n✅ Earn daily login credits\n✅ Track projects in your dashboard\n✅ Get referral bonuses\n\nSign up at /register!`,
+    'account': user ? `You're logged in as **${user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user.name}**${user.username ? ` (@${user.username})` : ''}!\n\n🪙 Credit balance: ${fmtCredits(user.credits)} credits\n📊 Dashboard: /dashboard\n⚙️ Settings: /dashboard/settings\n\nAnything specific you need help with?` : `You can create a free account in seconds — no credit card required!\n\n✅ Browse all 40+ services\n✅ Earn daily login credits\n✅ Track projects in your dashboard\n✅ Get referral bonuses\n\nSign up at /register!`,
   };
 
   const QUICK_ACTIONS = [
