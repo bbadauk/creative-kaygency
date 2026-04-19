@@ -401,7 +401,7 @@ h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 .badge-dark{background:var(--dark);color:#fff}
 
 /* Sections */
-.section{padding:56px 0}
+.section{padding:44px 0}
 .section-sm{padding:48px 0}
 .section-alt{background:var(--bg-alt)}
 .section-dark{background:var(--dark);color:#fff}
@@ -1067,7 +1067,7 @@ tr:hover td{background:var(--gray-50)}
   .sidebar-link{white-space:nowrap;font-size:13px;padding:8px 12px}
   .footer-grid{grid-template-columns:1fr}
   .footer-bottom{flex-direction:column;gap:12px}
-  .section{padding:48px 0}
+  .section{padding:32px 0}
   .price-comparison-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .pay-option-card{padding:28px 20px}
   .testimonial-card{width:300px}
@@ -9553,7 +9553,7 @@ function PricingPage() {
           <span className={`toggle-label${annual ? ' active' : ''}`}>Annual <span className="annual-save" style={{background:'linear-gradient(135deg,#10b981,#059669)',color:'#fff',padding:'3px 10px',borderRadius:20,fontSize:12,fontWeight:700,animation:'pulse 2s ease-in-out infinite'}}>Save 20% 🔥</span></span>
           {!annual && <div style={{position:'absolute',top:'100%',left:'50%',transform:'translateX(-50%)',marginTop:8,background:'rgba(16,185,129,0.1)',border:'1px solid rgba(16,185,129,0.3)',borderRadius:8,padding:'6px 14px',fontSize:12,color:'var(--success)',fontWeight:600,whiteSpace:'nowrap',animation:'fadeIn .3s ease'}}>👆 Switch to annual and save up to <strong>£720/year</strong></div>}
         </div>
-        <PricingCards annual={annual} />
+        <div style={{marginTop:36}}><PricingCards annual={annual} /></div>
         <div style={{textAlign:'center',marginTop:20}}>
           <GuaranteeBadge />
         </div>
