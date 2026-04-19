@@ -2147,11 +2147,18 @@ const FORUM_CATEGORIES = [
 // remain a loyalty perk, not a substitute for purchasing credits.
 // Max earnable per day capped at ~2 credits from forum activity.
 const FORUM_CREDIT_RULES = {
-  newThread: 0.5,        // 0.5 credits for starting a new thread
-  reply: 0.25,           // 0.25 credits per reply
-  receiveLike: 0.1,      // 0.1 credits when someone likes your post
-  dailyCap: 2,           // Max 2 credits earnable per day from forum activity
-  firstPostBonus: 2,     // One-time bonus for very first forum post
+  newThread: 0.25,       // 0.25 credits for starting a new thread
+  reply: 0.1,            // 0.1 credits per reply
+  receiveLike: 0.05,     // 0.05 credits when someone likes your post
+  dailyCap: 1.5,         // Max 1.5 credits earnable per day from forum activity
+  firstPostBonus: 1,     // One-time bonus for very first forum post
+  minReplyLength: 20,    // Minimum 20 characters for a reply to earn credits
+  minThreadLength: 50,   // Minimum 50 characters for thread content
+  replyCooldown: 30000,  // 30 seconds between replies
+  threadCooldown: 120000,// 2 minutes between new threads
+  maxThreadsPerDay: 5,   // Max 5 threads per day
+  maxRepliesPerDay: 20,  // Max 20 replies per day
+  noSelfReplyCredit: true,// No credits for replying to own thread
 };
 
 // Demo forum threads for initial launch display
@@ -2747,7 +2754,7 @@ function AuthProvider({ children }) {
   const CREDIT_RATE_WINDOW = 60000;
 
   const updateCredits = async (amount, reason = 'unknown') => {
-    const safeAmount = parseInt(amount, 10);
+    const safeAmount = parseFloat(amount);
     if (isNaN(safeAmount) || !user) return;
     // Rate limiting: prevent rapid credit manipulation
     const now = Date.now();
@@ -2759,7 +2766,7 @@ function AuthProvider({ children }) {
     _creditUpdateLog.current.push(now);
     // Prevent client-side credit increases (only admin or verified system actions)
     // Positive credits only allowed for: daily_login, referral, share, admin_grant
-    const ALLOWED_POSITIVE_REASONS = ['daily_login', 'referral', 'share_credit', 'admin_grant', 'streak_bonus', 'giveaway', 'credit_purchase'];
+    const ALLOWED_POSITIVE_REASONS = ['daily_login', 'referral', 'share_credit', 'admin_grant', 'streak_bonus', 'giveaway', 'credit_purchase', 'forum_thread', 'forum_reply', 'forum_like', 'forum_first_post'];
     if (safeAmount > 0 && !ALLOWED_POSITIVE_REASONS.includes(reason)) {
       console.warn('Unauthorized positive credit update blocked:', reason);
       return;
@@ -6342,10 +6349,10 @@ function BookingWizard({ service }) {
 // ============================================================================
 
 function DashCommunity() {
-  const { user, getDisplayName } = useContext(AuthContext);
+  const { user, getDisplayName, updateCredits } = useContext(AuthContext);
   const { addToast } = useContext(NotificationContext);
   const displayName = getDisplayName(user);
-  const [view, setView] = useState('categories'); // categories | category | thread | new-thread
+  const [view, setView] = useState('categories'); // categories | category | thread | new-thread | profile
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeThread, setActiveThread] = useState(null);
   const [threads, setThreads] = useState(DEMO_FORUM_THREADS);
@@ -6355,6 +6362,11 @@ function DashCommunity() {
   const [replyContent, setReplyContent] = useState('');
   const [sortBy, setSortBy] = useState('latest'); // latest | popular | unanswered
   const [forumCreditsToday, setForumCreditsToday] = useState(0);
+  const [profileUser, setProfileUser] = useState(null);
+  const [lastReplyTime, setLastReplyTime] = useState(0);
+  const [lastThreadTime, setLastThreadTime] = useState(0);
+  const [threadsToday, setThreadsToday] = useState(0);
+  const [repliesToday, setRepliesToday] = useState(0);
 
   const getThreadsForCategory = (catId) => {
     let filtered = threads.filter(t => t.category === catId);
@@ -6384,27 +6396,44 @@ function DashCommunity() {
     return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
   };
 
-  const earnForumCredits = (amount, reason) => {
+  const earnForumCredits = async (amount, reason) => {
     if (forumCreditsToday >= FORUM_CREDIT_RULES.dailyCap) {
+      addToast('Daily forum credit cap reached. Come back tomorrow!', 'info');
       return false;
     }
     const actual = Math.min(amount, FORUM_CREDIT_RULES.dailyCap - forumCreditsToday);
     if (actual > 0) {
       setForumCreditsToday(prev => prev + actual);
+      const supaReason = reason === 'New thread created' ? 'forum_thread' : reason === 'Forum reply' ? 'forum_reply' : reason === 'First forum post bonus!' ? 'forum_first_post' : 'forum_like';
+      await updateCredits(actual, supaReason);
       addToast(`+${actual} credits earned: ${reason}`, 'success');
     }
     return actual > 0;
   };
 
+  const viewProfile = (authorName, authorAvatar) => {
+    const authorThreads = threads.filter(t => t.author === authorName);
+    const authorReplies = threads.reduce((sum, t) => sum + (t.posts || []).filter(p => p.author === authorName).length, 0);
+    const authorLikes = threads.reduce((sum, t) => sum + (t.posts || []).filter(p => p.author === authorName).reduce((s, p) => s + p.likes, 0), 0);
+    setProfileUser({ name: authorName, avatar: authorAvatar, threads: authorThreads.length, replies: authorReplies, likes: authorLikes, joined: authorThreads.length > 0 ? authorThreads.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt))[0].createdAt : null });
+    setView('profile');
+  };
+
   const handleNewThread = () => {
     if (!newTitle.trim() || !newContent.trim()) { addToast('Please fill in both title and content', 'error'); return; }
+    if (newContent.trim().length < FORUM_CREDIT_RULES.minThreadLength) { addToast(`Thread content must be at least ${FORUM_CREDIT_RULES.minThreadLength} characters`, 'error'); return; }
+    const now = Date.now();
+    if (now - lastThreadTime < FORUM_CREDIT_RULES.threadCooldown) { addToast('Please wait before creating another thread', 'error'); return; }
+    if (threadsToday >= FORUM_CREDIT_RULES.maxThreadsPerDay) { addToast(`You can only create ${FORUM_CREDIT_RULES.maxThreadsPerDay} threads per day`, 'error'); return; }
     const thread = {
-      id: 'thread-' + Date.now(), category: activeCategory, title: newTitle, author: displayName, authorAvatar: '#7C3AED',
+      id: 'thread-' + now, category: activeCategory, title: newTitle.trim(), author: displayName, authorAvatar: '#7C3AED',
       replies: 0, likes: 0, views: 0, pinned: false, locked: false,
       createdAt: new Date().toISOString(), lastReplyAt: new Date().toISOString(),
-      posts: [{ id: 'p-' + Date.now(), author: displayName, authorAvatar: '#7C3AED', content: newContent, likes: 0, createdAt: new Date().toISOString() }]
+      posts: [{ id: 'p-' + now, author: displayName, authorAvatar: '#7C3AED', content: newContent.trim(), likes: 0, createdAt: new Date().toISOString() }]
     };
     setThreads(prev => [thread, ...prev]);
+    setLastThreadTime(now);
+    setThreadsToday(prev => prev + 1);
     const isFirstPost = threads.filter(t => t.author === displayName).length === 0;
     earnForumCredits(FORUM_CREDIT_RULES.newThread, 'New thread created');
     if (isFirstPost) earnForumCredits(FORUM_CREDIT_RULES.firstPostBonus, 'First forum post bonus!');
@@ -6417,16 +6446,39 @@ function DashCommunity() {
     if (!replyContent.trim()) { addToast('Please write a reply', 'error'); return; }
     const thread = threads.find(t => t.id === threadId);
     if (thread?.locked) { addToast('This thread is locked', 'error'); return; }
+    const now = Date.now();
+    if (now - lastReplyTime < FORUM_CREDIT_RULES.replyCooldown) { addToast('Please wait 30 seconds between replies', 'error'); return; }
+    if (repliesToday >= FORUM_CREDIT_RULES.maxRepliesPerDay) { addToast(`You can only post ${FORUM_CREDIT_RULES.maxRepliesPerDay} replies per day`, 'error'); return; }
+    const trimmedReply = replyContent.trim();
+    // Check for duplicate/spam content
+    const lastPost = thread.posts && thread.posts.length > 0 ? thread.posts[thread.posts.length - 1] : null;
+    if (lastPost && lastPost.author === displayName && lastPost.content === trimmedReply) { addToast('Duplicate reply detected', 'error'); return; }
     setThreads(prev => prev.map(t => t.id === threadId ? {
       ...t, replies: t.replies + 1, lastReplyAt: new Date().toISOString(),
-      posts: [...(t.posts || []), { id: 'p-' + Date.now(), author: displayName, authorAvatar: '#7C3AED', content: replyContent, likes: 0, createdAt: new Date().toISOString() }]
+      posts: [...(t.posts || []), { id: 'p-' + now, author: displayName, authorAvatar: '#7C3AED', content: trimmedReply, likes: 0, createdAt: new Date().toISOString() }]
     } : t));
-    earnForumCredits(FORUM_CREDIT_RULES.reply, 'Forum reply');
+    setLastReplyTime(now);
+    setRepliesToday(prev => prev + 1);
+    // Only award credits if reply meets minimum length and user isn't replying to own thread
+    const isOwnThread = FORUM_CREDIT_RULES.noSelfReplyCredit && thread.author === displayName;
+    if (trimmedReply.length >= FORUM_CREDIT_RULES.minReplyLength && !isOwnThread) {
+      earnForumCredits(FORUM_CREDIT_RULES.reply, 'Forum reply');
+    } else if (isOwnThread) {
+      addToast('Reply posted! (No credits for replying to your own thread)', 'info');
+    } else {
+      addToast('Reply posted! (Replies under 20 characters don\'t earn credits)', 'info');
+    }
     setReplyContent('');
-    addToast('Reply posted!', 'success');
+    if (!isOwnThread && trimmedReply.length >= FORUM_CREDIT_RULES.minReplyLength) addToast('Reply posted!', 'success');
   };
 
+  const [likedPosts, setLikedPosts] = useState(new Set());
   const handleLike = (threadId, postId) => {
+    if (likedPosts.has(postId)) { addToast('You already liked this post', 'info'); return; }
+    const thread = threads.find(t => t.id === threadId);
+    const post = thread?.posts?.find(p => p.id === postId);
+    if (post?.author === displayName) { addToast('You can\'t like your own post', 'info'); return; }
+    setLikedPosts(prev => new Set([...prev, postId]));
     setThreads(prev => prev.map(t => {
       if (t.id === threadId) {
         const updatedPosts = t.posts.map(p => p.id === postId ? { ...p, likes: p.likes + 1 } : p);
@@ -6504,7 +6556,7 @@ function DashCommunity() {
                     <div style={{fontSize:11,color:'var(--gray-400)'}}>threads</div>
                   </div>
                   {latestThread && <div style={{textAlign:'right',flexShrink:0,minWidth:100}}>
-                    <div style={{fontSize:12,fontWeight:600}}>{latestThread.author}</div>
+                    <div style={{fontSize:12,fontWeight:600,color:'var(--primary)',cursor:'pointer'}} onClick={(e) => { e.stopPropagation(); viewProfile(latestThread.author, latestThread.authorAvatar); }}>{latestThread.author}</div>
                     <div style={{fontSize:11,color:'var(--gray-400)'}}>{timeAgo(latestThread.lastReplyAt || latestThread.createdAt)}</div>
                   </div>}
                 </div>
@@ -6547,10 +6599,10 @@ function DashCommunity() {
                   {thread.locked && <span style={{fontSize:11,background:'rgba(239,68,68,0.1)',color:'var(--error)',padding:'2px 8px',borderRadius:4,fontWeight:700}}>🔒 Locked</span>}
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:14,marginTop:thread.pinned || thread.locked ? 8 : 0}}>
-                  <div style={{width:36,height:36,borderRadius:'50%',background:thread.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:14,flexShrink:0}}>{thread.author.charAt(0)}</div>
+                  <div style={{width:36,height:36,borderRadius:'50%',background:thread.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:14,flexShrink:0,cursor:'pointer'}} onClick={(e) => { e.stopPropagation(); viewProfile(thread.author, thread.authorAvatar); }}>{thread.author.charAt(0)}</div>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontWeight:700,fontSize:15,marginBottom:2,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{thread.title}</div>
-                    <div style={{fontSize:12,color:'var(--gray-400)'}}>by <strong>{thread.author}</strong> · {timeAgo(thread.createdAt)}</div>
+                    <div style={{fontSize:12,color:'var(--gray-400)'}}>by <strong style={{color:'var(--primary)',cursor:'pointer'}} onClick={(e) => { e.stopPropagation(); viewProfile(thread.author, thread.authorAvatar); }}>{thread.author}</strong> · {timeAgo(thread.createdAt)}</div>
                   </div>
                   <div style={{display:'flex',gap:16,alignItems:'center',flexShrink:0,fontSize:13,color:'var(--gray-400)'}}>
                     <span title="Replies">💬 {thread.replies}</span>
@@ -6596,7 +6648,7 @@ function DashCommunity() {
           <div style={{marginBottom:20}}>
             <h2 style={{fontSize:20,fontWeight:800,marginBottom:4}}>{currentThread.title}</h2>
             <div style={{display:'flex',gap:12,fontSize:13,color:'var(--gray-400)',flexWrap:'wrap'}}>
-              <span>by <strong style={{color:'var(--text)'}}>{currentThread.author}</strong></span>
+              <span>by <strong style={{color:'var(--primary)',cursor:'pointer'}} onClick={() => viewProfile(currentThread.author, currentThread.authorAvatar || '#7C3AED')}>{currentThread.author}</strong></span>
               <span>{timeAgo(currentThread.createdAt)}</span>
               <span>💬 {currentThread.replies} replies</span>
               <span>👁️ {currentThread.views} views</span>
@@ -6607,9 +6659,9 @@ function DashCommunity() {
             {currentThread.posts?.map((post, idx) => (
               <div key={post.id} className="card" style={{border: idx === 0 ? '2px solid rgba(124,58,237,0.2)' : '1px solid var(--border)',padding:20}}>
                 <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
-                  <div style={{width:40,height:40,borderRadius:'50%',background:post.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:16}}>{post.author.charAt(0)}</div>
+                  <div style={{width:40,height:40,borderRadius:'50%',background:post.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:700,fontSize:16,cursor:'pointer'}} onClick={() => viewProfile(post.author, post.authorAvatar)}>{post.author.charAt(0)}</div>
                   <div>
-                    <div style={{fontWeight:700,fontSize:14}}>{post.author} {idx === 0 && <span style={{fontSize:11,background:'rgba(124,58,237,0.1)',color:'var(--primary)',padding:'2px 8px',borderRadius:4,marginLeft:6}}>OP</span>}</div>
+                    <div style={{fontWeight:700,fontSize:14}}><span style={{color:'var(--primary)',cursor:'pointer'}} onClick={() => viewProfile(post.author, post.authorAvatar)}>{post.author}</span> {idx === 0 && <span style={{fontSize:11,background:'rgba(124,58,237,0.1)',color:'var(--primary)',padding:'2px 8px',borderRadius:4,marginLeft:6}}>OP</span>}</div>
                     <div style={{fontSize:12,color:'var(--gray-400)'}}>{timeAgo(post.createdAt)}</div>
                   </div>
                 </div>
@@ -6636,6 +6688,42 @@ function DashCommunity() {
               🔒 This thread has been locked by a moderator and is no longer accepting replies.
             </div>
           )}
+        </div>
+      )}
+
+      {/* Member Profile View */}
+      {view === 'profile' && profileUser && (
+        <div>
+          <button className="btn btn-secondary btn-sm" style={{marginBottom:16}} onClick={() => { setView(activeThread ? 'thread' : activeCategory ? 'category' : 'categories'); setProfileUser(null); }}>← Back</button>
+          <div className="card" style={{maxWidth:600,margin:'0 auto',textAlign:'center',border:'2px solid var(--primary)',padding:32}}>
+            <div style={{width:72,height:72,borderRadius:'50%',background:profileUser.avatar,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontWeight:800,fontSize:28,margin:'0 auto 16px'}}>{profileUser.name.charAt(0)}</div>
+            <h2 style={{fontSize:22,fontWeight:800,marginBottom:4}}>{profileUser.name}</h2>
+            <div style={{fontSize:13,color:'var(--gray-400)',marginBottom:20}}>Community Member{profileUser.joined ? ` · Joined ${new Date(profileUser.joined).toLocaleDateString('en-GB',{month:'short',year:'numeric'})}` : ''}</div>
+            <div style={{display:'flex',gap:16,justifyContent:'center',marginBottom:24,flexWrap:'wrap'}}>
+              <div style={{background:'rgba(124,58,237,0.06)',borderRadius:'var(--radius)',padding:'12px 20px',minWidth:80}}>
+                <div style={{fontSize:22,fontWeight:800,color:'var(--primary)'}}>{profileUser.threads}</div>
+                <div style={{fontSize:11,color:'var(--gray-400)'}}>Threads</div>
+              </div>
+              <div style={{background:'rgba(16,185,129,0.06)',borderRadius:'var(--radius)',padding:'12px 20px',minWidth:80}}>
+                <div style={{fontSize:22,fontWeight:800,color:'var(--success)'}}>{profileUser.replies}</div>
+                <div style={{fontSize:11,color:'var(--gray-400)'}}>Posts</div>
+              </div>
+              <div style={{background:'rgba(239,68,68,0.06)',borderRadius:'var(--radius)',padding:'12px 20px',minWidth:80}}>
+                <div style={{fontSize:22,fontWeight:800,color:'#EF4444'}}>{profileUser.likes}</div>
+                <div style={{fontSize:11,color:'var(--gray-400)'}}>Likes</div>
+              </div>
+            </div>
+            <h3 style={{fontSize:16,fontWeight:700,marginBottom:12,textAlign:'left'}}>Recent Threads</h3>
+            <div style={{textAlign:'left'}}>
+              {threads.filter(t => t.author === profileUser.name).slice(0,5).map(t => (
+                <div key={t.id} style={{padding:'10px 0',borderBottom:'1px solid var(--border)',cursor:'pointer'}} onClick={() => { setActiveThread(t.id); setActiveCategory(t.category); setView('thread'); setProfileUser(null); }}>
+                  <div style={{fontWeight:600,fontSize:14,color:'var(--text)'}}>{t.title}</div>
+                  <div style={{fontSize:12,color:'var(--gray-400)',marginTop:2}}>{FORUM_CATEGORIES.find(c => c.id === t.category)?.name} · 💬 {t.replies} · ❤️ {t.likes}</div>
+                </div>
+              ))}
+              {threads.filter(t => t.author === profileUser.name).length === 0 && <p style={{fontSize:13,color:'var(--gray-400)'}}>No threads yet.</p>}
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -10216,7 +10304,7 @@ function FAQPage() {
     { section: 'advertising', q: 'Do you offer bulk advertising discounts?', a: 'Yes. For businesses planning multiple consecutive campaigns or long-term advertising partnerships, we offer custom packages with discounted rates. Contact us with your requirements and budget, and we will create a tailored advertising plan. Bulk bookings of 3+ months receive priority placement and dedicated support.' },
 
     { section: 'community', q: 'What is the Community Forum?', a: 'The Community Forum is a members-only discussion space accessible from your dashboard. It has six categories: Showcase Your Project, Web Design Tips, SEO and Marketing, Branding Chat, General Discussion, and Feature Requests. You can start threads, post replies, like helpful content, and search across all discussions. It is a great place to get feedback, share tips, and connect with other Creative Kaygency members.' },
-    { section: 'community', q: 'Can I earn credits from the Community Forum?', a: 'Yes, but the amounts are deliberately small — they are a loyalty perk, not a substitute for purchasing credits. You earn 0.5 credits for starting a new thread, 0.25 credits per reply, and 0.1 credits when someone likes your post. Your very first forum post earns a one-time bonus of 2 credits. There is a daily cap of 2 credits from forum activity to keep the system fair and financially sustainable.' },
+    { section: 'community', q: 'Can I earn credits from the Community Forum?', a: 'Yes, but the amounts are deliberately small — they are a loyalty perk, not a substitute for purchasing credits. You earn 0.25 credits for starting a new thread, 0.1 credits per reply, and 0.05 credits when someone likes your post. Your very first forum post earns a one-time bonus of 1 credit. There is a daily cap of 1.5 credits from forum activity. Anti-abuse safeguards include: 30-second reply cooldown, minimum character lengths, no credits for self-replies, no self-liking, and daily limits on threads and replies.' },
     { section: 'community', q: 'How does the Leaderboard work?', a: 'The Leaderboard ranks members by their all-time contribution score, calculated from six weighted activities. Credit purchases carry the heaviest weight (10 points per credit), followed by orders placed (50 points each), referrals (30 points each), forum posts (5 points each), streak days (2 points each), and daily logins (1 point each). This ensures the biggest supporters of the platform are recognised most prominently.' },
     { section: 'community', q: 'What are Bronze, Silver, and Gold tiers?', a: 'Leaderboard tiers reward long-term engagement. Bronze (300+ points) earns a community badge and early access to new features. Silver (1,500+ points) earns a badge and a 2 percent credit bonus on purchases. Gold (5,000+ points) earns priority support, an exclusive badge, and a 5 percent credit bonus on all credit purchases. View your current tier and progress from Dashboard > Leaderboard.' },
     { section: 'community', q: 'What are the community guidelines?', a: 'Be respectful and constructive. Share genuinely helpful advice and feedback. Do not spam, self-promote excessively, or post irrelevant content. Report inappropriate content using the flag option. Moderators may pin, lock, or remove threads that violate guidelines. Repeat offenders may have their forum access suspended.' },
@@ -10736,7 +10824,7 @@ function CommunityCategoryPage({ catId }) {
               <div style={{flex:1,minWidth:0}}>
                 <h3 style={{fontSize:16,fontWeight:700,marginBottom:4}}>{thread.pinned && <span style={{color:cat.color,marginRight:6}}>📌</span>}{thread.title}</h3>
                 <div style={{fontSize:13,color:'var(--gray-500)',marginBottom:8}}>
-                  by <strong>{thread.author}</strong> · {timeAgo(thread.createdAt)}
+                  by <strong style={{color:'var(--primary)'}}>{thread.author}</strong> · {timeAgo(thread.createdAt)}
                   {thread.locked && <span style={{marginLeft:8,color:'#EF4444'}}>🔒 Locked</span>}
                 </div>
                 {thread.posts && thread.posts[0] && (
@@ -10748,7 +10836,7 @@ function CommunityCategoryPage({ catId }) {
                       <div key={post.id} style={{display:'flex',gap:8,marginBottom:10,paddingLeft:12,borderLeft:'2px solid var(--gray-200)'}}>
                         <div style={{width:28,height:28,borderRadius:'50%',background:post.authorAvatar,display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontWeight:600,fontSize:10,flexShrink:0}}>{post.author.split(' ').map(n=>n[0]).join('')}</div>
                         <div>
-                          <div style={{fontSize:12,fontWeight:600,color:'var(--gray-700)'}}>{post.author} <span style={{fontWeight:400,color:'var(--gray-400)',marginLeft:4}}>{timeAgo(post.createdAt)}</span></div>
+                          <div style={{fontSize:12,fontWeight:600,color:'var(--primary)'}}>{post.author} <span style={{fontWeight:400,color:'var(--gray-400)',marginLeft:4}}>{timeAgo(post.createdAt)}</span></div>
                           <p style={{fontSize:13,color:'var(--gray-600)',lineHeight:1.5,margin:'2px 0 0'}}>{post.content.substring(0, 150)}{post.content.length > 150 ? '...' : ''}</p>
                         </div>
                       </div>
@@ -10802,12 +10890,12 @@ function CommunityCategoryPage({ catId }) {
       <section style={{padding:'48px 24px',background:'white'}}>
         <div style={{maxWidth:700,margin:'0 auto',textAlign:'center'}}>
           <h2 style={{fontSize:22,fontWeight:700,marginBottom:12}}>Earn Credits by Participating</h2>
-          <p style={{color:'var(--gray-500)',marginBottom:24}}>Every thread you start, reply you post, and like you receive earns you small credit bonuses. Daily cap of 2 credits from forum activity keeps things fair.</p>
+          <p style={{color:'var(--gray-500)',marginBottom:24}}>Every thread you start, reply you post, and like you receive earns you small credit bonuses. Daily cap of 1.5 credits from forum activity keeps things fair.</p>
           <div style={{display:'flex',gap:16,justifyContent:'center',flexWrap:'wrap',fontSize:14}}>
-            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+0.5</strong> per new thread</div>
-            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+0.25</strong> per reply</div>
-            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+0.1</strong> per like received</div>
-            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+2</strong> first post bonus</div>
+            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+0.25</strong> per new thread</div>
+            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+0.1</strong> per reply</div>
+            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+0.05</strong> per like received</div>
+            <div style={{background:'var(--gray-50)',borderRadius:'var(--radius)',padding:'12px 20px'}}><strong>+1</strong> first post bonus</div>
           </div>
         </div>
       </section>
