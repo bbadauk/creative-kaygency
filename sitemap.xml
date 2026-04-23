@@ -42,12 +42,7 @@
   <url><loc>https://www.creativekaygency.com/privacy</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.creativekaygency.com/cookies</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 
-  <!-- ============================================================ -->
-  <!-- AUTH PAGES                                                    -->
-  <!-- ============================================================ -->
-  <url><loc>https://www.creativekaygency.com/login</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://www.creativekaygency.com/register</loc><lastmod>2026-04-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.creativekaygency.com/forgot-password</loc><lastmod>2026-04-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <!-- AUTH PAGES excluded — these have noindex tags and should not be in sitemap -->
 
   <!-- ============================================================ -->
   <!-- ADVERTISING                                                   -->
