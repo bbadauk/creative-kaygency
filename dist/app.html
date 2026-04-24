@@ -193,49 +193,33 @@
   </script>
   <!-- Clickjacking protection fallback -->
   <script>if (window.self !== window.top) { try { window.top.location = window.self.location; } catch(e) { document.documentElement.style.display = 'none'; } }</script>
-  <!-- Performance: resource hints -->
+  <!-- Performance: resource hints — preconnect to all critical origins early -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://js.stripe.com">
   <link rel="dns-prefetch" href="https://c.statcounter.com">
+  <!-- Preload critical scripts so browser starts downloading them immediately -->
+  <link rel="preload" href="https://unpkg.com/react@18.2.0/umd/react.production.min.js" as="script" crossorigin="anonymous">
+  <link rel="preload" href="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" as="script" crossorigin="anonymous">
+  <link rel="preload" href="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js" as="script" crossorigin="anonymous">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1" as="script" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Polyfills for older browsers (IE11, older Safari/Chrome) -->
-  <script>
-  // Polyfill: String.prototype.padStart
-  if(!String.prototype.padStart){String.prototype.padStart=function(t,p){t=t>>0;p=String(typeof p!=='undefined'?p:' ');if(this.length>=t)return String(this);var f=t-this.length;if(f>p.length)p+=p.repeat(f/p.length);return p.slice(0,f)+String(this)}}
-  // Polyfill: Array.from
-  if(!Array.from){Array.from=function(a,m,t){var arr=[];for(var i=0;i<a.length;i++)arr.push(m?m.call(t,a[i],i):a[i]);return arr}}
-  // Polyfill: Array.prototype.includes
-  if(!Array.prototype.includes){Array.prototype.includes=function(v,f){return this.indexOf(v,f)!==-1}}
-  // Polyfill: String.prototype.includes
-  if(!String.prototype.includes){String.prototype.includes=function(s,p){return this.indexOf(s,p||0)!==-1}}
-  // Polyfill: String.prototype.startsWith
-  if(!String.prototype.startsWith){String.prototype.startsWith=function(s,p){p=p||0;return this.substr(p,s.length)===s}}
-  // Polyfill: String.prototype.endsWith
-  if(!String.prototype.endsWith){String.prototype.endsWith=function(s,l){if(l===undefined||l>this.length)l=this.length;return this.substring(l-s.length,l)===s}}
-  // Polyfill: Object.assign
-  if(typeof Object.assign!=='function'){Object.assign=function(t){for(var i=1;i<arguments.length;i++){var s=arguments[i];if(s!=null)for(var k in s)if(Object.prototype.hasOwnProperty.call(s,k))t[k]=s[k]}return t}}
-  // Polyfill: Array.prototype.find
-  if(!Array.prototype.find){Array.prototype.find=function(p){for(var i=0;i<this.length;i++)if(p(this[i],i,this))return this[i]}}
-  // Polyfill: Array.prototype.findIndex
-  if(!Array.prototype.findIndex){Array.prototype.findIndex=function(p){for(var i=0;i<this.length;i++)if(p(this[i],i,this))return i;return-1}}
-  // Polyfill: String.prototype.repeat
-  if(!String.prototype.repeat){String.prototype.repeat=function(c){var s='';for(var i=0;i<c;i++)s+=this;return s}}
-  // Polyfill: Element.prototype.closest
-  if(!Element.prototype.closest){Element.prototype.closest=function(s){var el=this;while(el&&el.nodeType===1){if(el.matches(s))return el;el=el.parentElement}return null}}
-  // Polyfill: Element.prototype.matches
-  if(!Element.prototype.matches){Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector}
-  // Polyfill: CustomEvent constructor (IE11)
-  if(typeof window.CustomEvent!=='function'){function CustomEvent(e,p){p=p||{bubbles:false,cancelable:false,detail:null};var evt=document.createEvent('CustomEvent');evt.initCustomEvent(e,p.bubbles,p.cancelable,p.detail);return evt}window.CustomEvent=CustomEvent}
-  </script>
-  <!-- CDN dependencies: pinned to exact versions for security. SRI hashes should be regenerated if versions change. -->
+  <!-- Polyfills removed: all target browsers (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) support ES6+ natively -->
+  <!-- CDN dependencies: pinned to exact versions for security -->
   <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://unpkg.com/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://js.stripe.com/v3/"></script>
+  <!-- Stripe: defer loading — only needed when user reaches checkout -->
+  <script>
+  window.__stripeLoaded=false;
+  window.loadStripe=function(){if(window.__stripeLoaded)return Promise.resolve(window.Stripe);return new Promise(function(r){var s=document.createElement('script');s.src='https://js.stripe.com/v3/';s.onload=function(){window.__stripeLoaded=true;r(window.Stripe)};document.head.appendChild(s)})};
+  // Preload Stripe after page is interactive (doesn't block render)
+  if('requestIdleCallback' in window){requestIdleCallback(function(){loadStripe()})}else{setTimeout(function(){loadStripe()},3000)}
+  </script>
   <!-- Fallback: verify DOMPurify loaded (critical security dependency) -->
   <script>if(typeof DOMPurify==='undefined'){document.write('<div style="background:#ff0000;color:#fff;padding:20px;text-align:center;font-size:18px;font-weight:bold">Security Error: DOMPurify failed to load. Please refresh the page.</div>');throw new Error('DOMPurify not loaded — aborting for security');}</script>
 <style>
@@ -270,10 +254,14 @@ input,textarea,select{font-family:var(--font)}
 ul,ol{list-style:none}
 h1,h2,h3,h4,h5,h6{line-height:1.2;font-weight:700;color:var(--dark)}
 #root{min-height:100vh;min-height:100dvh}
-.app-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-size:18px;color:var(--primary);font-weight:600;gap:24px;background:#f8f7ff}
-.app-loading .loader-logo{font-size:32px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px}
-.app-loading .loader-spinner{width:48px;height:48px;border:4px solid #e9e5f5;border-top:4px solid var(--primary);border-radius:50%;animation:ck-spin 0.8s linear infinite}
-.app-loading .loader-text{font-size:14px;color:#8b7fb5;font-weight:500;animation:ck-pulse 1.5s ease-in-out infinite}
+.app-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-size:18px;color:var(--primary);font-weight:600;gap:20px;background:#f8f7ff}
+.app-loading .loader-logo{font-size:32px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px;animation:ck-fadeIn 0.3s ease}
+.app-loading .loader-spinner{width:44px;height:44px;border:3px solid #e9e5f5;border-top:3px solid var(--primary);border-radius:50%;animation:ck-spin 0.7s linear infinite}
+.app-loading .loader-text{font-size:13px;color:#8b7fb5;font-weight:500;animation:ck-pulse 1.5s ease-in-out infinite}
+.app-loading .loader-bar{width:200px;height:3px;background:#e9e5f5;border-radius:3px;overflow:hidden;margin-top:-8px}
+.app-loading .loader-bar-fill{width:0;height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:3px;animation:ck-loadbar 4s ease-out forwards}
+@keyframes ck-fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ck-loadbar{0%{width:0}30%{width:45%}60%{width:70%}80%{width:85%}100%{width:95%}}
 @keyframes ck-spin{to{transform:rotate(360deg)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes ck-pulse{0%,100%{opacity:0.5}50%{opacity:1}}
@@ -1304,7 +1292,7 @@ img{max-width:100%;height:auto}
       <p><a href="https://www.creativekaygency.com/">Visit Creative Kaygency</a> | <a href="https://www.creativekaygency.com/services">Our Services</a> | <a href="https://www.creativekaygency.com/pricing">Pricing</a> | <a href="https://www.creativekaygency.com/portfolio">Portfolio</a> | <a href="https://www.creativekaygency.com/blog">Blog</a> | <a href="https://www.creativekaygency.com/contact">Contact</a></p>
     </div>
   </noscript>
-  <div id="root"><div class="app-loading"><div class="loader-logo">Creative Kaygency</div><div class="loader-spinner"></div><div class="loader-text">Loading your experience...</div></div></div>
+  <div id="root"><div class="app-loading"><div class="loader-logo">Creative Kaygency</div><div class="loader-spinner"></div><div class="loader-bar"><div class="loader-bar-fill"></div></div><div class="loader-text">Loading your experience...</div></div></div>
 <script type="text/babel" data-type="module">
 // ============================================================================
 // CREATIVE KAYGENCY — Complete React SPA
@@ -12172,10 +12160,11 @@ function CheckoutModal({ clientSecret, onClose, onComplete }) {
 
     const initCheckout = async () => {
       try {
-        if (typeof Stripe === 'undefined') {
+        const StripeFactory = typeof Stripe !== 'undefined' ? Stripe : await window.loadStripe();
+        if (!StripeFactory) {
           throw new Error('Stripe.js failed to load. Please refresh and try again.');
         }
-        const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        const stripe = StripeFactory(STRIPE_PUBLISHABLE_KEY);
         checkout = await stripe.initEmbeddedCheckout({ clientSecret });
         if (!mounted) { checkout.destroy(); return; }
         checkoutRef.current = checkout;
@@ -13247,5 +13236,9 @@ root.render(<App />);
 <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13213318/0/e314e730/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <!-- End of Statcounter Code -->
+<!-- Service Worker: aggressive caching for instant repeat visits -->
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})};
+</script>
 </body>
 </html>
