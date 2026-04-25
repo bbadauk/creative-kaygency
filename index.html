@@ -10538,9 +10538,9 @@ function HostingPage() {
 function BlogSetupPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services } = useContext(AuthContext);
+  const plans = services.filter(s => s.category === 'blogging');
   useSEO({ title: 'Blog Setup Services - Creative Kaygency | Launch Your Dream Blog', description: 'Launch your blog in any niche. Custom WordPress theme, SEO posts, email setup, monetisation. 200+ blogs launched, 50+ niches, 4.9/5 rating, 5-day setup.', keywords: 'blog setup, WordPress setup, blog creation, niche blog, blog monetisation, content strategy, Creative Kaygency blog', canonical: 'https://www.creativekaygency.com/blog-setup', jsonLd: { '@context': 'https://schema.org', '@type': 'Service', name: 'Blog Setup Services', description: 'Professional blog setup service: custom WordPress theme, SEO-optimised posts, email setup, monetisation strategy. 200+ blogs launched across 50+ niches.', url: 'https://www.creativekaygency.com/blog-setup', provider: { '@id': 'https://www.creativekaygency.com/#organization' }, serviceType: 'Blog Setup & Content Strategy', areaServed: 'Worldwide', hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Blog Setup Plans', itemListElement: plans.map(p => ({ '@type': 'Offer', name: p.name, description: p.desc, priceCurrency: 'GBP' })) } } });
   useEffect(() => { window.scrollTo(0,0); }, []);
-  const plans = services.filter(s => s.category === 'blogging');
   const niches = [
     { name: 'Travel', emoji: '✈️' },
     { name: 'Finance', emoji: '💰' },
@@ -10698,9 +10698,9 @@ function BlogSetupPage() {
 function VideographyPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services } = useContext(AuthContext);
+  const plans = services.filter(s => s.category === 'videography');
   useSEO({ title: 'Professional Vlogging & Videography Services | Creative Kaygency', description: 'Professional video production: YouTube, TikTok, Instagram Reels, corporate videos. 4K filming, editing, thumbnails, SEO. 300+ videos, 50+ creators, 4.9/5.', keywords: 'video production, YouTube filming, videography service, professional video editing, TikTok video, corporate videos, UK video production, creative videography', canonical: 'https://www.creativekaygency.com/videography', jsonLd: { '@context': 'https://schema.org', '@type': 'Service', name: 'Professional Vlogging & Videography Services', description: 'Professional video production for YouTube, TikTok, Instagram Reels, and corporate videos. 4K filming, editing, thumbnails, and SEO optimisation.', url: 'https://www.creativekaygency.com/videography', provider: { '@id': 'https://www.creativekaygency.com/#organization' }, serviceType: 'Video Production & Videography', areaServed: 'GB', hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Videography Plans', itemListElement: plans.map(p => ({ '@type': 'Offer', name: p.name, description: p.desc, priceCurrency: 'GBP' })) } } });
   useEffect(() => { window.scrollTo(0,0); }, []);
-  const plans = services.filter(s => s.category === 'videography');
   const contentTypes = [
     { emoji: '📹', title: 'YouTube Long-Form', desc: 'Full-day shoots producing 2-3 polished long-form videos (8-20 mins) with thumbnails and SEO.' },
     { emoji: '📱', title: 'TikTok & Reels', desc: 'Short-form video batches: 5-6 videos per shoot, 15-60 seconds each, vertical format, trending audio.' },
