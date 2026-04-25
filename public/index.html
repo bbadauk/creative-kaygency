@@ -289,7 +289,7 @@ function Navbar() {
           <div className="nav-dropdown" onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
             <span className="nav-dropdown-trigger">Services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></span>
             {megaOpen && <div className="mega-menu"><div className="mega-menu-grid">
-              {CATEGORIES.map(c => <a key={c.id} href={`#/services?cat=${c.id}`} className="mega-menu-item"><div className="mega-menu-icon">{c.icon}</div><div><h4>{c.name}</h4><p>{c.desc}</p></div></a>)}
+              {CATEGORIES.map(c => <a key={c.id} href={`#/services/${c.id}`} className="mega-menu-item"><div className="mega-menu-icon">{c.icon}</div><div><h4>{c.name}</h4><p>{c.desc}</p></div></a>)}
             </div></div>}
           </div>
           <a href="#/portfolio">Portfolio</a>
@@ -361,7 +361,7 @@ function Footer() {
               <button className="btn btn-sm btn-primary" onClick={() => addToast('Subscribed to newsletter!','success')}>Subscribe</button>
             </div>
           </div>
-          <div><h4>Services</h4><div className="footer-links"><a href="#/services?cat=websites">Websites</a><a href="#/services?cat=ecommerce">E-Commerce</a><a href="#/services?cat=graphics">Graphics</a><a href="#/services?cat=seo">SEO</a><a href="#/services?cat=content">Content</a><a href="#/services?cat=digital">Digital Products</a></div></div>
+          <div><h4>Services</h4><div className="footer-links"><a href="#/services/websites">Websites</a><a href="#/services/ecommerce">E-Commerce</a><a href="#/services/graphics">Graphics</a><a href="#/services/seo">SEO</a><a href="#/services/content">Content</a><a href="#/services/digital">Digital Products</a></div></div>
           <div><h4>Company</h4><div className="footer-links"><a href="#/about">About Us</a><a href="#/portfolio">Portfolio</a><a href="#/blog">Blog</a><a href="#/contact">Contact</a><a href="#/knowledge">Help Center</a><a href="#/faq">FAQs</a></div></div>
           <div><h4>Legal</h4><div className="footer-links"><a href="#/privacy">Privacy Policy</a><a href="#/terms">Terms of Service</a><a href="#/refund">Refund Policy</a></div></div>
         </div>
@@ -466,7 +466,7 @@ function HomePage() {
             {CATEGORIES.slice(0, 8).map(c => {
               const svc = SERVICES.find(s => s.category === c.id);
               return (
-                <a key={c.id} href={`#/services?cat=${c.id}`} className="service-card card-hover">
+                <a key={c.id} href={`#/services/${c.id}`} className="service-card card-hover">
                   <div className="service-icon">{c.icon}</div>
                   <h3>{c.name}</h3>
                   <p>{c.desc}</p>

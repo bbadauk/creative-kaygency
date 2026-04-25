@@ -3196,7 +3196,7 @@ function Navbar() {
                 return columns.map((col,ci) => (
                   <div key={ci} className="mega-menu-col">
                     <div className="mega-menu-col-title">{col.title}</div>
-                    {col.ids.map(id => { const c = CATEGORIES.find(cat => cat.id === id); if(!c) return null; return <a key={c.id} href={routeHref(dedicatedPages[c.id] || `/services?cat=${c.id}`)} className="mega-menu-item"><div className="mega-menu-icon">{c.icon}</div><div><h4>{c.name}</h4><p>{c.desc}</p></div></a>; })}
+                    {col.ids.map(id => { const c = CATEGORIES.find(cat => cat.id === id); if(!c) return null; return <a key={c.id} href={routeHref(dedicatedPages[c.id] || `/services/${c.id}`)} className="mega-menu-item"><div className="mega-menu-icon">{c.icon}</div><div><h4>{c.name}</h4><p>{c.desc}</p></div></a>; })}
                   </div>
                 ));
               })()}
@@ -3270,7 +3270,7 @@ function Navbar() {
           <div key={ci} style={{background:col.bg,borderRadius:10,padding:'10px 12px',marginBottom:4}}>
             <div style={{fontSize:11,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.08em',color:col.color,padding:'4px 4px 8px',borderBottom:`2px solid ${col.color}22`}}>{col.title}</div>
             {col.ids.map(id => { const c = CATEGORIES.find(cat => cat.id === id); if(!c) return null; return (
-              <a key={c.id} href={routeHref(dedicatedPages[c.id] || `/services?cat=${c.id}`)} onClick={() => setMobileOpen(false)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 4px',fontSize:14,color:'var(--gray-700)',textDecoration:'none'}}>
+              <a key={c.id} href={routeHref(dedicatedPages[c.id] || `/services/${c.id}`)} onClick={() => setMobileOpen(false)} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 4px',fontSize:14,color:'var(--gray-700)',textDecoration:'none'}}>
                 <span style={{width:32,height:32,borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',fontSize:15,background:`${col.color}15`,flexShrink:0}}>{c.icon}</span>
                 <span style={{fontWeight:500}}>{c.name}</span>
               </a>
@@ -3339,7 +3339,7 @@ function Footer() {
               <button className="btn btn-sm btn-primary" onClick={() => addToast('Subscribed to newsletter!','success')}>Subscribe</button>
             </div>
           </div>
-          <div><h4>Services</h4><div className="footer-links"><a href={routeHref("/services?cat=websites")}>Websites</a><a href={routeHref("/services?cat=ecommerce")}>E-Commerce</a><a href={routeHref("/services?cat=graphics")}>Graphics</a><a href={routeHref("/services?cat=seo")}>SEO</a><a href={routeHref("/services?cat=content")}>Content</a><a href={routeHref("/hosting")}>Web Hosting</a><a href={routeHref("/blog-setup")}>Blog Setup</a><a href={routeHref("/videography")}>Videography</a><a href={routeHref("/services?cat=digital")}>Digital Products</a></div></div>
+          <div><h4>Services</h4><div className="footer-links"><a href={routeHref("/services/websites")}>Websites</a><a href={routeHref("/services/ecommerce")}>E-Commerce</a><a href={routeHref("/services/graphics")}>Graphics</a><a href={routeHref("/services/seo")}>SEO</a><a href={routeHref("/services/content")}>Content</a><a href={routeHref("/hosting")}>Web Hosting</a><a href={routeHref("/blog-setup")}>Blog Setup</a><a href={routeHref("/videography")}>Videography</a><a href={routeHref("/services/digital")}>Digital Products</a></div></div>
           <div><h4>Company</h4><div className="footer-links"><a href={routeHref("/about")}>About Us</a><a href={routeHref("/portfolio")}>Portfolio</a><a href={routeHref("/blog")}>Blog</a><a href={routeHref("/contact")}>Contact</a><a href={routeHref("/how-it-works")}>How It Works</a><a href={routeHref("/advertise")}>Advertise With Us</a><a href={routeHref("/knowledge")}>Help Center</a><a href={routeHref("/faq")}>FAQs</a><a href={routeHref("/support")}>Support Tickets</a><a href={routeHref("/community")}>Community Forum</a><a href={routeHref("/leaderboard")}>Leaderboard</a></div></div>
           <div><h4>Legal</h4><div className="footer-links"><a href={routeHref("/privacy")}>Privacy Policy</a><a href={routeHref("/terms")}>Terms of Service</a><a href={routeHref("/refund")}>Refund Policy</a><a href={routeHref("/sitemap")}>Sitemap</a><a href="sitemap.xml" target="_blank" rel="noopener noreferrer">XML Sitemap</a></div></div>
         </div>
@@ -3486,7 +3486,7 @@ function HomePage() {
         <div className="portfolio-strip-track">
           {[...Array(2)].map((_, dupeIdx) => {
             const items = [
-              { label: 'Brochure Websites', tag: 'Websites', link: routeHref('/services?cat=websites'), screen: (
+              { label: 'Brochure Websites', tag: 'Websites', link: routeHref('/services/websites'), screen: (
                 <div style={{background:'#fff',height:'100%',display:'flex',flexDirection:'column'}}>
                   <div style={{background:'#1a1a2e',padding:'8px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                     <div style={{color:'#fff',fontSize:11,fontWeight:800}}>FRESHBITE</div>
@@ -3503,7 +3503,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'E-Commerce Stores', tag: 'E-Commerce', link: routeHref('/services?cat=ecommerce'), screen: (
+              { label: 'E-Commerce Stores', tag: 'E-Commerce', link: routeHref('/services/ecommerce'), screen: (
                 <div style={{background:'#fff',height:'100%',display:'flex',flexDirection:'column'}}>
                   <div style={{background:'#0f0f23',padding:'8px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                     <div style={{color:'#fff',fontSize:11,fontWeight:800}}>URBANSTYLE</div>
@@ -3523,7 +3523,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'Landing Pages & Funnels', tag: 'Funnels', link: routeHref('/services?cat=websites'), screen: (
+              { label: 'Landing Pages & Funnels', tag: 'Funnels', link: routeHref('/services/websites'), screen: (
                 <div style={{background:'linear-gradient(180deg,#0a192f,#172a45)',height:'100%',display:'flex',flexDirection:'column',color:'#fff'}}>
                   <div style={{padding:'6px 14px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid rgba(255,255,255,0.08)'}}>
                     <div style={{fontSize:10,fontWeight:800,color:'#4facfe'}}>LAUNCH<span style={{color:'#fff'}}>PRO</span></div>
@@ -3541,7 +3541,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'Social Media Profiles', tag: 'Social', link: routeHref('/services?cat=social'), screen: (
+              { label: 'Social Media Profiles', tag: 'Social', link: routeHref('/services/social'), screen: (
                 <div style={{background:'linear-gradient(180deg,#1a1a2e,#16213e)',height:'100%',display:'flex',flexDirection:'column',color:'#fff'}}>
                   <div style={{padding:'10px 14px',display:'flex',alignItems:'center',gap:8,borderBottom:'1px solid rgba(255,255,255,0.08)'}}>
                     <div style={{width:28,height:28,borderRadius:'50%',background:'linear-gradient(135deg,#43e97b,#38f9d7)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800}}>G</div>
@@ -3558,7 +3558,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'Brand Identity Kits', tag: 'Branding', link: routeHref('/services?cat=graphics'), screen: (
+              { label: 'Brand Identity Kits', tag: 'Branding', link: routeHref('/services/graphics'), screen: (
                 <div style={{background:'#fff',height:'100%',display:'flex',flexDirection:'column'}}>
                   <div style={{background:'linear-gradient(135deg,#fa709a,#fee140)',flex:1,padding:'16px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
                     <div style={{width:50,height:50,borderRadius:'50%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:8,boxShadow:'0 4px 12px rgba(0,0,0,0.15)'}}>
@@ -3578,7 +3578,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'SEO Campaigns', tag: 'SEO', link: routeHref('/services?cat=seo'), screen: (
+              { label: 'SEO Campaigns', tag: 'SEO', link: routeHref('/services/seo'), screen: (
                 <div style={{background:'#f8f7ff',height:'100%',display:'flex',flexDirection:'column'}}>
                   <div style={{background:'#1e1e2e',padding:'8px 14px',display:'flex',alignItems:'center',gap:6}}>
                     <div style={{fontSize:10,fontWeight:800,color:'#a18cd1'}}>SEO</div>
@@ -3603,7 +3603,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'Email Automations', tag: 'Email', link: routeHref('/services?cat=email'), screen: (
+              { label: 'Email Automations', tag: 'Email', link: routeHref('/services/email'), screen: (
                 <div style={{background:'#1a1a2e',height:'100%',display:'flex',flexDirection:'column',color:'#fff'}}>
                   <div style={{padding:'8px 14px',borderBottom:'1px solid rgba(255,255,255,0.08)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                     <div style={{fontSize:10,fontWeight:800}}>📧 Campaign Hub</div>
@@ -3624,7 +3624,7 @@ function HomePage() {
                   </div>
                 </div>
               )},
-              { label: 'Digital Product Creation', tag: 'Products', link: routeHref('/services?cat=digital'), screen: (
+              { label: 'Digital Product Creation', tag: 'Products', link: routeHref('/services/digital'), screen: (
                 <div style={{background:'linear-gradient(180deg,#0a1628,#162447)',height:'100%',display:'flex',flexDirection:'column',color:'#fff'}}>
                   <div style={{padding:'8px 14px',borderBottom:'1px solid rgba(255,255,255,0.08)'}}>
                     <div style={{fontSize:10,fontWeight:800}}>📚 Product Store</div>
@@ -3690,7 +3690,7 @@ function HomePage() {
             {CATEGORIES.slice(0, 8).map(c => {
               const svc = services.find(s => s.category === c.id);
               return (
-                <a key={c.id} href={routeHref(`/services?cat=${c.id}`)} className="service-card card-hover">
+                <a key={c.id} href={routeHref(`/services/${c.id}`)} className="service-card card-hover">
                   <div className="service-icon">{c.icon}</div>
                   <h3>{c.name}</h3>
                   <p>{c.desc}</p>
@@ -3988,15 +3988,18 @@ function ServicesPage() {
   const { formatPrice } = useContext(CurrencyContext);
   const { services, isAdmin } = useContext(AuthContext);
   useSEO({ title: 'Digital Design Services UK - Creative Kaygency | 40+ Professional Services from £17', description: 'Browse 40+ professional digital services: websites, e-commerce stores, logos, SEO, content, email marketing. Prices from £17. Save 20% with subscriptions. Satisfaction guaranteed.', keywords: 'digital services UK, web design services, e-commerce development, SEO services UK, branding services, content writing, email marketing, graphic design, Creative Kaygency, affordable design agency', canonical: 'https://www.creativekaygency.com/services', jsonLd: { '@context': 'https://schema.org', '@type': 'ItemList', name: '40+ Professional Digital Design Services', description: 'Explore our full catalogue of digital design, development, marketing, and branding services.', url: 'https://www.creativekaygency.com/services', numberOfItems: services.length, itemListElement: services.slice(0, 20).map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: 'https://www.creativekaygency.com/services/' + s.id, description: s.desc })) } });
-  const [filter, setFilter] = useState(() => {
-    const catMatch = getRoutePath().match(/cat=(\w+)/);
-    return catMatch ? catMatch[1] : 'all';
-  });
+  const VALID_CATS = ['websites','ecommerce','graphics','seo','content','email','social','hosting','digital','additional','blogging','videography'];
+  const parseCatFromPath = () => {
+    const path = getRoutePath();
+    const catMatch = path.match(/cat=(\w+)/);
+    if (catMatch && VALID_CATS.includes(catMatch[1])) return catMatch[1];
+    const pathMatch = path.match(/^\/services\/(\w[\w-]*)$/);
+    if (pathMatch && VALID_CATS.includes(pathMatch[1])) return pathMatch[1];
+    return 'all';
+  };
+  const [filter, setFilter] = useState(parseCatFromPath);
   useEffect(() => {
-    const syncFilter = () => {
-      const catMatch = getRoutePath().match(/cat=(\w+)/);
-      if (catMatch) setFilter(catMatch[1]);
-    };
+    const syncFilter = () => { setFilter(parseCatFromPath()); };
     syncFilter();
     const evt = IS_FILE_PROTOCOL ? 'hashchange' : 'popstate';
     window.addEventListener(evt, syncFilter);
@@ -4078,7 +4081,7 @@ function ServiceDetailPage({ serviceId }) {
   const service = services.find(s => s.id === serviceId) || services.find(s => s.slug === serviceId);
   if (!service) return <NotFoundPage />;
   const catName = CATEGORIES.find(c=>c.id===service.category)?.name || '';
-  useSEO({ title: service.metaTitle || `${service.name} - Creative Kaygency | Professional ${catName} Service UK`, description: service.metaDescription || `${service.desc} Professional ${service.name} service from Creative Kaygency. From ${service.creditMin} credits. Satisfaction guaranteed.`, keywords: service.metaKeywords || `${service.name}, ${catName}, digital services UK, Creative Kaygency, affordable ${catName.toLowerCase()}`, canonical: `https://www.creativekaygency.com/services/${service.slug || service.id}`, jsonLd: [{ "@context": "https://schema.org", "@type": "Service", "name": service.name, "description": service.longDesc || service.desc, "provider": { "@type": "Organization", "name": "Creative Kaygency", "url": "https://www.creativekaygency.com", "logo": "https://www.creativekaygency.com/og-image.png" }, "category": catName, "areaServed": { "@type": "Country", "name": "GB" }, "serviceType": catName, "termsOfService": "https://www.creativekaygency.com/terms", "hasOfferCatalog": { "@type": "OfferCatalog", "name": service.name, "itemListElement": [{ "@type": "Offer", "priceCurrency": "GBP", "price": Math.round(service.creditMin * CONFIG.CREDIT_RATIO), "priceSpecification": { "@type": "UnitPriceSpecification", "priceCurrency": "GBP", "price": Math.round(service.creditMin * CONFIG.CREDIT_RATIO), "unitText": `${service.creditMin} credits` }, "availability": "https://schema.org/InStock", "url": `https://www.creativekaygency.com/services/${service.slug || service.id}` }] }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": String(15 + (service.creditMin % 30)), "bestRating": "5" } }, { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.creativekaygency.com/" }, { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.creativekaygency.com/services" }, { "@type": "ListItem", "position": 3, "name": catName, "item": `https://www.creativekaygency.com/services?cat=${service.category}` }, { "@type": "ListItem", "position": 4, "name": service.name }] }] });
+  useSEO({ title: service.metaTitle || `${service.name} - Creative Kaygency | Professional ${catName} Service UK`, description: service.metaDescription || `${service.desc} Professional ${service.name} service from Creative Kaygency. From ${service.creditMin} credits. Satisfaction guaranteed.`, keywords: service.metaKeywords || `${service.name}, ${catName}, digital services UK, Creative Kaygency, affordable ${catName.toLowerCase()}`, canonical: `https://www.creativekaygency.com/services/${service.slug || service.id}`, jsonLd: [{ "@context": "https://schema.org", "@type": "Service", "name": service.name, "description": service.longDesc || service.desc, "provider": { "@type": "Organization", "name": "Creative Kaygency", "url": "https://www.creativekaygency.com", "logo": "https://www.creativekaygency.com/og-image.png" }, "category": catName, "areaServed": { "@type": "Country", "name": "GB" }, "serviceType": catName, "termsOfService": "https://www.creativekaygency.com/terms", "hasOfferCatalog": { "@type": "OfferCatalog", "name": service.name, "itemListElement": [{ "@type": "Offer", "priceCurrency": "GBP", "price": Math.round(service.creditMin * CONFIG.CREDIT_RATIO), "priceSpecification": { "@type": "UnitPriceSpecification", "priceCurrency": "GBP", "price": Math.round(service.creditMin * CONFIG.CREDIT_RATIO), "unitText": `${service.creditMin} credits` }, "availability": "https://schema.org/InStock", "url": `https://www.creativekaygency.com/services/${service.slug || service.id}` }] }, "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": String(15 + (service.creditMin % 30)), "bestRating": "5" } }, { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.creativekaygency.com/" }, { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.creativekaygency.com/services" }, { "@type": "ListItem", "position": 3, "name": catName, "item": `https://www.creativekaygency.com/services/${service.category}` }, { "@type": "ListItem", "position": 4, "name": service.name }] }] });
   const related = services.filter(s => s.category === service.category && s.id !== service.id).slice(0, 3);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(service.name);
@@ -9752,12 +9755,12 @@ function KBArticlePage({ slug }) {
   if (!article) return <NotFoundPage />;
   const cat = KB_CATEGORIES.find(c => c.id === article.category);
   const related = KB_ARTICLES.filter(a => a.category === article.category && a.slug !== slug);
-  useSEO({ title: `${article.title} - Knowledge Base | Creative Kaygency`, description: article.content.substring(0, 155) + '...', keywords: `${article.title}, ${cat?.name || 'knowledge base'}, help guide, Creative Kaygency`, canonical: `https://www.creativekaygency.com/knowledge/${article.slug}`, jsonLd: [{ "@context": "https://schema.org", "@type": "TechArticle", "headline": article.title, "description": article.content.substring(0, 200), "articleBody": article.content, "wordCount": article.content.split(' ').length, "url": `https://www.creativekaygency.com/knowledge/${article.slug}`, "datePublished": "2026-01-01", "dateModified": "2026-04-01", "author": { "@type": "Organization", "name": "Creative Kaygency", "url": "https://www.creativekaygency.com" }, "publisher": { "@type": "Organization", "name": "Creative Kaygency", "logo": { "@type": "ImageObject", "url": "https://www.creativekaygency.com/og-image.png" } }, "mainEntityOfPage": { "@type": "WebPage", "@id": `https://www.creativekaygency.com/knowledge/${article.slug}` }, "articleSection": cat?.name || "Knowledge Base", "isPartOf": { "@type": "WebPage", "@id": "https://www.creativekaygency.com/knowledge" } }, { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.creativekaygency.com/" }, { "@type": "ListItem", "position": 2, "name": "Knowledge Base", "item": "https://www.creativekaygency.com/knowledge" }, { "@type": "ListItem", "position": 3, "name": cat?.name || "Guide", "item": `https://www.creativekaygency.com/knowledge?cat=${article.category}` }, { "@type": "ListItem", "position": 4, "name": article.title }] }] });
+  useSEO({ title: `${article.title} - Knowledge Base | Creative Kaygency`, description: article.content.substring(0, 155) + '...', keywords: `${article.title}, ${cat?.name || 'knowledge base'}, help guide, Creative Kaygency`, canonical: `https://www.creativekaygency.com/knowledge/${article.slug}`, jsonLd: [{ "@context": "https://schema.org", "@type": "TechArticle", "headline": article.title, "description": article.content.substring(0, 200), "articleBody": article.content, "wordCount": article.content.split(' ').length, "url": `https://www.creativekaygency.com/knowledge/${article.slug}`, "datePublished": "2026-01-01", "dateModified": "2026-04-01", "author": { "@type": "Organization", "name": "Creative Kaygency", "url": "https://www.creativekaygency.com" }, "publisher": { "@type": "Organization", "name": "Creative Kaygency", "logo": { "@type": "ImageObject", "url": "https://www.creativekaygency.com/og-image.png" } }, "mainEntityOfPage": { "@type": "WebPage", "@id": `https://www.creativekaygency.com/knowledge/${article.slug}` }, "articleSection": cat?.name || "Knowledge Base", "isPartOf": { "@type": "WebPage", "@id": "https://www.creativekaygency.com/knowledge" } }, { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.creativekaygency.com/" }, { "@type": "ListItem", "position": 2, "name": "Knowledge Base", "item": "https://www.creativekaygency.com/knowledge" }, { "@type": "ListItem", "position": 3, "name": cat?.name || "Guide", "item": `https://www.creativekaygency.com/knowledge` }, { "@type": "ListItem", "position": 4, "name": article.title }] }] });
   return (
     <div>
       <div className="page-header" style={{padding:'40px 0'}}>
         <div className="container">
-          <div className="breadcrumb" style={{marginBottom:12}}><a href={routeHref("/")}>Home</a> / <a href={routeHref("/knowledge")}>Knowledge Base</a> / <a href={routeHref(`/knowledge?cat=${article.category}`)}>{cat?.name}</a> / {article.title}</div>
+          <div className="breadcrumb" style={{marginBottom:12}}><a href={routeHref("/")}>Home</a> / <a href={routeHref("/knowledge")}>Knowledge Base</a> / <a href={routeHref("/knowledge")}>{cat?.name}</a> / {article.title}</div>
           <h1 style={{fontSize:32}}>{article.title}</h1>
           <div style={{display:'flex',gap:16,justifyContent:'center',marginTop:12,fontSize:13,color:'var(--gray-400)'}}>
             <span>{cat?.icon} {cat?.name}</span>
@@ -10527,7 +10530,7 @@ function HostingPage() {
       <p>Join 500+ businesses already hosted with Creative Kaygency. Plans start at just {formatPrice(9)}/month.</p>
       <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
         <a href={routeHref("/dashboard/book?service=hosting-business")} className="btn btn-lg btn-dark">Get Started Now →</a>
-        <a href={routeHref("/services?cat=hosting")} className="btn btn-lg btn-ghost" style={{color:'#fff',borderColor:'rgba(255,255,255,0.3)'}}>Compare All Plans</a>
+        <a href={routeHref("/services/hosting")} className="btn btn-lg btn-ghost" style={{color:'#fff',borderColor:'rgba(255,255,255,0.3)'}}>Compare All Plans</a>
       </div>
     </div></section>
   </div>);
