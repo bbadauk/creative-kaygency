@@ -1,15 +1,14 @@
-// Creative Kaygency Service Worker — aggressive caching for fast repeat visits
-const CACHE_NAME = 'ck-v1';
-const CDN_CACHE = 'ck-cdn-v1';
+// Creative Kaygency Service Worker v2 — aggressive caching for fast repeat visits
+const CACHE_NAME = 'ck-v2';
+const CDN_CACHE = 'ck-cdn-v2';
 
 // App shell to cache immediately
 const APP_SHELL = ['/app.html'];
 
-// CDN resources to cache on first use (stale-while-revalidate)
+// CDN resources to cache on first use (cache-first — versioned/immutable)
 const CDN_URLS = [
   'https://unpkg.com/react@18.2.0/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js',
-  'https://unpkg.com/@babel/standalone@7.24.0/babel.min.js',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1',
   'https://unpkg.com/dompurify@3.0.8/dist/purify.min.js'
 ];
@@ -48,6 +47,9 @@ self.addEventListener('fetch', e => {
   // Stripe: always network (required by Stripe TOS)
   if (url.hostname.includes('stripe.com')) return;
 
+  // Search engine bots should always get fresh content
+  if (/bot|crawl|spider|slurp|googlebot|bingbot/i.test(navigator.userAgent)) return;
+
   // CDN scripts: cache-first (they're versioned/immutable)
   if (CDN_URLS.some(u => e.request.url.startsWith(u))) {
     e.respondWith(
@@ -80,18 +82,16 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // App shell (HTML): stale-while-revalidate
+  // App shell (HTML): network-first with cache fallback
   if (url.pathname === '/' || url.pathname === '/app.html' || !url.pathname.includes('.')) {
     e.respondWith(
-      caches.open(CACHE_NAME).then(c =>
-        c.match('/app.html').then(cached => {
-          const fetchPromise = fetch(e.request).then(resp => {
-            if (resp.ok) c.put('/app.html', resp.clone());
-            return resp;
-          }).catch(() => cached);
-          return cached || fetchPromise;
-        })
-      )
+      fetch(e.request).then(resp => {
+        if (resp.ok) {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then(c => c.put('/app.html', clone));
+        }
+        return resp;
+      }).catch(() => caches.open(CACHE_NAME).then(c => c.match('/app.html')))
     );
     return;
   }

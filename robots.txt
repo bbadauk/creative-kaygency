@@ -12,6 +12,10 @@ Disallow: /dashboard
 Disallow: /kay-control-panel
 Disallow: /login
 Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /book/
+Disallow: /api/
 
 # Crawl-delay (optional, be kind to server)
 Crawl-delay: 1

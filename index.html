@@ -3346,7 +3346,7 @@ function Footer() {
         <div className="footer-bottom">
           <span>© 2024 {CONFIG.SITE_NAME}. All rights reserved.</span>
           <div className="footer-social">
-            <a href="#" title="Twitter">𝕏</a><a href="#" title="Facebook">f</a><a href="#" title="LinkedIn">in</a><a href="#" title="Instagram">📷</a>
+            <a href="https://x.com/creativekaygency" title="Follow us on X" target="_blank" rel="noopener noreferrer">𝕏</a><a href="https://facebook.com/creativekaygency" title="Like us on Facebook" target="_blank" rel="noopener noreferrer">f</a><a href="https://linkedin.com/company/creativekaygency" title="Connect on LinkedIn" target="_blank" rel="noopener noreferrer">in</a><a href="https://instagram.com/creativekaygency" title="Follow us on Instagram" target="_blank" rel="noopener noreferrer">📷</a>
           </div>
           <div className={`currency-dropdown${langOpen ? ' open' : ''}`} ref={langRef} style={{position:'relative',display:'inline-block'}}>
             <button className="currency-dropdown-trigger" onClick={() => setLangOpen(!langOpen)} aria-label="Select language" aria-expanded={langOpen} style={{fontSize:12,padding:'4px 10px',background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.2)',color:'white',borderRadius:6,cursor:'pointer',display:'flex',alignItems:'center',gap:4}}>
@@ -11195,7 +11195,7 @@ function useSEO({ title, description, keywords, canonical, ogTitle, ogDesc, ogIm
     if (description) setMeta('name', 'description', description);
     if (keywords) setMeta('name', 'keywords', keywords);
     if (noindex) setMeta('name', 'robots', 'noindex, nofollow');
-    else { const rb = document.querySelector('meta[name="robots"]'); if (rb) rb.setAttribute('content', 'index, follow'); }
+    else { let rb = document.querySelector('meta[name="robots"]'); if (!rb) { rb = document.createElement('meta'); rb.setAttribute('name', 'robots'); document.head.appendChild(rb); } rb.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'); }
     var defaultOgImage = 'https://www.creativekaygency.com/og-image.png';
     setMeta('property', 'og:title', ogTitle || title);
     setMeta('property', 'og:description', ogDesc || description);
