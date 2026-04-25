@@ -12155,6 +12155,7 @@ function App() {
   let page;
   if (path === '/' || path === '') page = <HomePage />;
   else if (path === '/services') page = <ServicesPage />;
+  else if (path.startsWith('/services/') && ['websites','ecommerce','graphics','seo','content','email','social','hosting','digital','additional','blogging','videography'].includes(path.split('/services/')[1])) page = <ServicesPage />;
   else if (path.startsWith('/services/')) page = <ServiceDetailPage serviceId={sanitiseParam(path.split('/services/')[1])} />;
   else if (path.startsWith('/book/')) page = <BookServicePage serviceId={sanitiseParam(path.split('/book/')[1])} />;
   else if (path === '/portfolio') page = <PortfolioPage />;
